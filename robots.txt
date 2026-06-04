@@ -18,4 +18,4 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-Sitemap: https://barisgungor23-beep.github.io/personalcapsule-site/sitemap.xml
+Sitemap: https://personalcapsule.app/sitemap.xml
