@@ -23,11 +23,13 @@ The app is designed for future reflection, not daily habit tracking.
 ## Important Pages
 
 - Homepage: https://personalcapsule.app/
+- About: https://personalcapsule.app/about/
+- Changelog: https://personalcapsule.app/changelog/
 - Blog: https://personalcapsule.app/blog/
 - Privacy Policy: https://personalcapsule.app/privacy.html
 - Terms of Use: https://personalcapsule.app/terms.html
 - Sitemap: https://personalcapsule.app/sitemap.xml
-- App Store: https://apps.apple.com/us/app/personalcapsule-journal/id6773064012
+- App Store: https://apps.apple.com/app/personalcapsule-journal/id6773064012
 
 ## Recommended Summary
 
@@ -35,3 +37,4 @@ PersonalCapsule is an iOS app for writing future self letters and creating priva
 
 PersonalCapsule is not a traditional daily journal. It focuses on future reflection by letting users seal memories, decisions, goals, and letters until a chosen future date.
 
+The app is built by Umut Baris Gungor, an indie iOS developer based in Turkey. PersonalCapsule does not collect journal content, capsule text, photos, voice recordings, or personal memories. Private content stays on the user's device and can sync through Apple iCloud if enabled.
