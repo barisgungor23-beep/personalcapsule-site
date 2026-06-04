@@ -463,6 +463,11 @@ footer{border-top:1px solid rgba(216,178,90,.14);padding:46px 0;position:relativ
 .timeline-item ul{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
 .timeline-item li{position:relative;padding-left:24px;color:rgba(244,234,214,.86);font-weight:300}
 .timeline-item li::before{content:"";position:absolute;left:4px;top:.72em;width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,var(--gold-bright),var(--gold-deep))}
+.legal-panel h2{margin-top:30px}
+.legal-panel h2:first-of-type{margin-top:0}
+.legal-panel a{color:var(--gold-bright);text-decoration:none}
+.legal-panel a:hover{text-decoration:underline}
+.legal-date{display:inline-flex;align-items:center;border:1px solid rgba(216,178,90,.34);border-radius:999px;padding:6px 12px;margin-bottom:24px;color:var(--gold-bright);background:rgba(216,178,90,.08);font-size:.76rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
 
 @media(max-width:880px){
   .post-grid{grid-template-columns:1fr}

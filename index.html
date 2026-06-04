@@ -31,17 +31,82 @@
 <meta name="twitter:image" content="https://personalcapsule.app/og-image.png">
 <meta name="twitter:image:alt" content="PersonalCapsule app">
 
-<!-- Structured data: SoftwareApplication. NOTE: fill in real ratingValue / ratingCount before publishing. -->
+<!-- Structured data for the app, website, organization and page path. -->
 <script type="application/ld+json">
 {
-  "@context":"https://schema.org",
-  "@type":"MobileApplication",
-  "name":"PersonalCapsule — Journal",
-  "operatingSystem":"iOS",
-  "applicationCategory":"LifestyleApplication",
-  "description":"A digital time capsule journal to write letters to your future self, capture memories, record decisions and set goals.",
-  "url":"https://apps.apple.com/app/personalcapsule-journal/id6773064012",
-  "author":{"@type":"Person","name":"Umut Barış Güngör"}
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://personalcapsule.app/#organization",
+      "name": "PersonalCapsule",
+      "url": "https://personalcapsule.app/",
+      "logo": "https://personalcapsule.app/icon.jpg",
+      "email": "support.personalcapsule@gmail.com",
+      "founder": {
+        "@type": "Person",
+        "name": "Umut Baris Gungor"
+      },
+      "sameAs": [
+        "https://apps.apple.com/app/personalcapsule-journal/id6773064012"
+      ]
+    },
+    {
+      "@type": [
+        "SoftwareApplication",
+        "MobileApplication"
+      ],
+      "@id": "https://personalcapsule.app/#app",
+      "name": "PersonalCapsule - Journal",
+      "alternateName": "PersonalCapsule",
+      "operatingSystem": "iOS",
+      "applicationCategory": "LifestyleApplication",
+      "applicationSubCategory": "Digital time capsule journal",
+      "description": "PersonalCapsule is a private digital time capsule journal for future self letters, memories, decisions and goals.",
+      "url": "https://personalcapsule.app/",
+      "downloadUrl": "https://apps.apple.com/app/personalcapsule-journal/id6773064012",
+      "image": "https://personalcapsule.app/og-image.png",
+      "author": {
+        "@id": "https://personalcapsule.app/#organization"
+      },
+      "publisher": {
+        "@id": "https://personalcapsule.app/#organization"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://personalcapsule.app/#website",
+      "name": "PersonalCapsule",
+      "url": "https://personalcapsule.app/",
+      "publisher": {
+        "@id": "https://personalcapsule.app/#organization"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://personalcapsule.app/#webpage",
+      "url": "https://personalcapsule.app/",
+      "name": "PersonalCapsule - Digital Time Capsule Journal for Your Future Self",
+      "isPartOf": {
+        "@id": "https://personalcapsule.app/#website"
+      },
+      "about": {
+        "@id": "https://personalcapsule.app/#app"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://personalcapsule.app/"
+        }
+      ]
+    }
+  ]
 }
 </script>
 
