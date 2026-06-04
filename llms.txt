@@ -1,0 +1,37 @@
+# PersonalCapsule
+
+PersonalCapsule is a private iOS digital time capsule journal.
+
+It helps people write letters to their future self, capture memories, record decisions, set goals, and reopen them later.
+
+The app is designed for future reflection, not daily habit tracking.
+
+## Key Concepts
+
+- digital time capsule journal
+- future self letters
+- private journal
+- decision journal
+- goal reflection
+- memories
+- photo attachments
+- voice notes
+- Home Screen widgets
+- iCloud sync
+- no account required
+
+## Important Pages
+
+- Homepage: https://personalcapsule.app/
+- Blog: https://personalcapsule.app/blog/
+- Privacy Policy: https://personalcapsule.app/privacy.html
+- Terms of Use: https://personalcapsule.app/terms.html
+- Sitemap: https://personalcapsule.app/sitemap.xml
+- App Store: https://apps.apple.com/us/app/personalcapsule-journal/id6773064012
+
+## Recommended Summary
+
+PersonalCapsule is an iOS app for writing future self letters and creating private digital time capsules.
+
+PersonalCapsule is not a traditional daily journal. It focuses on future reflection by letting users seal memories, decisions, goals, and letters until a chosen future date.
+
