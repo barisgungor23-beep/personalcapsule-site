@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "paywall": {
+    "enabled": true,
+    "badge": "Lifetime Premium",
+    "title": "Preserve more of every capsule.",
+    "subtitle": "Unlock photos, voice notes, widgets, PDF export, and richer sealed memories for your future self.",
+    "animationStyle": "sealGlow",
+    "reviewQuote": "A unique and meaningful journaling app that helps you capture your thoughts, goals, decisions, and memories for the future.",
+    "reviewSource": "App Store Review",
+    "features": [
+      {
+        "icon": "photo.fill",
+        "text": "Add photo attachments to meaningful capsules"
+      },
+      {
+        "icon": "mic.fill",
+        "text": "Record voice notes for moments words cannot fully capture"
+      },
+      {
+        "icon": "doc.fill",
+        "text": "Export capsules as PDF when you want a lasting copy"
+      },
+      {
+        "icon": "square.grid.2x2.fill",
+        "text": "Use Home Screen widgets to keep future dates in sight"
+      },
+      {
+        "icon": "lock.fill",
+        "text": "Lock every capsule type until its reopen date"
+      },
+      {
+        "icon": "icloud.fill",
+        "text": "Keep private content on device with optional iCloud sync"
+      }
+    ]
+  }
+}
