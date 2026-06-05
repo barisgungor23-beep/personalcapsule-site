@@ -33,6 +33,41 @@
         "icon": "icloud.fill",
         "text": "Keep private content on device with optional iCloud sync"
       }
-    ]
+    ],
+    "localizations": {
+      "tr": {
+        "badge": "Ömür boyu Premium",
+        "title": "Her kapsülde daha fazlasını sakla.",
+        "subtitle": "Fotoğrafları, ses notlarını, widgetları, PDF dışa aktarmayı ve gelecekteki kendin için daha zengin anıları aç.",
+        "reviewQuote": "Düşüncelerinizi, hedeflerinizi, kararlarınızı ve anılarınızı gelecek için yakalamanıza yardımcı olan anlamlı bir günlük uygulaması.",
+        "reviewSource": "App Store Yorumu",
+        "features": [
+          {
+            "icon": "photo.fill",
+            "text": "Anlamlı kapsüllere fotoğraf ekle"
+          },
+          {
+            "icon": "mic.fill",
+            "text": "Kelimelerin yetmediği anlar için ses notu kaydet"
+          },
+          {
+            "icon": "doc.fill",
+            "text": "Kalıcı bir kopya istediğinde kapsülleri PDF olarak dışa aktar"
+          },
+          {
+            "icon": "square.grid.2x2.fill",
+            "text": "Gelecek tarihleri görmek için Ana Ekran widgetlarını kullan"
+          },
+          {
+            "icon": "lock.fill",
+            "text": "Tüm kapsül türlerini açılma tarihine kadar kilitle"
+          },
+          {
+            "icon": "icloud.fill",
+            "text": "Özel içeriği cihazında tut, istersen iCloud ile eşitle"
+          }
+        ]
+      }
+    }
   }
 }
