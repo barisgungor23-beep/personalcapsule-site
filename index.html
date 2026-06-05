@@ -379,6 +379,66 @@
   </div>
 </section>
 
+<!-- PROMO OFFER -->
+<section class="sec" id="promo">
+  <div class="wrap">
+    <div class="promo-shell reveal">
+      <div class="promo-main">
+        <div class="eyebrow">Limited launch offer</div>
+        <h2>Unlock Premium for 50% off.</h2>
+        <p class="promo-copy">Use a limited App Store offer code to get lifetime Premium at 50% off. Available for the first 500 redemptions or until the campaign ends.</p>
+        <div class="promo-countdown" aria-label="Offer countdown">
+          <div><strong id="promo-days">7</strong><span>Days</span></div>
+          <div><strong id="promo-hours">00</strong><span>Hours</span></div>
+          <div><strong id="promo-minutes">00</strong><span>Minutes</span></div>
+        </div>
+        <div class="promo-actions">
+          <button class="promo-btn" id="claim-promo-code" type="button">Claim 50% Off Code</button>
+          <a class="promo-link" href="https://apps.apple.com/app/personalcapsule-journal/id6773064012" target="_blank" rel="noopener">Open on the App Store</a>
+        </div>
+        <div class="promo-code-box" id="promo-code-box" hidden>
+          <span class="promo-code-label">Your code</span>
+          <strong id="promo-code">PERSONALCAPSULEAPP</strong>
+          <button class="copy-code" id="copy-promo-code" type="button">Copy</button>
+        </div>
+        <p class="promo-note">Limited to 500 App Store redemptions. The offer may end earlier if all redemptions are used.</p>
+      </div>
+      <div class="promo-side">
+        <div class="promo-benefits">
+          <h3>Premium includes</h3>
+          <ul>
+            <li>Photo attachments</li>
+            <li>Voice recordings</li>
+            <li>PDF export</li>
+            <li>Home Screen widgets</li>
+            <li>Full capsule locking</li>
+            <li>Lifetime Premium access</li>
+          </ul>
+        </div>
+        <div class="plan-compare" aria-label="Free and Premium comparison">
+          <div>
+            <h4>Free</h4>
+            <p>Write private capsules, save memories, and reopen them later.</p>
+          </div>
+          <div>
+            <h4>Premium</h4>
+            <p>Add photos, voice notes, widgets, PDF export, and richer sealed capsules.</p>
+          </div>
+        </div>
+        <div class="redeem-guide">
+          <h3>How to redeem</h3>
+          <ol>
+            <li>Download PersonalCapsule from the App Store.</li>
+            <li>Open Settings inside the app.</li>
+            <li>Tap Redeem Offer Code.</li>
+            <li>Enter the code and complete the App Store redemption.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- HOW IT COMPARES -->
 <section class="sec" id="compare">
   <div class="wrap">
@@ -492,6 +552,36 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 // trigger hero reveals immediately
 addEventListener('load',()=>{document.querySelectorAll('.hero .reveal').forEach((el,i)=>el.classList.add('in'))});
 setTimeout(()=>document.querySelectorAll('.hero .reveal').forEach(el=>el.classList.add('in')),60);
+// promo code reveal, copy and countdown
+const promoCode='PERSONALCAPSULEAPP';
+const promoEnd=new Date('2026-06-12T23:59:59+03:00').getTime();
+const claimBtn=document.getElementById('claim-promo-code');
+const promoBox=document.getElementById('promo-code-box');
+const copyBtn=document.getElementById('copy-promo-code');
+claimBtn?.addEventListener('click',()=>{
+  promoBox.hidden=false;
+  claimBtn.textContent='Code revealed';
+});
+copyBtn?.addEventListener('click',async()=>{
+  try{
+    await navigator.clipboard.writeText(promoCode);
+    copyBtn.textContent='Copied';
+    setTimeout(()=>copyBtn.textContent='Copy',1800);
+  }catch{
+    copyBtn.textContent='Select code';
+  }
+});
+function updatePromoCountdown(){
+  const left=Math.max(0,promoEnd-Date.now());
+  const days=Math.floor(left/86400000);
+  const hours=Math.floor((left%86400000)/3600000);
+  const minutes=Math.floor((left%3600000)/60000);
+  document.getElementById('promo-days').textContent=String(days);
+  document.getElementById('promo-hours').textContent=String(hours).padStart(2,'0');
+  document.getElementById('promo-minutes').textContent=String(minutes).padStart(2,'0');
+}
+updatePromoCountdown();
+setInterval(updatePromoCountdown,60000);
 </script>
 </body>
 </html>
