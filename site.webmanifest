@@ -1,0 +1,26 @@
+{
+  "name": "PersonalCapsule",
+  "short_name": "PersonalCapsule",
+  "description": "A private digital time capsule journal for future self letters, memories, decisions and goals.",
+  "start_url": "https://personalcapsule.app/",
+  "display": "standalone",
+  "background_color": "#0b0907",
+  "theme_color": "#0b0907",
+  "icons": [
+    {
+      "src": "https://personalcapsule.app/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "https://personalcapsule.app/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://personalcapsule.app/icon.jpg",
+      "sizes": "1024x1024",
+      "type": "image/jpeg"
+    }
+  ]
+}
