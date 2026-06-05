@@ -26,6 +26,11 @@ The app is designed for future reflection, not daily habit tracking.
 - About: https://personalcapsule.app/about/
 - Changelog: https://personalcapsule.app/changelog/
 - Blog: https://personalcapsule.app/blog/
+- Future Self Letters: https://personalcapsule.app/blog/category/future-self-letters.html
+- Digital Time Capsules: https://personalcapsule.app/blog/category/digital-time-capsules.html
+- Reflection & Personal Growth: https://personalcapsule.app/blog/category/reflection-personal-growth.html
+- Decision Journaling: https://personalcapsule.app/blog/category/decision-journaling.html
+- Memory Keeping: https://personalcapsule.app/blog/category/memory-keeping.html
 - Privacy Policy: https://personalcapsule.app/privacy.html
 - Terms of Use: https://personalcapsule.app/terms.html
 - Sitemap: https://personalcapsule.app/sitemap.xml
