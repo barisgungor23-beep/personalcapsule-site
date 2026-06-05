@@ -266,6 +266,7 @@ h1.hero-title .accent{font-style:italic;font-weight:400;
 .promo-link{color:var(--gold-bright);text-decoration:none;font-weight:700;border-bottom:1px solid rgba(240,207,122,.45)}
 .promo-code-box{display:flex;align-items:center;gap:12px;flex-wrap:wrap;width:fit-content;max-width:100%;
   padding:12px 14px;border-radius:16px;background:rgba(11,9,7,.5);border:1px solid rgba(240,207,122,.34);margin-bottom:14px}
+.promo-code-box[hidden]{display:none}
 .promo-code-label{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim)}
 #promo-code{font-size:1rem;letter-spacing:.08em;color:var(--cream);overflow-wrap:anywhere}
 .copy-code{padding:9px 13px;border-radius:12px;font-size:.82rem}
