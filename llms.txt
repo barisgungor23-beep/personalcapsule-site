@@ -43,3 +43,48 @@ PersonalCapsule is an iOS app for writing future self letters and creating priva
 PersonalCapsule is not a traditional daily journal. It focuses on future reflection by letting users seal memories, decisions, goals, and letters until a chosen future date.
 
 The app is built by Umut Baris Gungor, an indie iOS developer based in Turkey. PersonalCapsule does not collect journal content, capsule text, photos, voice recordings, or personal memories. Private content stays on the user's device and can sync through Apple iCloud if enabled.
+
+## Future Self Letters Articles
+
+- 50 Questions for Your Future Self: Reflection Prompts: https://personalcapsule.app/blog/50-questions-for-your-future-self.html
+- Future Self Journal Ideas: 15 Simple Ways to Start: https://personalcapsule.app/blog/future-self-journal-ideas.html
+- Future Self Letter Prompts for Big Life Changes: https://personalcapsule.app/blog/future-self-letter-prompts-for-big-life-changes.html
+- How to Write a Letter to Your Future Self (Examples & Prompts): https://personalcapsule.app/blog/how-to-write-a-letter-to-your-future-self.html
+- How to Write a Letter to Yourself in 5 Years: https://personalcapsule.app/blog/how-to-write-a-letter-to-yourself-in-5-years.html
+- Letter to Your Future Self: Real Examples to Inspire Yours: https://personalcapsule.app/blog/letter-to-your-future-self-examples.html
+- What to Say to Your Future Self (When You Don't Know Where to Start): https://personalcapsule.app/blog/what-to-say-to-your-future-self.html
+
+## Digital Time Capsules Articles
+
+- Best Digital Time Capsule Apps: What to Look For: https://personalcapsule.app/blog/best-digital-time-capsule-apps.html
+- Digital Time Capsule Ideas for Adults: https://personalcapsule.app/blog/digital-time-capsule-ideas-for-adults.html
+- Digital Time Capsule vs Traditional Journaling: https://personalcapsule.app/blog/digital-time-capsule-vs-traditional-journaling.html
+- How to Create a Private Time Capsule on iPhone: https://personalcapsule.app/blog/how-to-create-a-private-time-capsule-on-iphone.html
+- What Is a Digital Time Capsule? A Complete Guide: https://personalcapsule.app/blog/what-is-a-digital-time-capsule.html
+- What to Put in a Digital Time Capsule: 30 Ideas: https://personalcapsule.app/blog/what-to-put-in-a-digital-time-capsule.html
+
+## Reflection & Personal Growth Articles
+
+- Benefits of Keeping a Digital Journal: https://personalcapsule.app/blog/benefits-of-keeping-a-digital-journal.html
+- Goal Tracking vs Goal Reflection: The Bigger Picture: https://personalcapsule.app/blog/goal-tracking-vs-goal-reflection.html
+- How to Reflect on Your Goals Without Pressure: https://personalcapsule.app/blog/how-to-reflect-on-your-goals-without-pressure.html
+- Monthly Reflection Questions for Personal Growth: https://personalcapsule.app/blog/monthly-reflection-questions-for-personal-growth.html
+- Personal Growth Reflection Techniques That Are Easy to Keep: https://personalcapsule.app/blog/personal-growth-reflection-techniques.html
+- Why Reflection Improves Decision Making: https://personalcapsule.app/blog/why-reflection-improves-decision-making.html
+
+## Decision Journaling Articles
+
+- Decision Journal Examples: What Entries Actually Look Like: https://personalcapsule.app/blog/decision-journal-examples.html
+- Decision Journaling for Career and Life Choices: https://personalcapsule.app/blog/decision-journaling-for-career-and-life-choices.html
+- How to Review Past Decisions (Without Beating Yourself Up): https://personalcapsule.app/blog/how-to-review-past-decisions.html
+- Questions to Ask Before a Big Decision: https://personalcapsule.app/blog/questions-to-ask-before-a-big-decision.html
+- Why Hindsight Bias Changes Your Memory: https://personalcapsule.app/blog/why-hindsight-bias-changes-your-memory.html
+- Why Recording Life Decisions Can Change Your Future: https://personalcapsule.app/blog/why-recording-life-decisions-can-change-your-future.html
+
+## Memory Keeping Articles
+
+- Digital Memory Keeping Guide for Beginners: https://personalcapsule.app/blog/digital-memory-keeping-guide.html
+- How Photos Make Time Capsules More Meaningful: https://personalcapsule.app/blog/how-photos-make-time-capsules-more-meaningful.html
+- How to Preserve Important Memories (Before They Fade): https://personalcapsule.app/blog/how-to-preserve-important-memories.html
+- How to Track Life Milestones: https://personalcapsule.app/blog/how-to-track-life-milestones.html
+- Voice Notes and Memory Reflection: https://personalcapsule.app/blog/voice-notes-and-memory-reflection.html
