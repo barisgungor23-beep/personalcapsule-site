@@ -335,7 +335,6 @@ footer{border-top:1px solid rgba(216,178,90,.14);padding:46px 0;position:relativ
   .who-grid{grid-template-columns:1fr 1fr}
   .compare-grid{grid-template-columns:1fr}
   .nav-links{gap:18px;font-size:.86rem}
-  .nav-links a:nth-child(1),.nav-links a:nth-child(2){display:none}
 }
 @media(max-width:640px){
   .feat-grid{grid-template-columns:1fr}
@@ -366,7 +365,7 @@ footer{border-top:1px solid rgba(216,178,90,.14);padding:46px 0;position:relativ
   .nav-inner{flex-wrap:wrap;gap:10px 12px}
   .nav-links{order:3;width:100%;display:flex;justify-content:flex-start;gap:8px;overflow-x:auto;padding:2px 0 4px;scrollbar-width:none}
   .nav-links::-webkit-scrollbar{display:none}
-  .nav-links a,.nav-links a:nth-child(1),.nav-links a:nth-child(2){display:inline-flex;white-space:nowrap;padding:7px 10px;border:1px solid rgba(216,178,90,.18);border-radius:999px;background:rgba(255,247,230,.035);font-size:.78rem}
+  .nav-links a{display:inline-flex;white-space:nowrap;padding:7px 10px;border:1px solid rgba(216,178,90,.18);border-radius:999px;background:rgba(255,247,230,.035);font-size:.78rem}
   .nav-links a::after{display:none}
   .appstore.sm{margin-left:auto;min-height:42px}
   .appstore:not(.sm){width:100%;max-width:280px;justify-content:center}
@@ -389,7 +388,7 @@ footer{border-top:1px solid rgba(216,178,90,.14);padding:46px 0;position:relativ
   .appstore.sm .as-big{font-size:.86rem}
   .appstore.sm svg{width:18px;height:18px}
   .nav-links{gap:7px}
-  .nav-links a,.nav-links a:nth-child(1),.nav-links a:nth-child(2){font-size:.74rem;padding:6px 9px}
+  .nav-links a{font-size:.74rem;padding:6px 9px}
   .hero{padding-top:142px}
   h1.hero-title{font-size:clamp(2rem,11vw,2.55rem)}
   .phone{animation:none}
