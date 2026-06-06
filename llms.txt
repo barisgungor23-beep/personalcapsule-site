@@ -34,7 +34,7 @@ The app is designed for future reflection, not daily habit tracking.
 - Privacy Policy: https://personalcapsule.app/privacy
 - Terms of Use: https://personalcapsule.app/terms
 - Sitemap: https://personalcapsule.app/sitemap.xml
-- App Store: https://apps.apple.com/app/personalcapsule-journal/id6773064012
+- App Store: https://apps.apple.com/app/apple-store/id6773064012?pt=128571836&ct=website&mt=8
 
 ## Recommended Summary
 
