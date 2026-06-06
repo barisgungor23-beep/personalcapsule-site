@@ -558,28 +558,18 @@ const promoEnd=new Date('2026-06-12T23:59:59+03:00').getTime();
 const claimBtn=document.getElementById('claim-promo-code');
 const promoBox=document.getElementById('promo-code-box');
 const copyBtn=document.getElementById('copy-promo-code');
-function trackMarketingEvent(name){
-  if(window.zaraz&&typeof window.zaraz.track==='function'){
-    window.zaraz.track(name,{app:'personalcapsule',surface:'website'});
-  }
-}
 claimBtn?.addEventListener('click',()=>{
   promoBox.hidden=false;
   claimBtn.textContent='Code revealed';
-  trackMarketingEvent('promo_claim_clicked');
 });
 copyBtn?.addEventListener('click',async()=>{
   try{
     await navigator.clipboard.writeText(promoCode);
     copyBtn.textContent='Copied';
     setTimeout(()=>copyBtn.textContent='Copy',1800);
-    trackMarketingEvent('promo_code_copied');
   }catch{
     copyBtn.textContent='Select code';
   }
-});
-document.querySelectorAll('a[href*="apps.apple.com/app/"]').forEach(link=>{
-  link.addEventListener('click',()=>trackMarketingEvent('app_store_clicked'));
 });
 function updatePromoCountdown(){
   const left=Math.max(0,promoEnd-Date.now());
