@@ -255,14 +255,15 @@
   nav,.atmos,footer,.page-main>header,.page-main>section:not(#pdf-designer),#pdf-designer .sec-head,.ow-tool-panel,.ow-preview-label,.ow-preview-wrap{display:none!important}
   .page-main,#pdf-designer,#pdf-designer .wrap,.ow-tool{display:block!important;width:210mm!important;min-height:297mm!important;padding:0!important;margin:0!important;background:#fff!important;border:none!important;box-shadow:none!important}
   .ow-print-pages{display:block!important;width:210mm!important;margin:0!important;padding:0!important}
-  .ow-print-sheet{display:block!important;position:relative!important;width:210mm!important;height:297mm!important;margin:0!important;padding:18mm 18mm 18mm!important;background:linear-gradient(178deg,var(--paper-bg),var(--paper-edge))!important;color:var(--paper-ink)!important;box-shadow:none!important;border-radius:0!important;overflow:hidden!important;page-break-after:always;break-after:page;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .ow-print-sheet.is-continued{padding-top:18mm!important;padding-bottom:18mm!important}
+  .ow-print-sheet{display:block!important;position:relative!important;width:210mm!important;height:297mm!important;margin:0!important;padding:16mm 17mm 15mm!important;background:linear-gradient(178deg,var(--paper-bg),var(--paper-edge))!important;color:var(--paper-ink)!important;box-shadow:none!important;border-radius:0!important;overflow:hidden!important;page-break-after:always;break-after:page;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ow-print-sheet.is-continued{padding-top:16mm!important;padding-bottom:15mm!important}
   .ow-print-sheet:last-child{page-break-after:auto;break-after:auto}
   .ow-print-sheet:before{inset:8mm!important}
   .ow-print-sheet:after{inset:11mm!important}
   .ow-print-sheet h3{font-size:30pt!important}
-  .ow-letter-body{font-size:12pt!important;line-height:1.62!important}
-  .ow-print-sheet.is-continued .ow-letter-body{padding-top:5mm!important}
+  .ow-letter-body{font-size:11.5pt!important;line-height:1.5!important}
+  .ow-letter-body p{margin-bottom:.72em!important}
+  .ow-print-sheet.is-continued .ow-letter-body{padding-top:0!important}
 }
 </style>
 </head>
@@ -577,13 +578,13 @@ function paginate(text){
   const pages=[];
   let current=[];
   let count=0;
-  let limit=250;
+  let limit=330;
   for(const item of words){
     if(count>=limit && current.length){
       pages.push(current);
       current=[];
       count=0;
-      limit=385;
+      limit=500;
     }
     current.push(item);
     count+=1;
