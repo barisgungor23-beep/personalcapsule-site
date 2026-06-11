@@ -255,12 +255,14 @@
   nav,.atmos,footer,.page-main>header,.page-main>section:not(#pdf-designer),#pdf-designer .sec-head,.ow-tool-panel,.ow-preview-label,.ow-preview-wrap{display:none!important}
   .page-main,#pdf-designer,#pdf-designer .wrap,.ow-tool{display:block!important;width:210mm!important;min-height:297mm!important;padding:0!important;margin:0!important;background:#fff!important;border:none!important;box-shadow:none!important}
   .ow-print-pages{display:block!important;width:210mm!important;margin:0!important;padding:0!important}
-  .ow-print-sheet{display:block!important;position:relative!important;width:210mm!important;height:297mm!important;margin:0!important;padding:22mm 20mm 26mm!important;background:linear-gradient(178deg,var(--paper-bg),var(--paper-edge))!important;color:var(--paper-ink)!important;box-shadow:none!important;border-radius:0!important;overflow:hidden!important;page-break-after:always;break-after:page;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ow-print-sheet{display:block!important;position:relative!important;width:210mm!important;height:297mm!important;margin:0!important;padding:18mm 18mm 18mm!important;background:linear-gradient(178deg,var(--paper-bg),var(--paper-edge))!important;color:var(--paper-ink)!important;box-shadow:none!important;border-radius:0!important;overflow:hidden!important;page-break-after:always;break-after:page;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ow-print-sheet.is-continued{padding-top:18mm!important;padding-bottom:18mm!important}
   .ow-print-sheet:last-child{page-break-after:auto;break-after:auto}
   .ow-print-sheet:before{inset:8mm!important}
   .ow-print-sheet:after{inset:11mm!important}
   .ow-print-sheet h3{font-size:30pt!important}
   .ow-letter-body{font-size:12pt!important;line-height:1.62!important}
+  .ow-print-sheet.is-continued .ow-letter-body{padding-top:5mm!important}
 }
 </style>
 </head>
@@ -575,13 +577,13 @@ function paginate(text){
   const pages=[];
   let current=[];
   let count=0;
-  let limit=210;
+  let limit=250;
   for(const item of words){
     if(count>=limit && current.length){
       pages.push(current);
       current=[];
       count=0;
-      limit=305;
+      limit=385;
     }
     current.push(item);
     count+=1;
@@ -622,10 +624,11 @@ function createPrintSheet(pageParagraphs,index,total){
   const openTitle=escapeHTML(openInput.value.trim() || "You miss me");
   const fromName=escapeHTML(fromInput.value.trim() || "Your name");
   const toName=escapeHTML(toInput.value.trim() || "Their name");
+  if(continued){
+    article.classList.add("is-continued");
+  }
   article.innerHTML=`
-    <small>${continued ? "Open when letter · continued" : "Open when"}</small>
-    <h3>${openTitle}</h3>
-    ${continued ? "" : `<div class="ow-meta"><div><strong>From</strong><br><span>${fromName}</span></div><div><strong>To</strong><br><span>${toName}</span></div></div>`}
+    ${continued ? "" : `<small>Open when</small><h3>${openTitle}</h3><div class="ow-meta"><div><strong>From</strong><br><span>${fromName}</span></div><div><strong>To</strong><br><span>${toName}</span></div></div>`}
     <div class="ow-letter-body"></div>
     <div class="ow-made">Created with PersonalCapsule</div>
     <div class="ow-print-page-number">Page ${index+1} of ${total}</div>
