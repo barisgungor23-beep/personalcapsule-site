@@ -208,19 +208,29 @@
 .ow-chip-row{display:flex;flex-wrap:wrap;gap:8px}
 .ow-chip{border:1px solid rgba(216,178,90,.22);background:rgba(255,247,230,.04);color:var(--cream-dim);border-radius:999px;padding:8px 11px;cursor:pointer;font-weight:700;font-size:.8rem}
 .ow-chip[aria-selected="true"]{background:linear-gradient(180deg,var(--gold-bright),var(--gold));color:#221708;border-color:transparent}
+.ow-style-chip{border:1px solid rgba(216,178,90,.22);background:rgba(255,247,230,.04);color:var(--cream-dim);border-radius:12px;padding:9px 11px;cursor:pointer;font-weight:700;font-size:.8rem}
+.ow-style-chip[aria-selected="true"]{background:rgba(216,178,90,.14);color:var(--cream);border-color:rgba(240,207,122,.55)}
 .ow-print-btn{width:100%;margin-top:18px;border:none;border-radius:15px;background:linear-gradient(180deg,var(--gold-bright),var(--gold));color:#23190a;font-weight:800;padding:15px 18px;cursor:pointer}
 .ow-note{margin-top:12px;color:var(--text-dim);font-size:.82rem;line-height:1.45}
 .ow-preview-wrap{padding:24px;border-radius:28px;background:radial-gradient(circle at 50% 0,rgba(216,178,90,.12),transparent 55%),rgba(255,247,230,.035);border:1px solid var(--glass-line)}
 .ow-preview-label{text-align:center;color:var(--text-faint);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700;margin-bottom:16px}
-.ow-preview-sheet{width:min(620px,100%);min-height:780px;margin:0 auto;border-radius:8px;background:linear-gradient(178deg,#f6ead4,#ead8b6);color:#362316;box-shadow:0 34px 90px -38px rgba(0,0,0,.88);padding:54px 48px;text-align:center;position:relative;overflow:hidden}
-.ow-preview-sheet:before{content:"";position:absolute;inset:18px;border:1px solid rgba(154,90,46,.35);pointer-events:none}
-.ow-preview-sheet small{font:700 .68rem/1 'Hanken Grotesk',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#9a5a2e}
-.ow-preview-sheet h3{font-family:'Fraunces',Georgia,serif;font-size:clamp(2rem,5vw,3.1rem);font-weight:390;line-height:1.02;margin:20px 0 12px;color:#362316}
-.ow-meta{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:28px 0;text-align:left;font-size:.95rem;color:#765337}
-.ow-meta div{border-bottom:1px solid rgba(154,90,46,.28);padding-bottom:7px}
-.ow-letter-body{text-align:left;font-family:Georgia,serif;font-size:1.08rem;line-height:1.72;color:#3d2b1b}
+.ow-preview-sheet,.ow-print-sheet{--paper-bg:#f6ead4;--paper-edge:#ead8b6;--paper-ink:#362316;--paper-soft:#765337;--paper-line:rgba(154,90,46,.35);--paper-accent:#9a5a2e}
+.ow-preview-sheet[data-paper="rose"],.ow-print-sheet[data-paper="rose"]{--paper-bg:#fbf0ee;--paper-edge:#f4e2e1;--paper-ink:#4a2f33;--paper-soft:#8a6168;--paper-line:rgba(194,112,138,.36);--paper-accent:#b95f7c}
+.ow-preview-sheet[data-paper="sage"],.ow-print-sheet[data-paper="sage"]{--paper-bg:#f3efe1;--paper-edge:#e4dfc9;--paper-ink:#2b322a;--paper-soft:#5f6a57;--paper-line:rgba(93,125,89,.34);--paper-accent:#5d7d59}
+.ow-preview-sheet[data-paper="dusk"],.ow-print-sheet[data-paper="dusk"]{--paper-bg:#f1eee3;--paper-edge:#e1e4df;--paper-ink:#262d36;--paper-soft:#5c6675;--paper-line:rgba(79,108,142,.34);--paper-accent:#4f6c8e}
+.ow-preview-sheet[data-paper="noir"],.ow-print-sheet[data-paper="noir"]{--paper-bg:#171310;--paper-edge:#100d0a;--paper-ink:#efe2cf;--paper-soft:#bca982;--paper-line:rgba(240,207,122,.38);--paper-accent:#f0cf7a}
+.ow-preview-sheet{width:min(620px,100%);min-height:780px;margin:0 auto;border-radius:8px;background:linear-gradient(178deg,var(--paper-bg),var(--paper-edge));color:var(--paper-ink);box-shadow:0 34px 90px -38px rgba(0,0,0,.88);padding:54px 48px;text-align:center;position:relative;overflow:hidden}
+.ow-preview-sheet:before,.ow-print-sheet:before{content:"";position:absolute;inset:18px;border:1px solid var(--paper-line);pointer-events:none}
+.ow-preview-sheet:after,.ow-print-sheet:after{content:"";position:absolute;inset:26px;border:1px solid color-mix(in srgb,var(--paper-line) 62%,transparent);pointer-events:none}
+.ow-preview-sheet small,.ow-print-sheet small{font:700 .68rem/1 'Hanken Grotesk',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--paper-accent)}
+.ow-preview-sheet h3,.ow-print-sheet h3{font-family:'Fraunces',Georgia,serif;font-size:clamp(2rem,5vw,3.1rem);font-weight:390;line-height:1.02;margin:20px 0 12px;color:var(--paper-ink)}
+.ow-meta{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:28px 0;text-align:left;font-size:.95rem;color:var(--paper-soft)}
+.ow-meta div{border-bottom:1px solid color-mix(in srgb,var(--paper-line) 72%,transparent);padding-bottom:7px}
+.ow-letter-body{text-align:left;font-family:Georgia,serif;font-size:1.08rem;line-height:1.72;color:var(--paper-ink)}
 .ow-letter-body p{margin:0 0 1em}
-.ow-made{margin-top:32px;color:#7a5d40;font-style:italic}
+.ow-made{margin-top:32px;color:var(--paper-soft);font-style:italic}
+.ow-print-pages{display:none}
+.ow-print-page-number{position:absolute;left:0;right:0;bottom:12mm;text-align:center;font:700 9px/1 'Hanken Grotesk',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--paper-soft)}
 .ow-faq{display:grid;gap:14px}
 .ow-faq details{padding:20px 22px;border-radius:18px;background:rgba(255,247,230,.035);border:1px solid rgba(216,178,90,.16)}
 .ow-faq summary{cursor:pointer;font-weight:800;color:var(--cream)}
@@ -242,10 +252,15 @@
 @media print{
   @page{size:A4 portrait;margin:0}
   html,body{width:210mm!important;min-height:297mm!important;margin:0!important;background:#fff!important;color:#000!important}
-  nav,.atmos,footer,.page-main>header,.page-main>section:not(#pdf-designer),#pdf-designer .sec-head,.ow-tool-panel,.ow-preview-label{display:none!important}
-  .page-main,#pdf-designer,#pdf-designer .wrap,.ow-tool,.ow-preview-wrap{display:block!important;width:210mm!important;min-height:297mm!important;padding:0!important;margin:0!important;background:#fff!important;border:none!important;box-shadow:none!important}
-  .ow-preview-sheet{display:block!important;width:210mm!important;min-height:297mm!important;margin:0!important;padding:22mm 20mm!important;box-shadow:none!important;border-radius:0!important;overflow:hidden!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .ow-preview-sheet:before{inset:8mm!important}
+  nav,.atmos,footer,.page-main>header,.page-main>section:not(#pdf-designer),#pdf-designer .sec-head,.ow-tool-panel,.ow-preview-label,.ow-preview-wrap{display:none!important}
+  .page-main,#pdf-designer,#pdf-designer .wrap,.ow-tool{display:block!important;width:210mm!important;min-height:297mm!important;padding:0!important;margin:0!important;background:#fff!important;border:none!important;box-shadow:none!important}
+  .ow-print-pages{display:block!important;width:210mm!important;margin:0!important;padding:0!important}
+  .ow-print-sheet{display:block!important;position:relative!important;width:210mm!important;height:297mm!important;margin:0!important;padding:22mm 20mm 26mm!important;background:linear-gradient(178deg,var(--paper-bg),var(--paper-edge))!important;color:var(--paper-ink)!important;box-shadow:none!important;border-radius:0!important;overflow:hidden!important;page-break-after:always;break-after:page;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ow-print-sheet:last-child{page-break-after:auto;break-after:auto}
+  .ow-print-sheet:before{inset:8mm!important}
+  .ow-print-sheet:after{inset:11mm!important}
+  .ow-print-sheet h3{font-size:30pt!important}
+  .ow-letter-body{font-size:12pt!important;line-height:1.62!important}
 }
 </style>
 </head>
@@ -347,7 +362,10 @@
       </div>
       <div class="ow-tool">
         <aside class="ow-tool-panel reveal ow-print-hide">
+          <label>Open when idea</label>
           <div class="ow-chip-row" id="templateChips" aria-label="Letter templates"></div>
+          <label>Paper style</label>
+          <div class="ow-chip-row" id="styleChips" aria-label="Paper style templates"></div>
           <label for="fromInput">From</label>
           <input id="fromInput" autocomplete="off" placeholder="Your name">
           <label for="toInput">To</label>
@@ -372,6 +390,7 @@
             <div class="ow-made">Created with PersonalCapsule</div>
           </article>
         </div>
+        <div class="ow-print-pages" id="printPages" aria-hidden="true"></div>
       </div>
     </div>
   </section>
@@ -469,10 +488,55 @@ const templates=[
     chip:"One year",
     open:"One year has passed",
     body:"A year can change more than we expect. I wonder what you know now that you did not know when this was written.\n\nLook back gently. Notice what changed, what stayed, and what you are proud of. This letter was written with hope for you."
+  },
+  {
+    id:"best-friend",
+    chip:"Best friend",
+    open:"You need your best friend",
+    body:"If you opened this, I hope you know you are not alone. You have been one of the safest and funniest parts of my life, and I am grateful for every ordinary moment that became better because you were there.\n\nNo matter how busy life gets, I am still cheering for you. You are loved, appreciated, and never as far from me as a calendar or a map might suggest."
+  },
+  {
+    id:"love",
+    chip:"Love",
+    open:"You need to feel loved",
+    body:"I hope this letter finds you on a day when you need to feel held by words. You are loved in the quiet ways too: in small memories, in familiar jokes, in the way your presence changes a room.\n\nKeep this close. Let it remind you that you matter deeply, not because of what you do, but because of who you are."
+  },
+  {
+    id:"anniversary",
+    chip:"Anniversary",
+    open:"It is our anniversary",
+    body:"Today is a small doorway back into everything we have lived together. I hope you remember not only the big moments, but the tiny ones: the looks, the laughter, the ordinary days that became ours.\n\nThank you for being part of this story. I am grateful for what we have been, what we are, and what we are still becoming."
+  },
+  {
+    id:"hard-day",
+    chip:"Hard day",
+    open:"You are having a hard day",
+    body:"If today feels like too much, let this letter be permission to stop pushing for a moment. You do not have to be impressive right now. You only have to be gentle enough to keep going.\n\nOne hard day is not the whole story. Rest if you need to. Begin again when you can."
+  },
+  {
+    id:"graduation",
+    chip:"Graduation",
+    open:"You graduate",
+    body:"You made it here. Maybe it took more effort than people saw, more doubt than you admitted, and more patience than you expected. Still, you arrived.\n\nLet yourself feel proud today. A new chapter is opening, and you are allowed to walk into it with hope."
+  },
+  {
+    id:"future-self",
+    chip:"Future self",
+    open:"The future arrives",
+    body:"Future me, I am writing this from a version of life you may barely remember. I hope you are kinder to yourself now. I hope you kept the parts of us that mattered.\n\nLook back with honesty, but not cruelty. Notice how far we came. I am sending this forward with trust."
   }
 ];
 
+const paperStyles=[
+  {id:"classic", label:"Classic"},
+  {id:"rose", label:"Rose"},
+  {id:"sage", label:"Sage"},
+  {id:"dusk", label:"Dusk"},
+  {id:"noir", label:"Noir"}
+];
+
 const templateChips=document.getElementById("templateChips");
+const styleChips=document.getElementById("styleChips");
 const fromInput=document.getElementById("fromInput");
 const toInput=document.getElementById("toInput");
 const openInput=document.getElementById("openInput");
@@ -481,13 +545,100 @@ const fromOut=document.getElementById("fromOut");
 const toOut=document.getElementById("toOut");
 const previewTitle=document.getElementById("previewTitle");
 const letterBody=document.getElementById("letterBody");
+const previewSheet=document.getElementById("letterSheet");
+const printPages=document.getElementById("printPages");
+let selectedPaper="classic";
 
-function writeParagraphs(text){
-  letterBody.replaceChildren();
-  String(text || "").split(/\n\s*\n/).map(p=>p.trim()).filter(Boolean).forEach(value=>{
+function paragraphsFromText(text){
+  return String(text || "").split(/\n\s*\n/).map(p=>p.trim()).filter(Boolean);
+}
+
+function writeParagraphs(container, paragraphs){
+  container.replaceChildren();
+  paragraphs.forEach(value=>{
     const p=document.createElement("p");
     p.textContent=value;
-    letterBody.appendChild(p);
+    container.appendChild(p);
+  });
+}
+
+function splitWords(paragraphs){
+  return paragraphs.flatMap((paragraph,index)=>paragraph.split(/\s+/).filter(Boolean).map((word,wordIndex)=>({
+    word,
+    breakBefore:index>0 && wordIndex===0
+  })));
+}
+
+function paginate(text){
+  const words=splitWords(paragraphsFromText(text));
+  if(!words.length) return [[]];
+  const pages=[];
+  let current=[];
+  let count=0;
+  let limit=210;
+  for(const item of words){
+    if(count>=limit && current.length){
+      pages.push(current);
+      current=[];
+      count=0;
+      limit=305;
+    }
+    current.push(item);
+    count+=1;
+  }
+  if(current.length) pages.push(current);
+  return pages;
+}
+
+function wordsToParagraphs(pageWords){
+  const paragraphs=[];
+  let current=[];
+  pageWords.forEach(item=>{
+    if(item.breakBefore && current.length){
+      paragraphs.push(current.join(" "));
+      current=[];
+    }
+    current.push(item.word);
+  });
+  if(current.length) paragraphs.push(current.join(" "));
+  return paragraphs;
+}
+
+function escapeHTML(value){
+  return String(value).replace(/[&<>"']/g, char=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    "\"":"&quot;",
+    "'":"&#39;"
+  }[char]));
+}
+
+function createPrintSheet(pageParagraphs,index,total){
+  const article=document.createElement("article");
+  article.className="ow-print-sheet";
+  article.dataset.paper=selectedPaper;
+  const continued=index>0;
+  const openTitle=escapeHTML(openInput.value.trim() || "You miss me");
+  const fromName=escapeHTML(fromInput.value.trim() || "Your name");
+  const toName=escapeHTML(toInput.value.trim() || "Their name");
+  article.innerHTML=`
+    <small>${continued ? "Open when letter · continued" : "Open when"}</small>
+    <h3>${openTitle}</h3>
+    ${continued ? "" : `<div class="ow-meta"><div><strong>From</strong><br><span>${fromName}</span></div><div><strong>To</strong><br><span>${toName}</span></div></div>`}
+    <div class="ow-letter-body"></div>
+    <div class="ow-made">Created with PersonalCapsule</div>
+    <div class="ow-print-page-number">Page ${index+1} of ${total}</div>
+  `;
+  writeParagraphs(article.querySelector(".ow-letter-body"), pageParagraphs);
+  return article;
+}
+
+function buildPrintPages(){
+  const pages=paginate(bodyInput.value);
+  printPages.replaceChildren();
+  pages.forEach((pageWords,index)=>{
+    printPages.appendChild(createPrintSheet(wordsToParagraphs(pageWords),index,pages.length));
   });
 }
 
@@ -495,7 +646,9 @@ function render(){
   fromOut.textContent=fromInput.value.trim() || "Your name";
   toOut.textContent=toInput.value.trim() || "Their name";
   previewTitle.textContent=openInput.value.trim() || "You miss me";
-  writeParagraphs(bodyInput.value);
+  previewSheet.dataset.paper=selectedPaper;
+  writeParagraphs(letterBody, paragraphsFromText(bodyInput.value));
+  buildPrintPages();
 }
 
 templates.forEach((template,index)=>{
@@ -505,13 +658,28 @@ templates.forEach((template,index)=>{
   button.textContent=template.chip;
   button.setAttribute("aria-selected",index===0 ? "true" : "false");
   button.addEventListener("click",()=>{
-    document.querySelectorAll(".ow-chip").forEach(item=>item.setAttribute("aria-selected","false"));
+    templateChips.querySelectorAll(".ow-chip").forEach(item=>item.setAttribute("aria-selected","false"));
     button.setAttribute("aria-selected","true");
     openInput.value=template.open;
     bodyInput.value=template.body;
     render();
   });
   templateChips.appendChild(button);
+});
+
+paperStyles.forEach((style,index)=>{
+  const button=document.createElement("button");
+  button.type="button";
+  button.className="ow-style-chip";
+  button.textContent=style.label;
+  button.setAttribute("aria-selected",index===0 ? "true" : "false");
+  button.addEventListener("click",()=>{
+    styleChips.querySelectorAll(".ow-style-chip").forEach(item=>item.setAttribute("aria-selected","false"));
+    button.setAttribute("aria-selected","true");
+    selectedPaper=style.id;
+    render();
+  });
+  styleChips.appendChild(button);
 });
 
 openInput.value=templates[0].open;
