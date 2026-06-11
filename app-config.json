@@ -1,5 +1,86 @@
 {
   "version": 1,
+  "onboarding": {
+    "enabled": true,
+    "pages": [
+      {
+        "icon": "cube.transparent",
+        "title": "Save today for the future.",
+        "subtitle": "Capture your thoughts, decisions, and memories now. Reopen them when the time is right.",
+        "style": "capsuleMarquee",
+        "showsNameInput": false
+      },
+      {
+        "icon": "envelope.fill",
+        "title": "Write to your future self.",
+        "subtitle": "Seal a letter, a goal, a decision, or a moment. Open it when the date arrives.",
+        "style": "capsuleMarquee",
+        "showsNameInput": false
+      },
+      {
+        "icon": "signpost.right.fill",
+        "title": "See your decisions more clearly.",
+        "subtitle": "Save your fear, hope, and confidence in the moment. Later, see what changed.",
+        "style": "capsuleMarquee",
+        "showsNameInput": false
+      },
+      {
+        "icon": "lock.fill",
+        "title": "Private by design.",
+        "subtitle": "No account required. Your capsules stay on your device, with optional iCloud sync.",
+        "style": "icon",
+        "showsNameInput": false
+      },
+      {
+        "icon": "sparkles",
+        "title": "Create your first capsule.",
+        "subtitle": "Start with a note your future self will be glad to read.",
+        "style": "capsuleMarquee",
+        "showsNameInput": true
+      }
+    ],
+    "localizations": {
+      "tr": {
+        "pages": [
+          {
+            "icon": "cube.transparent",
+            "title": "Bugünü geleceğe sakla.",
+            "subtitle": "Düşüncelerini, kararlarını ve anılarını şimdi kaydet. Zamanı geldiğinde yeniden aç.",
+            "style": "capsuleMarquee",
+            "showsNameInput": false
+          },
+          {
+            "icon": "envelope.fill",
+            "title": "Gelecekteki kendine yaz.",
+            "subtitle": "Bir mektup, hedef, karar veya anı oluştur. Seçtiğin tarihe kadar mühürlü kalsın.",
+            "style": "capsuleMarquee",
+            "showsNameInput": false
+          },
+          {
+            "icon": "signpost.right.fill",
+            "title": "Kararlarını daha net gör.",
+            "subtitle": "O anki korkunu, umudunu ve güvenini kaydet. Sonra neyin değiştiğine bak.",
+            "style": "capsuleMarquee",
+            "showsNameInput": false
+          },
+          {
+            "icon": "lock.fill",
+            "title": "Gizlilik için tasarlandı.",
+            "subtitle": "Hesap gerekmez. Kapsüllerin cihazında kalır; istersen iCloud ile eşitlenir.",
+            "style": "icon",
+            "showsNameInput": false
+          },
+          {
+            "icon": "sparkles",
+            "title": "İlk kapsülünü oluştur.",
+            "subtitle": "Gelecekteki kendinin okumaktan mutlu olacağı bir notla başla.",
+            "style": "capsuleMarquee",
+            "showsNameInput": true
+          }
+        ]
+      }
+    }
+  },
   "paywall": {
     "enabled": true,
     "badge": "Lifetime Premium",
