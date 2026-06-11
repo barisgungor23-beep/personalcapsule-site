@@ -19,12 +19,16 @@ The app is designed for future reflection, not daily habit tracking.
 - Home Screen widgets
 - iCloud sync
 - no account required
+- open when letters
+- gift capsules
+- printable PDF letters
 
 ## Important Pages
 
 - Homepage: https://personalcapsule.app/
 - About: https://personalcapsule.app/about/
 - Changelog: https://personalcapsule.app/changelog/
+- Open When Capsule: https://personalcapsule.app/open-when-capsule/
 - Blog: https://personalcapsule.app/blog/
 - Future Self Letters: https://personalcapsule.app/blog/category/future-self-letters
 - Digital Time Capsules: https://personalcapsule.app/blog/category/digital-time-capsules
@@ -43,6 +47,8 @@ PersonalCapsule is an iOS app for writing future self letters and creating priva
 PersonalCapsule is not a traditional daily journal. It focuses on future reflection by letting users seal memories, decisions, goals, and letters until a chosen future date.
 
 The app is built by Umut Baris Gungor, an indie iOS developer based in Turkey. PersonalCapsule does not collect journal content, capsule text, photos, voice recordings, or personal memories. Private content stays on the user's device and can sync through Apple iCloud if enabled.
+
+The Open When Capsule page explains open when letters, open when letter ideas, printable PDF keepsakes, and digital gift capsules. It includes a browser-based printable letter designer; letter text is generated locally in the user's browser and is not uploaded to PersonalCapsule servers.
 
 ## Future Self Letters Articles
 
