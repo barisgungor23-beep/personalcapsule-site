@@ -8,6 +8,7 @@ const MODEL_FILE = path.join(ROOT, "outputs", "admin", "admin-read-model.json");
 const OUTPUT_FILE = path.join(ROOT, "outputs", "admin", "index.html");
 const CONTROL_REPORT_FILE = path.join(ROOT, "outputs", "admin", "control-report.json");
 const DRAFT_COMPARISON_FILE = path.join(ROOT, "outputs", "admin", "draft-comparison-report.json");
+const DRAFT_QUALITY_FILE = path.join(ROOT, "outputs", "admin", "draft-quality-report.json");
 const PUBLISH_READINESS_FILE = path.join(ROOT, "outputs", "admin", "publish-readiness-report.json");
 const PUBLISH_DRY_RUN_FILE = path.join(ROOT, "outputs", "admin", "publish-dry-run-report.json");
 const PUBLISH_ROLLBACK_FILE = path.join(ROOT, "outputs", "admin", "publish-rollback-plan.json");
@@ -142,6 +143,15 @@ function readDraftComparisonReport() {
   if (!fs.existsSync(DRAFT_COMPARISON_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(DRAFT_COMPARISON_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readDraftQualityReport() {
+  if (!fs.existsSync(DRAFT_QUALITY_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(DRAFT_QUALITY_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -842,6 +852,62 @@ function renderDraftComparison(report) {
     </section>`;
 }
 
+function renderDraftQuality(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Draft Quality</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No draft quality report yet</strong>
+            <span>Run node scripts/audit-draft-quality.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const items = Array.isArray(report.items) ? report.items : [];
+  const status = summary.status === "passed" ? "good" : summary.status === "review" ? "warn" : "bad";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Draft Quality</h2>
+        <span class="pill ${status}">${escapeHtml(summary.status || "unknown")}</span>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Drafts</span><strong>${escapeHtml(summary.drafts || 0)}</strong></div>
+        <div class="detail-stat"><span>Ready</span><strong>${escapeHtml(summary.ready || 0)}</strong></div>
+        <div class="detail-stat"><span>Blocked</span><strong>${escapeHtml(summary.blocked || 0)}</strong></div>
+        <div class="detail-stat"><span>Fixes</span><strong>${escapeHtml((summary.totalBlockers || 0) + (summary.totalWarnings || 0))}</strong></div>
+      </div>
+      <div class="mini-list draft-quality-list">
+        ${
+          items.length
+            ? items
+                .map(
+                  (item) => `
+                    <div class="${item.status === "ready" ? "passed" : "needs-review"}">
+                      <strong>${escapeHtml(item.title || item.id)}</strong>
+                      <span>${escapeHtml(item.status)} · score ${escapeHtml(item.score || 0)} · ${escapeHtml(item.kind || "draft")}</span>
+                      ${
+                        item.fixes && item.fixes.length
+                          ? `<span>${escapeHtml(item.fixes.slice(0, 3).map((fix) => fix.fix).join(" · "))}</span>`
+                          : `<span>No draft fixes needed.</span>`
+                      }
+                    </div>`
+                )
+                .join("")
+            : `<div class="passed"><strong>No active drafts</strong><span>There is no draft content waiting for quality review.</span></div>`
+        }
+      </div>
+    </section>`;
+}
+
 function renderPublishWorkflow() {
   const steps = [
     ["Create Draft", "Published content is copied into a private draft file."],
@@ -947,6 +1013,7 @@ function render(model) {
   const editorRulesJson = JSON.stringify(model.editorRules.article || {}).replaceAll("</", "<\\/");
   const controlReport = readControlReport();
   const draftComparisonReport = readDraftComparisonReport();
+  const draftQualityReport = readDraftQualityReport();
   const publishReadinessReport = readPublishReadinessReport();
   const publishDryRunReport = readPublishDryRunReport();
   const publishRollbackPlan = readPublishRollbackPlan();
@@ -1542,6 +1609,8 @@ function render(model) {
         ${renderRestoreDryRun(restoreDryRunReport)}
 
         ${renderRestoreReport(restoreReport)}
+
+        ${renderDraftQuality(draftQualityReport)}
 
         ${renderDraftComparison(draftComparisonReport)}
 

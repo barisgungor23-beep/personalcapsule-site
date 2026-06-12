@@ -49,6 +49,7 @@ function main() {
       "Backup Snapshot",
       "Restore Dry Run",
       "Restore Result",
+      "Draft Quality",
       "Draft Comparison",
       "Draft Publish Workflow",
       "New Article Draft",
