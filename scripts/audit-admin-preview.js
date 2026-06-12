@@ -43,6 +43,8 @@ function main() {
       "SEO Preview",
       "Keywords",
       "Quality checks",
+      "Fix list",
+      "Issues",
       "Related links",
       "FAQ",
       "Local admin preview only",

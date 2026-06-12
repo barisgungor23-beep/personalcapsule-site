@@ -103,42 +103,56 @@ function scoreArticle(article) {
       label: "SEO title length",
       passed: makeLengthStatus(article.seoTitle, 10, 65) === "ok",
       weight: 20,
+      reason: "SEO title should exist and stay within a readable search-result length.",
+      fix: "Keep the SEO title clear, specific and under 65 characters.",
     },
     {
       id: "meta_description",
       label: "Meta description length",
       passed: makeLengthStatus(article.description, 70, 165) === "ok",
       weight: 20,
+      reason: "Meta description helps people, Google and AI previews understand the page quickly.",
+      fix: "Use a natural 70-165 character summary that includes the main intent.",
     },
     {
       id: "keywords",
       label: "Keyword coverage",
       passed: Array.isArray(article.keywords) && article.keywords.length >= 5,
       weight: 15,
+      reason: "Keywords help the admin panel understand the article topic and internal search intent.",
+      fix: "Add 5-8 focused keywords that match the article topic.",
     },
     {
       id: "body_depth",
       label: "Content depth",
       passed: Array.isArray(article.body) && article.body.length >= 8,
       weight: 15,
+      reason: "A thin article is less useful for readers and gives search systems less context.",
+      fix: "Add practical sections, examples or steps until the article answers the topic fully.",
     },
     {
       id: "related_links",
       label: "Related links",
       passed: Array.isArray(article.related) && article.related.length >= 2,
       weight: 10,
+      reason: "Related links connect articles into a topic cluster and help visitors keep reading.",
+      fix: "Add at least two relevant internal links.",
     },
     {
       id: "faq",
       label: "FAQ coverage",
       passed: Array.isArray(article.faq) && article.faq.length >= 1,
       weight: 10,
+      reason: "FAQ content gives direct answers that are useful for Google snippets and AI systems.",
+      fix: "Add at least one honest question and answer that fits the article.",
     },
     {
       id: "cta",
       label: "CTA configured",
       passed: Boolean(article.cta && article.cta.type && article.cta.heading && article.cta.text),
       weight: 10,
+      reason: "CTA turns useful content into a clear next step without making the article feel pushy.",
+      fix: "Use a soft App Store or Open When CTA that matches the article topic.",
     },
   ];
 
@@ -146,11 +160,22 @@ function scoreArticle(article) {
   let status = "risk";
   if (score >= 90) status = "good";
   else if (score >= 70) status = "review";
+  const issues = checks
+    .filter((check) => !check.passed)
+    .map((check) => ({
+      id: check.id,
+      label: check.label,
+      reason: check.reason,
+      fix: check.fix,
+      lostPoints: check.weight,
+    }));
 
   return {
     score,
     status,
     checks,
+    issues,
+    issueCount: issues.length,
   };
 }
 
@@ -278,6 +303,8 @@ function main() {
         qualityScore: quality.score,
         qualityStatus: quality.status,
         qualityChecks: quality.checks,
+        qualityIssues: quality.issues,
+        qualityIssueCount: quality.issueCount,
       };
     })
     .sort((a, b) => a.categoryName.localeCompare(b.categoryName) || a.title.localeCompare(b.title));

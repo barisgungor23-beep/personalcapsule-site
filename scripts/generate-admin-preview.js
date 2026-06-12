@@ -64,6 +64,7 @@ function renderArticles(articles) {
           <td>${escapeHtml(article.categoryName)}</td>
           <td><span class="pill ${statusClass(article.status)}">${escapeHtml(article.status)}</span></td>
           <td><span class="pill ${statusClass(article.qualityStatus === "good" ? "ok" : article.qualityStatus === "review" ? "short" : "missing")}">${escapeHtml(article.qualityStatus)} · ${article.qualityScore}</span></td>
+          <td>${article.qualityIssueCount}</td>
           <td>${article.seoTitleLength}</td>
           <td><span class="pill ${statusClass(article.descriptionStatus)}">${escapeHtml(article.descriptionStatus)}</span></td>
           <td>${article.bodyBlockCount}</td>
@@ -387,6 +388,9 @@ function render(model) {
     }
     .mini-list strong { display: block; font-size: 13px; }
     .mini-list span { display: block; color: var(--muted); font-size: 12px; margin-top: 3px; }
+    .mini-list .passed { border-color: rgba(134,201,138,.22); }
+    .mini-list .needs-review { border-color: rgba(240,207,122,.3); }
+    .mini-list .needs-review strong { color: var(--warn); }
     .section-label {
       color: var(--faint);
       font-size: 11px;
@@ -517,6 +521,7 @@ function render(model) {
                   <th>Category</th>
                   <th>Status</th>
                   <th>Quality</th>
+                  <th>Issues</th>
                   <th>SEO title</th>
                   <th>Description</th>
                   <th>Blocks</th>
@@ -639,6 +644,7 @@ function render(model) {
       const related = Array.isArray(article.related) ? article.related : [];
       const faq = Array.isArray(article.faq) ? article.faq : [];
       const qualityChecks = Array.isArray(article.qualityChecks) ? article.qualityChecks : [];
+      const qualityIssues = Array.isArray(article.qualityIssues) ? article.qualityIssues : [];
       const cta = article.cta || {};
 
       detail.innerHTML = [
@@ -654,13 +660,18 @@ function render(model) {
           "<div class='detail-stat'><span>Category</span><strong>" + esc(article.categoryName) + "</strong></div>",
           "<div class='detail-stat'><span>Status</span><strong>" + esc(article.status) + "</strong></div>",
           "<div class='detail-stat'><span>Quality</span><strong>" + esc(article.qualityStatus) + " · " + esc(article.qualityScore) + "</strong></div>",
+          "<div class='detail-stat'><span>Open issues</span><strong>" + esc(article.qualityIssueCount) + "</strong></div>",
           "<div class='detail-stat'><span>SEO title length</span><strong>" + esc(article.seoTitleLength) + "</strong></div>",
           "<div class='detail-stat'><span>Description length</span><strong>" + esc(article.descriptionLength) + "</strong></div>",
           "<div class='detail-stat'><span>Body blocks</span><strong>" + esc(article.bodyBlockCount) + "</strong></div>",
           "<div class='detail-stat'><span>Related articles</span><strong>" + esc(article.relatedCount) + "</strong></div>",
         "</div>",
+        "<div class='section-label'>Fix list</div>",
+        qualityIssues.length
+          ? "<div class='mini-list'>" + qualityIssues.map((issue) => "<div class='needs-review'><strong>" + esc(issue.label) + " · -" + esc(issue.lostPoints) + " points</strong><span>Why: " + esc(issue.reason) + "</span><span>Fix: " + esc(issue.fix) + "</span></div>").join("") + "</div>"
+          : "<div class='empty'>No open quality issues for this article.</div>",
         "<div class='section-label'>Quality checks</div>",
-        "<div class='mini-list'>" + qualityChecks.map((check) => "<div><strong>" + (check.passed ? "Passed" : "Needs review") + " · " + esc(check.label) + "</strong><span>Weight: " + esc(check.weight) + "</span></div>").join("") + "</div>",
+        "<div class='mini-list'>" + qualityChecks.map((check) => "<div class='" + (check.passed ? "passed" : "needs-review") + "'><strong>" + (check.passed ? "Passed" : "Needs review") + " · " + esc(check.label) + "</strong><span>Why: " + esc(check.reason) + "</span><span>Fix: " + esc(check.fix) + "</span><span>Weight: " + esc(check.weight) + "</span></div>").join("") + "</div>",
         "<div class='section-label'>Keywords</div>",
         "<div class='tag-list'>" + keywords.map((keyword) => "<span class='tag'>" + esc(keyword) + "</span>").join("") + "</div>",
         "<div class='section-label'>CTA</div>",

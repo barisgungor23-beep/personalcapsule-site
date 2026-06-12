@@ -108,6 +108,22 @@ function main() {
       if (!Array.isArray(article.qualityChecks) || article.qualityChecks.length === 0) {
         add("critical", `Article ${article.id} has no qualityChecks.`);
       }
+      if (!Array.isArray(article.qualityIssues)) {
+        add("critical", `Article ${article.id} has no qualityIssues array.`);
+      }
+      if (typeof article.qualityIssueCount !== "number") {
+        add("critical", `Article ${article.id} has invalid qualityIssueCount.`);
+      }
+      if (Array.isArray(article.qualityIssues) && article.qualityIssueCount !== article.qualityIssues.length) {
+        add("critical", `Article ${article.id} qualityIssueCount does not match qualityIssues length.`);
+      }
+      if (Array.isArray(article.qualityChecks)) {
+        for (const check of article.qualityChecks) {
+          if (!check.reason || !check.fix) {
+            add("critical", `Article ${article.id} has a quality check without reason or fix.`);
+          }
+        }
+      }
     }
 
     const countedByCategory = new Map();
