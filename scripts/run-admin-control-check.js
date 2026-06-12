@@ -94,6 +94,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "plan_publish_rollback",
+    label: "Plan publish rollback",
+    command: ["node", "scripts/plan-publish-rollback.js"],
+    kind: "audit",
+  },
+  {
     id: "audit_admin_read_model",
     label: "Audit admin read model",
     command: ["node", "scripts/audit-admin-read-model.js"],

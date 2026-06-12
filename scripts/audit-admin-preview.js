@@ -38,6 +38,7 @@ function main() {
       "Control Center",
       "Publish Readiness",
       "Publish Dry Run",
+      "Rollback Plan",
       "Draft Comparison",
       "Draft Publish Workflow",
       "Create Draft",
