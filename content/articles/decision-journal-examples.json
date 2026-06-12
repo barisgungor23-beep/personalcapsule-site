@@ -1,0 +1,164 @@
+{
+  "id": "decision-journal-examples",
+  "type": "blog_article",
+  "status": "published",
+  "category": "decision-journaling",
+  "title": "Decision Journal Examples: What Entries Actually Look Like",
+  "seoTitle": "Decision Journal Examples to Learn From — PersonalCapsule",
+  "slug": "decision-journal-examples",
+  "url": "https://personalcapsule.app/blog/decision-journal-examples",
+  "description": "See real decision journal examples — career, money, and everyday choices — plus a simple template you can copy.",
+  "keywords": [
+    "decision journal examples",
+    "decision journaling",
+    "decision log example",
+    "decision making journal",
+    "decision journal template",
+    "reflective decision journal"
+  ],
+  "excerpt": "See real decision journal examples — career, money, and everyday choices — plus a simple template you can copy.",
+  "eyebrow": "Decision Journaling",
+  "readTime": "4 min read",
+  "datePublished": "2026-06-05",
+  "dateModified": "2026-06-06",
+  "schemaAbout": [],
+  "body": [
+    {
+      "type": "paragraph",
+      "text": "A decision journal is easier to understand once you see one. These decision journal examples show what a useful entry actually looks like, so you can write your own without overthinking the format."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "The simple template behind every example"
+    },
+    {
+      "type": "paragraph",
+      "text": "Most good entries cover five things:"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "The decision you're facing."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "The options you're weighing."
+    },
+    {
+      "type": "paragraph",
+      "text": "Your reasoning for leaning one way."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "What you expect to happen."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "A reopen date to review it later."
+    },
+    {
+      "type": "paragraph",
+      "text": "That's it. Each example below follows this frame."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Example 1: A career decision"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Decision: Should I leave my job to freelance?",
+        "Options: Stay; freelance full-time; freelance part-time first.",
+        "Reasoning: I'm leaning toward part-time first because it lowers the risk while I test demand.",
+        "Expectation: I think I can find two clients within three months.",
+        "Reopen: In 6 months."
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "When this reopens, the writer can compare \"two clients in three months\" with what really happened — and learn something concrete."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Example 2: A money decision"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Decision: Should I make a big purchase now or wait?",
+        "Options: Buy now; wait three months; don't buy.",
+        "Reasoning: Leaning toward waiting, because the urgency feels emotional rather than practical.",
+        "Expectation: I expect the urge will fade if I wait.",
+        "Reopen: In 1 month."
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "This example captures an emotional pull honestly, which makes the later review more revealing."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Example 3: An everyday decision"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Decision: Should I commit to this volunteer role?",
+        "Options: Yes; no; yes but smaller.",
+        "Reasoning: Leaning yes-but-smaller, because I tend to overcommit and then resent it.",
+        "Expectation: A smaller role will feel sustainable.",
+        "Reopen: In 3 months."
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Even small choices benefit from a quick entry — especially ones that reveal a pattern (here, overcommitting)."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "What makes these entries useful"
+    },
+    {
+      "type": "paragraph",
+      "text": "Notice they're short, specific, and written before the outcome is known. The specificity is what matters: \"two clients in three months\" teaches you more than \"I think it'll go well.\" Vague predictions can't be checked later."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Writing your own"
+    },
+    {
+      "type": "paragraph",
+      "text": "Copy the five-part template and fill it in for a decision you're facing this week. Add a photo or voice note if it helps capture your state of mind. Because your entries stay private on your device, you can be completely honest about your real reasoning.Used a few times, decision journal examples like these turn into a personal record of how you think — and a quiet way to get better at it."
+    }
+  ],
+  "faq": [],
+  "cta": {
+    "heading": "Start your first capsule",
+    "text": "PersonalCapsule lets you record a decision and your reasoning, then reopen it once you know the outcome. It's a free, private download on the App Store.",
+    "appStoreTracking": "website"
+  },
+  "related": [
+    {
+      "href": "why-recording-life-decisions-can-change-your-future",
+      "label": "Why Recording Life Decisions Can Change Your Future"
+    },
+    {
+      "href": "questions-to-ask-before-a-big-decision",
+      "label": "Questions to Ask Before a Big Decision"
+    },
+    {
+      "href": "how-to-review-past-decisions",
+      "label": "How to Review Past Decisions"
+    }
+  ],
+  "breadcrumbOpenWhen": true
+}

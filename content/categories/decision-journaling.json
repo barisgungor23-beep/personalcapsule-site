@@ -1,0 +1,28 @@
+{
+  "id": "decision-journaling",
+  "type": "blog_category",
+  "status": "published",
+  "name": "Decision Journaling",
+  "slug": "decision-journaling",
+  "url": "https://personalcapsule.app/blog/category/decision-journaling",
+  "seoTitle": "Decision Journaling - PersonalCapsule Blog",
+  "description": "Decision journaling guides for recording choices, reviewing outcomes and learning from your own reasoning.",
+  "keywords": [
+    "decision journaling",
+    "PersonalCapsule",
+    "private journal",
+    "future reflection"
+  ],
+  "eyebrow": "Decision Journaling",
+  "heading": "Decision Journaling",
+  "heroText": "Guides for recording choices before the outcome is known, then reviewing your reasoning with more clarity later.",
+  "intro": "Decision journaling guides for recording choices, reviewing outcomes and learning from your own reasoning.",
+  "schemaAbout": [
+    "decision journaling",
+    "decision journal",
+    "hindsight bias",
+    "decision reflection"
+  ],
+  "llmsInclude": true,
+  "sitemapInclude": true
+}
