@@ -88,6 +88,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "publish_dry_run",
+    label: "Publish dry run",
+    command: ["node", "scripts/publish-article-draft-dry-run.js", "--dry-run"],
+    kind: "audit",
+  },
+  {
     id: "audit_admin_read_model",
     label: "Audit admin read model",
     command: ["node", "scripts/audit-admin-read-model.js"],

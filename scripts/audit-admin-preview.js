@@ -37,6 +37,7 @@ function main() {
       "Read-only control preview",
       "Control Center",
       "Publish Readiness",
+      "Publish Dry Run",
       "Draft Comparison",
       "Draft Publish Workflow",
       "Create Draft",

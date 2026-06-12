@@ -9,6 +9,7 @@ const OUTPUT_FILE = path.join(ROOT, "outputs", "admin", "index.html");
 const CONTROL_REPORT_FILE = path.join(ROOT, "outputs", "admin", "control-report.json");
 const DRAFT_COMPARISON_FILE = path.join(ROOT, "outputs", "admin", "draft-comparison-report.json");
 const PUBLISH_READINESS_FILE = path.join(ROOT, "outputs", "admin", "publish-readiness-report.json");
+const PUBLISH_DRY_RUN_FILE = path.join(ROOT, "outputs", "admin", "publish-dry-run-report.json");
 
 function escapeHtml(value) {
   return String(value)
@@ -150,6 +151,15 @@ function readPublishReadinessReport() {
   }
 }
 
+function readPublishDryRunReport() {
+  if (!fs.existsSync(PUBLISH_DRY_RUN_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(PUBLISH_DRY_RUN_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
 function renderControlCenter(report) {
   if (!report) {
     return `
@@ -196,6 +206,58 @@ function renderControlCenter(report) {
               </div>`
           )
           .join("")}
+      </div>
+    </section>`;
+}
+
+function renderPublishDryRun(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Publish Dry Run</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No dry-run report yet</strong>
+            <span>Run node scripts/publish-article-draft-dry-run.js --dry-run or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const plan = Array.isArray(report.plan) ? report.plan : [];
+  const status = summary.status === "passed" ? "good" : "bad";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Publish Dry Run</h2>
+        <span class="pill ${status}">${escapeHtml(report.mode || "dry_run")}</span>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Ready drafts</span><strong>${escapeHtml(summary.readyDrafts || 0)}</strong></div>
+        <div class="detail-stat"><span>Operations</span><strong>${escapeHtml(summary.plannedFileOperations || 0)}</strong></div>
+        <div class="detail-stat"><span>Blockers</span><strong>${escapeHtml(summary.blockers || 0)}</strong></div>
+        <div class="detail-stat"><span>Warnings</span><strong>${escapeHtml(summary.warnings || 0)}</strong></div>
+      </div>
+      <div class="mini-list dry-run-list">
+        ${
+          plan.length
+            ? plan
+                .map(
+                  (item) => `
+                    <div class="passed">
+                      <strong>${escapeHtml(item.title)}</strong>
+                      <span>${escapeHtml(item.wouldUpdate.length)} updates · ${escapeHtml(item.wouldRemoveAfterPublish.length)} cleanup steps</span>
+                      <span>${escapeHtml(item.changedFields.join(", ") || "no changed fields")}</span>
+                    </div>`
+                )
+                .join("")
+            : `<div class="passed"><strong>No publish operations planned</strong><span>Dry-run made no changes.</span></div>`
+        }
       </div>
     </section>`;
 }
@@ -382,6 +444,7 @@ function render(model) {
   const controlReport = readControlReport();
   const draftComparisonReport = readDraftComparisonReport();
   const publishReadinessReport = readPublishReadinessReport();
+  const publishDryRunReport = readPublishDryRunReport();
 
   return `<!doctype html>
 <html lang="en">
@@ -870,6 +933,8 @@ function render(model) {
         ${renderControlCenter(controlReport)}
 
         ${renderPublishReadiness(publishReadinessReport)}
+
+        ${renderPublishDryRun(publishDryRunReport)}
 
         ${renderDraftComparison(draftComparisonReport)}
 
