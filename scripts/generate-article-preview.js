@@ -51,16 +51,21 @@ function renderBody(blocks) {
       if (block.type === "paragraph") {
         return `<p>${linkText(block.text, block.links)}</p>`;
       }
+      if (block.type === "quote") {
+        return `<blockquote>${linkText(block.text, block.links)}</blockquote>`;
+      }
       if (block.type === "heading") {
         return `<h${block.level}>${linkText(block.text, block.links)}</h${block.level}>`;
       }
       if (block.type === "list") {
-        return `<ul>${block.items
+        const tag = block.ordered ? "ol" : "ul";
+        const start = block.ordered && block.start ? ` start="${escapeAttr(block.start)}"` : "";
+        return `<${tag}${start}>${block.items
           .map((item) => {
             if (typeof item === "string") return `<li>${escapeHtml(item)}</li>`;
             return `<li>${linkText(item.text, item.links)}</li>`;
           })
-          .join("")}</ul>`;
+          .join("")}</${tag}>`;
       }
       throw new Error(`Unsupported block type: ${block.type}`);
     })
@@ -195,11 +200,14 @@ function renderHead(article, category) {
 }
 
 function renderPage(article, category) {
+  const extraBreadcrumb = article.breadcrumbOpenWhen
+    ? ' / <a href="../open-when-capsule/">Open When</a>'
+    : "";
   return `${renderHead(article, category)}<body><div class="atmos"><div class="glow-orb" style="width:520px;height:520px;top:-120px;right:-100px;background:radial-gradient(circle,rgba(216,178,90,.28),transparent 70%)"></div><div class="glow-orb" style="width:480px;height:480px;bottom:6%;left:-140px;background:radial-gradient(circle,rgba(224,120,60,.18),transparent 70%)"></div><div class="grain"></div></div><nav id="nav" class="solid"><div class="nav-inner"><a class="brand" href="../" style="text-decoration:none"><img src="../icon.jpg" alt="PersonalCapsule icon"><span>PersonalCapsule</span></a><div class="nav-links"><a href="../about/">About</a><a href="../changelog/">Changelog</a><a href="../#faq">FAQ</a><a href="../blog/">Blog</a><a href="../open-when-capsule/">Open When</a></div><a class="appstore sm" href="${escapeAttr(
     appStoreUrl("website")
   )}" target="_blank" rel="noopener" aria-label="Download on the App Store">${appleSvg()}<span class="as-txt"><span class="as-small">Download on the</span><span class="as-big">App Store</span></span></a></div></nav><article class="article"><div class="breadcrumb"><a href="../">Home</a> / <a href="./">Blog</a> / <a href="category/${escapeAttr(
     category.slug
-  )}">${escapeHtml(category.name)}</a></div><div class="article-head"><div class="eyebrow">${escapeHtml(
+  )}">${escapeHtml(category.name)}</a>${extraBreadcrumb}</div><div class="article-head"><div class="eyebrow">${escapeHtml(
     article.eyebrow || category.name
   )}</div><h1>${escapeHtml(article.title)}</h1><div class="article-meta">${escapeHtml(
     SITE.siteName

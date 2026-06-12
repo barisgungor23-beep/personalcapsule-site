@@ -1,0 +1,28 @@
+{
+  "id": "future-self-letters",
+  "type": "blog_category",
+  "status": "published",
+  "name": "Future Self Letters",
+  "slug": "future-self-letters",
+  "url": "https://personalcapsule.app/blog/category/future-self-letters",
+  "seoTitle": "Future Self Letters - PersonalCapsule Blog",
+  "description": "Guides, examples and prompts for writing letters to your future self, asking meaningful questions and reflecting across time.",
+  "keywords": [
+    "future self letters",
+    "PersonalCapsule",
+    "private journal",
+    "future reflection"
+  ],
+  "eyebrow": "Future Self Letters",
+  "heading": "Future Self Letters",
+  "heroText": "Guides for writing meaningful letters to your future self, choosing the right questions, and creating a personal message that becomes more valuable with time.",
+  "intro": "Guides, examples and prompts for writing letters to your future self, asking meaningful questions and reflecting across time.",
+  "schemaAbout": [
+    "future self letters",
+    "future reflection",
+    "letter to your future self",
+    "self reflection prompts"
+  ],
+  "llmsInclude": true,
+  "sitemapInclude": true
+}

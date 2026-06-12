@@ -145,6 +145,9 @@ function validateArticle(file, article, categories) {
       if (block.type === "paragraph" && !isNonEmptyString(block.text)) {
         add("critical", file, `Paragraph block ${index} is missing text.`);
       }
+      if (block.type === "quote" && !isNonEmptyString(block.text)) {
+        add("critical", file, `Quote block ${index} is missing text.`);
+      }
       if (block.type === "list" && (!Array.isArray(block.items) || block.items.length === 0)) {
         add("critical", file, `List block ${index} has no items.`);
       }

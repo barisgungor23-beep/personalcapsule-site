@@ -63,10 +63,11 @@ function extractTextAndLinks(html) {
 }
 
 function parseProse(html) {
-  let prose = firstMatch(html, /<div class="prose">([\s\S]*?)<\/div><div class="article-cta/i);
+  let prose = firstMatch(html, /<div class="prose">([\s\S]*?)<\/div>\s*<div class="article-cta/i);
   prose = prose.replace(/<h2>FAQ<\/h2>[\s\S]*$/i, "");
   const blocks = [];
-  const tokenPattern = /<(p|h2|h3)\b[^>]*>([\s\S]*?)<\/\1>|<ul\b[^>]*>([\s\S]*?)<\/ul>/gi;
+  const tokenPattern =
+    /<(p|h2|h3|blockquote)\b[^>]*>([\s\S]*?)<\/\1>|<(ul|ol)\b([^>]*)>([\s\S]*?)<\/\3>/gi;
   let match;
 
   while ((match = tokenPattern.exec(prose))) {
@@ -75,12 +76,20 @@ function parseProse(html) {
       blocks.push({ type: "paragraph", ...extractTextAndLinks(match[2]) });
     } else if (tag === "h2" || tag === "h3") {
       blocks.push({ type: "heading", level: Number(tag.slice(1)), ...extractTextAndLinks(match[2]) });
+    } else if (tag === "blockquote") {
+      blocks.push({ type: "quote", ...extractTextAndLinks(match[2]) });
     } else {
-      const items = Array.from(match[3].matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/gi)).map((item) => {
+      const listTag = match[3];
+      const attrs = match[4] || "";
+      const start = attr(`<ol ${attrs}>`, "start");
+      const items = Array.from(match[5].matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/gi)).map((item) => {
         const parsed = extractTextAndLinks(item[1]);
         return parsed.links ? parsed : parsed.text;
       });
-      blocks.push({ type: "list", items });
+      const block = { type: "list", items };
+      if (listTag === "ol") block.ordered = true;
+      if (start) block.start = Number(start);
+      blocks.push(block);
     }
   }
 
@@ -115,19 +124,21 @@ function parseCta(html) {
   };
 }
 
-function importArticle(slug) {
+function importArticle(slug, categoryId) {
   const htmlPath = path.join(ROOT, "blog", `${slug}.html`);
   const html = fs.readFileSync(htmlPath, "utf8");
   const jsonLdBlocks = getJsonLd(html);
   const articleSchema = jsonLdBlocks.find((block) => block["@type"] === "Article") || {};
   const h1 = stripTags(firstMatch(html, /<div class="article-head">[\s\S]*?<h1>([\s\S]*?)<\/h1>/i));
-  const readTime = stripTags(firstMatch(html, /<div class="article-meta">[\s\S]*?·\s*([\s\S]*?)<\/div>/i));
+  const eyebrow = stripTags(firstMatch(html, /<div class="article-head">[\s\S]*?<div class="eyebrow">([\s\S]*?)<\/div>/i));
+  const articleMeta = stripTags(firstMatch(html, /<div class="article-meta">([\s\S]*?)<\/div>/i));
+  const readTime = articleMeta.includes("·") ? articleMeta.split("·").pop().trim() : "4 min read";
 
   const article = {
     id: slug,
     type: "blog_article",
     status: "published",
-    category: "open-when-letters",
+    category: categoryId,
     title: h1 || articleSchema.headline,
     seoTitle: stripTags(firstMatch(html, /<title>([\s\S]*?)<\/title>/i)),
     slug,
@@ -141,7 +152,7 @@ function importArticle(slug) {
       .map((keyword) => keyword.trim())
       .filter(Boolean),
     excerpt: getMeta(html, "name", "description"),
-    eyebrow: "Open When Letters",
+    eyebrow: eyebrow || categoryId,
     readTime: readTime || "4 min read",
     datePublished: articleSchema.datePublished || "2026-06-12",
     dateModified: articleSchema.dateModified || "2026-06-12",
@@ -152,18 +163,31 @@ function importArticle(slug) {
     related: parseRelated(html),
   };
 
+  if (html.includes('href="../open-when-capsule/"')) {
+    article.breadcrumbOpenWhen = true;
+  }
+
   const outputPath = path.join(ROOT, "content/articles", `${slug}.json`);
   fs.writeFileSync(outputPath, `${JSON.stringify(article, null, 2)}\n`);
   console.log(`Imported ${path.relative(ROOT, outputPath)}`);
 }
 
 function main() {
-  const slugs = process.argv.slice(2);
+  const args = process.argv.slice(2);
+  const categoryArgIndex = args.indexOf("--category");
+  const categoryId =
+    categoryArgIndex >= 0 && args[categoryArgIndex + 1]
+      ? args[categoryArgIndex + 1]
+      : "open-when-letters";
+  const slugs =
+    categoryArgIndex >= 0 ? args.filter((_, index) => index !== categoryArgIndex && index !== categoryArgIndex + 1) : args;
   if (slugs.length === 0) {
-    console.error("Usage: node scripts/import-article-json-from-html.js article-slug [...more-slugs]");
+    console.error(
+      "Usage: node scripts/import-article-json-from-html.js [--category category-id] article-slug [...more-slugs]"
+    );
     process.exit(1);
   }
-  for (const slug of slugs) importArticle(slug);
+  for (const slug of slugs) importArticle(slug, categoryId);
 }
 
 main();
