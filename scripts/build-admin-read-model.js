@@ -204,14 +204,18 @@ function main() {
         description: article.description,
         descriptionLength: article.description.length,
         descriptionStatus: makeLengthStatus(article.description, 70, 165),
+        keywords: article.keywords,
         keywordCount: article.keywords.length,
         bodyBlockCount: article.body.length,
         faqCount: article.faq.length,
+        faq: article.faq,
         relatedCount: article.related.length,
+        related: article.related,
         datePublished: article.datePublished,
         dateModified: article.dateModified,
         readTime: article.readTime,
         ctaType: article.cta && article.cta.type ? article.cta.type : "none",
+        cta: article.cta || null,
       };
     })
     .sort((a, b) => a.categoryName.localeCompare(b.categoryName) || a.title.localeCompare(b.title));

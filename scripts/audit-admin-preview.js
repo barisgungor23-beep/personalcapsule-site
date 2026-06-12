@@ -40,6 +40,10 @@ function main() {
       "Pages",
       "Health",
       "Selected article",
+      "SEO Preview",
+      "Keywords",
+      "Related links",
+      "FAQ",
       "Local admin preview only",
     ];
 

@@ -348,6 +348,52 @@ function render(model) {
     }
     .detail-stat span { display: block; color: var(--faint); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
     .detail-stat strong { display: block; margin-top: 4px; font-size: 16px; }
+    .seo-preview {
+      border: 1px solid rgba(127,176,230,.22);
+      background: rgba(127,176,230,.065);
+      border-radius: 13px;
+      padding: 13px;
+      display: grid;
+      gap: 5px;
+    }
+    .seo-preview strong { color: #9fc6f0; font-size: 15px; line-height: 1.25; }
+    .seo-preview span { color: var(--good); font-size: 12px; overflow-wrap: anywhere; }
+    .seo-preview p { font-size: 13px; }
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+    .tag {
+      display: inline-flex;
+      border: 1px solid rgba(216,178,90,.22);
+      border-radius: 999px;
+      padding: 4px 9px;
+      color: var(--gold);
+      background: rgba(216,178,90,.07);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .mini-list {
+      display: grid;
+      gap: 8px;
+    }
+    .mini-list div {
+      border: 1px solid rgba(255,247,230,.09);
+      background: rgba(0,0,0,.12);
+      border-radius: 11px;
+      padding: 10px;
+    }
+    .mini-list strong { display: block; font-size: 13px; }
+    .mini-list span { display: block; color: var(--muted); font-size: 12px; margin-top: 3px; }
+    .section-label {
+      color: var(--faint);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      font-weight: 800;
+      margin-bottom: -6px;
+    }
     .hidden-row { display: none; }
     footer { color: var(--faint); padding: 20px 0 4px; font-size: 13px; }
     @media (max-width: 1100px) {
@@ -479,7 +525,7 @@ function render(model) {
             </div>
             <div class="detail-card" id="articleDetail">
               <h3>No article selected</h3>
-              <p>Use the View button in the article table to inspect SEO, structure and publishing fields before editing features exist.</p>
+              <p>Use the View button in the article table to inspect SEO, FAQ, related links, CTA and publishing fields before editing features exist.</p>
             </div>
           </section>
 
@@ -572,9 +618,20 @@ function render(model) {
     }
 
     function renderDetail(article) {
+      const keywords = Array.isArray(article.keywords) ? article.keywords : [];
+      const related = Array.isArray(article.related) ? article.related : [];
+      const faq = Array.isArray(article.faq) ? article.faq : [];
+      const cta = article.cta || {};
+
       detail.innerHTML = [
         "<h3>" + esc(article.title) + "</h3>",
         "<p>" + esc(article.description) + "</p>",
+        "<div class='section-label'>SEO Preview</div>",
+        "<div class='seo-preview'>",
+          "<strong>" + esc(article.seoTitle) + "</strong>",
+          "<span>" + esc(article.url) + "</span>",
+          "<p>" + esc(article.description) + "</p>",
+        "</div>",
         "<div class='detail-grid'>",
           "<div class='detail-stat'><span>Category</span><strong>" + esc(article.categoryName) + "</strong></div>",
           "<div class='detail-stat'><span>Status</span><strong>" + esc(article.status) + "</strong></div>",
@@ -583,8 +640,15 @@ function render(model) {
           "<div class='detail-stat'><span>Body blocks</span><strong>" + esc(article.bodyBlockCount) + "</strong></div>",
           "<div class='detail-stat'><span>Related articles</span><strong>" + esc(article.relatedCount) + "</strong></div>",
         "</div>",
-        "<p><strong>Slug:</strong> " + esc(article.slug) + "</p>",
-        "<p><strong>URL:</strong> " + esc(article.url) + "</p>"
+        "<div class='section-label'>Keywords</div>",
+        "<div class='tag-list'>" + keywords.map((keyword) => "<span class='tag'>" + esc(keyword) + "</span>").join("") + "</div>",
+        "<div class='section-label'>CTA</div>",
+        "<div class='mini-list'><div><strong>" + esc(cta.heading || "No CTA heading") + "</strong><span>" + esc(cta.text || "No CTA text") + "</span><span>Type: " + esc(article.ctaType) + "</span></div></div>",
+        "<div class='section-label'>Related links</div>",
+        "<div class='mini-list'>" + related.map((item) => "<div><strong>" + esc(item.label || "") + "</strong><span>" + esc(item.href || "") + "</span></div>").join("") + "</div>",
+        "<div class='section-label'>FAQ</div>",
+        "<div class='mini-list'>" + faq.map((item) => "<div><strong>" + esc(item.question || "") + "</strong><span>" + esc(item.answer || "") + "</span></div>").join("") + "</div>",
+        "<p><strong>Slug:</strong> " + esc(article.slug) + "</p>"
       ].join("");
     }
 
