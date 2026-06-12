@@ -1,0 +1,29 @@
+{
+  "id": "memory-keeping",
+  "type": "blog_category",
+  "status": "published",
+  "name": "Memory Keeping",
+  "slug": "memory-keeping",
+  "url": "https://personalcapsule.app/blog/category/memory-keeping",
+  "seoTitle": "Memory Keeping - PersonalCapsule Blog",
+  "description": "Beginner-friendly memory keeping guides for preserving moments with notes, photos, voice recordings and private archives.",
+  "keywords": [
+    "memory keeping",
+    "PersonalCapsule",
+    "private journal",
+    "future reflection"
+  ],
+  "eyebrow": "Memory Keeping",
+  "heading": "Memory Keeping",
+  "heroText": "Simple ways to preserve important memories, track milestones, and keep personal moments easy to revisit.",
+  "intro": "Beginner-friendly memory keeping guides for preserving moments with notes, photos, voice recordings and private archives.",
+  "schemaAbout": [
+    "memory keeping",
+    "digital memory keeping",
+    "life milestones",
+    "voice notes",
+    "photo memories"
+  ],
+  "llmsInclude": true,
+  "sitemapInclude": true
+}

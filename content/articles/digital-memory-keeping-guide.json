@@ -1,0 +1,151 @@
+{
+  "id": "digital-memory-keeping-guide",
+  "type": "blog_article",
+  "status": "published",
+  "category": "memory-keeping",
+  "title": "Digital Memory Keeping Guide for Beginners",
+  "seoTitle": "Digital Memory Keeping Guide — PersonalCapsule",
+  "slug": "digital-memory-keeping-guide",
+  "url": "https://personalcapsule.app/blog/digital-memory-keeping-guide",
+  "description": "A beginner-friendly digital memory keeping guide — how to save, organize, and revisit memories privately on your phone.",
+  "keywords": [
+    "digital memory keeping",
+    "memory keeping guide",
+    "how to keep memories digitally",
+    "digital memories",
+    "saving memories app",
+    "memory keeping beginners"
+  ],
+  "excerpt": "A beginner-friendly digital memory keeping guide — how to save, organize, and revisit memories privately on your phone.",
+  "eyebrow": "Memory Keeping",
+  "readTime": "4 min read",
+  "datePublished": "2026-06-05",
+  "dateModified": "2026-06-06",
+  "schemaAbout": [],
+  "body": [
+    {
+      "type": "paragraph",
+      "text": "If your memories are scattered across camera rolls, notes apps, and the back of your mind, a little structure goes a long way. This digital memory keeping guide walks through the basics, gently, for anyone starting out."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "What digital memory keeping actually is"
+    },
+    {
+      "type": "paragraph",
+      "text": "Digital memory keeping simply means saving your meaningful moments — notes, photos, voice recordings — in a digital form you can revisit later. It's less about archiving everything and more about keeping the moments that matter where you can find them."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Step 1: Decide what's worth keeping"
+    },
+    {
+      "type": "paragraph",
+      "text": "You don't need to save everything. A helpful filter: would a future version of you be glad this was kept? If yes, it's worth a moment to record."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Step 2: Choose your formats"
+    },
+    {
+      "type": "paragraph",
+      "text": "Mix formats based on what each moment needs:"
+    },
+    {
+      "type": "paragraph",
+      "text": "Text for thoughts, context, and meaning."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Photos"
+    },
+    {
+      "type": "paragraph",
+      "text": "for how things looked."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Voice notes"
+    },
+    {
+      "type": "paragraph",
+      "text": "for tone and atmosphere."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "A single memory can combine all three."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Step 3: Keep it in one place"
+    },
+    {
+      "type": "paragraph",
+      "text": "The most common mistake is scattering memories across many apps, which makes them hard to find again. Keeping them in one dedicated space — where you can search and revisit — is what turns scattered fragments into a real record."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Step 4: Add a little context"
+    },
+    {
+      "type": "paragraph",
+      "text": "A photo without a note loses its story over time. A sentence about what was happening and how you felt keeps the memory meaningful years later."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Step 5: Think about privacy"
+    },
+    {
+      "type": "paragraph",
+      "text": "Memories are personal, so where they live matters. An approach that keeps your content on your device — rather than uploading it by default — lets you record freely. Optional, user-controlled cloud sync can give you a backup without putting your private memories on a public feed."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Step 6: Make some of them future-facing"
+    },
+    {
+      "type": "paragraph",
+      "text": "Memory keeping doesn't have to point only backward. Sealing a memory to reopen later adds a small thrill of rediscovery — you meet a forgotten moment again on a future date."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Keeping it sustainable"
+    },
+    {
+      "type": "paragraph",
+      "text": "Start small: capture one memory a week, not your entire life. A light, consistent habit will preserve far more over time than an ambitious system you drop.This digital memory keeping guide comes down to one idea: catch the moments that matter, keep them in one private place, and make them easy to revisit."
+    }
+  ],
+  "faq": [],
+  "cta": {
+    "heading": "Start your first capsule",
+    "text": "PersonalCapsule is a simple, private home for your memories — text, photos, and voice notes you can keep and reopen on your own terms. It's free to start on the App Store.",
+    "appStoreTracking": "website"
+  },
+  "related": [
+    {
+      "href": "how-to-preserve-important-memories",
+      "label": "How to Preserve Important Memories"
+    },
+    {
+      "href": "how-to-track-life-milestones",
+      "label": "How to Track Life Milestones"
+    },
+    {
+      "href": "what-is-a-digital-time-capsule",
+      "label": "What Is a Digital Time Capsule?"
+    }
+  ],
+  "breadcrumbOpenWhen": true
+}
