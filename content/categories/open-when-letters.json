@@ -1,0 +1,29 @@
+{
+  "id": "open-when-letters",
+  "type": "blog_category",
+  "status": "published",
+  "name": "Open When Letters",
+  "slug": "open-when-letters",
+  "url": "https://personalcapsule.app/blog/category/open-when-letters",
+  "seoTitle": "Open When Letters Ideas & Examples | PersonalCapsule",
+  "description": "Explore open when letter ideas, examples, printable prompts, and digital gift capsule inspiration for someone you love.",
+  "keywords": [
+    "open when letters",
+    "open when letter ideas",
+    "open when letters for boyfriend",
+    "open when letters printable",
+    "digital gift letter"
+  ],
+  "eyebrow": "Open When Letters",
+  "heading": "Open When Letters",
+  "heroText": "Ideas, examples, and printable guides for creating letters someone opens when they miss you, need support, or want to feel loved.",
+  "intro": "Ideas, examples, and printable guides for open when letters, long-distance love notes, friendship gifts, and digital gift capsules.",
+  "schemaAbout": [
+    "open when letters",
+    "open when letter ideas",
+    "printable letters",
+    "digital gift capsules"
+  ],
+  "llmsInclude": true,
+  "sitemapInclude": true
+}

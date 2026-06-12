@@ -1,0 +1,19 @@
+{
+  "siteName": "PersonalCapsule",
+  "siteUrl": "https://personalcapsule.app",
+  "author": "Umut Baris Gungor",
+  "supportEmail": "support.personalcapsule@gmail.com",
+  "appStore": {
+    "baseUrl": "https://apps.apple.com/app/apple-store/id6773064012",
+    "providerToken": "128571836",
+    "mediaType": "8",
+    "campaigns": {
+      "website": "https://apps.apple.com/app/apple-store/id6773064012?pt=128571836&ct=website&mt=8",
+      "website_open_when": "https://apps.apple.com/app/apple-store/id6773064012?pt=128571836&ct=website_open_when&mt=8"
+    }
+  },
+  "assets": {
+    "icon": "https://personalcapsule.app/icon.jpg",
+    "ogImage": "https://personalcapsule.app/og-image.png"
+  }
+}
