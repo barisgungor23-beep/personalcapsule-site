@@ -46,6 +46,12 @@ const steps = [
     kind: "generate",
   },
   {
+    id: "generate_draft_previews",
+    label: "Generate draft previews",
+    command: ["node", "scripts/generate-draft-preview.js", "--all"],
+    kind: "generate",
+  },
+  {
     id: "validate_content",
     label: "Validate content",
     command: ["node", "scripts/validate-content.js"],
@@ -55,6 +61,12 @@ const steps = [
     id: "audit_article_drafts",
     label: "Audit article drafts",
     command: ["node", "scripts/audit-article-drafts.js"],
+    kind: "audit",
+  },
+  {
+    id: "audit_draft_previews",
+    label: "Audit draft previews",
+    command: ["node", "scripts/audit-draft-previews.js"],
     kind: "audit",
   },
   {
