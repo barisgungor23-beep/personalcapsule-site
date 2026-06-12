@@ -13,6 +13,7 @@ const PUBLISH_DRY_RUN_FILE = path.join(ROOT, "outputs", "admin", "publish-dry-ru
 const PUBLISH_ROLLBACK_FILE = path.join(ROOT, "outputs", "admin", "publish-rollback-plan.json");
 const BACKUP_SNAPSHOT_FILE = path.join(ROOT, "outputs", "admin", "backup-snapshot-dry-run-report.json");
 const RESTORE_DRY_RUN_FILE = path.join(ROOT, "outputs", "admin", "restore-backup-dry-run-report.json");
+const RESTORE_REPORT_FILE = path.join(ROOT, "outputs", "admin", "restore-backup-report.json");
 const PUBLISH_REPORT_FILE = path.join(ROOT, "outputs", "admin", "publish-report.json");
 
 function escapeHtml(value) {
@@ -191,6 +192,15 @@ function readRestoreDryRunReport() {
   }
 }
 
+function readRestoreReport() {
+  if (!fs.existsSync(RESTORE_REPORT_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(RESTORE_REPORT_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
 function readPublishReport() {
   if (!fs.existsSync(PUBLISH_REPORT_FILE)) return null;
   try {
@@ -198,6 +208,57 @@ function readPublishReport() {
   } catch {
     return null;
   }
+}
+
+function renderRestoreReport(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Restore Result</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No restore report yet</strong>
+            <span>Run node scripts/restore-backup-snapshot.js --confirm only after restore dry-run passes.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const restored = Array.isArray(report.restored) ? report.restored : [];
+  const status = summary.status === "passed" ? "good" : "bad";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Restore Result</h2>
+        <span class="pill ${status}">${escapeHtml(report.mode || "confirmed_restore")}</span>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Files restored</span><strong>${escapeHtml(summary.filesRestored || 0)}</strong></div>
+        <div class="detail-stat"><span>Blockers</span><strong>${escapeHtml(summary.blockers || 0)}</strong></div>
+        <div class="detail-stat"><span>Warnings</span><strong>${escapeHtml(summary.warnings || 0)}</strong></div>
+      </div>
+      <div class="mini-list restore-result-list">
+        ${
+          restored.length
+            ? restored
+                .slice(0, 12)
+                .map(
+                  (item) => `
+                    <div class="passed">
+                      <strong>${escapeHtml(item.to)}</strong>
+                      <span>Restored from ${escapeHtml(item.from)}</span>
+                    </div>`
+                )
+                .join("")
+            : `<div class="passed"><strong>No restore operations yet</strong><span>Nothing has been restored by the local command.</span></div>`
+        }
+      </div>
+    </section>`;
 }
 
 function renderControlCenter(report) {
@@ -695,6 +756,7 @@ function render(model) {
   const publishRollbackPlan = readPublishRollbackPlan();
   const backupSnapshotReport = readBackupSnapshotReport();
   const restoreDryRunReport = readRestoreDryRunReport();
+  const restoreReport = readRestoreReport();
   const publishReport = readPublishReport();
 
   return `<!doctype html>
@@ -1194,6 +1256,8 @@ function render(model) {
         ${renderBackupSnapshot(backupSnapshotReport)}
 
         ${renderRestoreDryRun(restoreDryRunReport)}
+
+        ${renderRestoreReport(restoreReport)}
 
         ${renderDraftComparison(draftComparisonReport)}
 
