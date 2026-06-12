@@ -231,6 +231,12 @@
 .ow-made{margin-top:32px;color:var(--paper-soft);font-style:italic}
 .ow-print-pages{display:none}
 .ow-print-page-number{position:absolute;left:0;right:0;bottom:12mm;text-align:center;font:700 9px/1 'Hanken Grotesk',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--paper-soft)}
+.ow-measure-sheet{display:block!important;position:absolute!important;left:-10000px!important;top:0!important;visibility:hidden!important;width:210mm!important;height:297mm!important;margin:0!important;padding:16mm 17mm 15mm!important;box-sizing:border-box!important;overflow:hidden!important;pointer-events:none!important}
+.ow-measure-sheet.is-continued{padding-top:16mm!important;padding-bottom:15mm!important}
+.ow-measure-sheet h3{font-size:30pt!important}
+.ow-measure-sheet .ow-letter-body{font-family:"Times New Roman",Times,serif!important;font-size:12pt!important;line-height:1.42!important}
+.ow-measure-sheet .ow-letter-body p{margin-bottom:.7em!important}
+.ow-measure-sheet .ow-made{position:absolute;left:18mm;right:18mm;bottom:22mm;margin:0;text-align:center}
 .ow-faq{display:grid;gap:14px}
 .ow-faq details{padding:20px 22px;border-radius:18px;background:rgba(255,247,230,.035);border:1px solid rgba(216,178,90,.16)}
 .ow-faq summary{cursor:pointer;font-weight:800;color:var(--cream)}
@@ -261,9 +267,10 @@
   .ow-print-sheet:before{inset:8mm!important}
   .ow-print-sheet:after{inset:11mm!important}
   .ow-print-sheet h3{font-size:30pt!important}
-  .ow-letter-body{font-size:11.5pt!important;line-height:1.5!important}
-  .ow-letter-body p{margin-bottom:.72em!important}
+  .ow-letter-body{font-family:"Times New Roman",Times,serif!important;font-size:12pt!important;line-height:1.42!important}
+  .ow-letter-body p{margin-bottom:.7em!important}
   .ow-print-sheet.is-continued .ow-letter-body{padding-top:0!important}
+  .ow-made{position:absolute;left:18mm;right:18mm;bottom:22mm;margin:0!important;text-align:center}
 }
 </style>
 </head>
@@ -576,20 +583,33 @@ function paginate(text){
   const words=splitWords(paragraphsFromText(text));
   if(!words.length) return [[]];
   const pages=[];
-  let current=[];
-  let count=0;
-  let limit=330;
-  for(const item of words){
-    if(count>=limit && current.length){
-      pages.push(current);
-      current=[];
-      count=0;
-      limit=500;
+  let start=0;
+  while(start<words.length){
+    const fallbackLimit=pages.length ? 500 : 330;
+    const maxCandidate=pages.length ? 620 : 430;
+    if(!pageFits(words.slice(start,start+1),pages.length,start+1===words.length)){
+      const fallbackCount=Math.min(words.length-start,fallbackLimit);
+      pages.push(words.slice(start,start+fallbackCount));
+      start+=fallbackCount;
+      continue;
     }
-    current.push(item);
-    count+=1;
+    let low=1;
+    let high=Math.min(words.length-start,maxCandidate);
+    let best=1;
+    while(low<=high){
+      const mid=Math.floor((low+high)/2);
+      const candidate=words.slice(start,start+mid);
+      const isFinalCandidate=start+mid===words.length;
+      if(pageFits(candidate,pages.length,isFinalCandidate)){
+        best=mid;
+        low=mid+1;
+      }else{
+        high=mid-1;
+      }
+    }
+    pages.push(words.slice(start,start+best));
+    start+=best;
   }
-  if(current.length) pages.push(current);
   return pages;
 }
 
@@ -617,7 +637,20 @@ function escapeHTML(value){
   }[char]));
 }
 
-function createPrintSheet(pageParagraphs,index,total){
+function pageFits(pageWords,index,includeFooter){
+  const probe=createPrintSheet(wordsToParagraphs(pageWords),index,index+1,includeFooter);
+  probe.classList.add("ow-measure-sheet");
+  document.body.appendChild(probe);
+  const sheetRect=probe.getBoundingClientRect();
+  const bodyRect=probe.querySelector(".ow-letter-body").getBoundingClientRect();
+  const millimeter=sheetRect.height/297;
+  const reservedBottom=(includeFooter ? 34 : 18)*millimeter;
+  const fits=bodyRect.bottom<=sheetRect.bottom-reservedBottom;
+  probe.remove();
+  return fits;
+}
+
+function createPrintSheet(pageParagraphs,index,total,includeFooter=index===total-1){
   const article=document.createElement("article");
   article.className="ow-print-sheet";
   article.dataset.paper=selectedPaper;
@@ -631,7 +664,7 @@ function createPrintSheet(pageParagraphs,index,total){
   article.innerHTML=`
     ${continued ? "" : `<small>Open when</small><h3>${openTitle}</h3><div class="ow-meta"><div><strong>From</strong><br><span>${fromName}</span></div><div><strong>To</strong><br><span>${toName}</span></div></div>`}
     <div class="ow-letter-body"></div>
-    <div class="ow-made">Created with PersonalCapsule</div>
+    ${includeFooter ? `<div class="ow-made">Created with PersonalCapsule</div>` : ""}
     <div class="ow-print-page-number">Page ${index+1} of ${total}</div>
   `;
   writeParagraphs(article.querySelector(".ow-letter-body"), pageParagraphs);
