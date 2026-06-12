@@ -36,6 +36,7 @@ function main() {
       "PersonalCapsule Website Admin",
       "Read-only control preview",
       "Control Center",
+      "Draft Comparison",
       "Draft Publish Workflow",
       "Create Draft",
       "Control Check",

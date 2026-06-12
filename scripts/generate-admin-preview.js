@@ -7,6 +7,7 @@ const ROOT = path.resolve(__dirname, "..");
 const MODEL_FILE = path.join(ROOT, "outputs", "admin", "admin-read-model.json");
 const OUTPUT_FILE = path.join(ROOT, "outputs", "admin", "index.html");
 const CONTROL_REPORT_FILE = path.join(ROOT, "outputs", "admin", "control-report.json");
+const DRAFT_COMPARISON_FILE = path.join(ROOT, "outputs", "admin", "draft-comparison-report.json");
 
 function escapeHtml(value) {
   return String(value)
@@ -130,6 +131,15 @@ function readControlReport() {
   }
 }
 
+function readDraftComparisonReport() {
+  if (!fs.existsSync(DRAFT_COMPARISON_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(DRAFT_COMPARISON_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
 function renderControlCenter(report) {
   if (!report) {
     return `
@@ -176,6 +186,57 @@ function renderControlCenter(report) {
               </div>`
           )
           .join("")}
+      </div>
+    </section>`;
+}
+
+function renderDraftComparison(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Draft Comparison</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No comparison report yet</strong>
+            <span>Run node scripts/compare-article-drafts.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const comparisons = Array.isArray(report.comparisons) ? report.comparisons : [];
+  const status = summary.status === "passed" ? "good" : "bad";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Draft Comparison</h2>
+        <span class="pill ${status}">${escapeHtml(summary.status || "unknown")}</span>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Drafts</span><strong>${escapeHtml(summary.drafts || 0)}</strong></div>
+        <div class="detail-stat"><span>Changed</span><strong>${escapeHtml(summary.changedDrafts || 0)}</strong></div>
+        <div class="detail-stat"><span>Total changes</span><strong>${escapeHtml(summary.totalChanges || 0)}</strong></div>
+        <div class="detail-stat"><span>Critical</span><strong>${escapeHtml(summary.critical || 0)}</strong></div>
+      </div>
+      <div class="mini-list draft-comparison-list">
+        ${
+          comparisons.length
+            ? comparisons
+                .map(
+                  (item) => `
+                    <div class="${item.criticalChangeCount > 0 ? "needs-review" : "passed"}">
+                      <strong>${escapeHtml(item.title)}</strong>
+                      <span>${escapeHtml(item.changeCount)} changes · ${escapeHtml(item.changedFields.join(", ") || "no changed fields")}</span>
+                    </div>`
+                )
+                .join("")
+            : `<div class="passed"><strong>No active drafts</strong><span>There is nothing to compare yet.</span></div>`
+        }
       </div>
     </section>`;
 }
@@ -253,6 +314,7 @@ function render(model) {
   const articleJson = JSON.stringify(model.articles).replaceAll("</", "<\\/");
   const editorRulesJson = JSON.stringify(model.editorRules.article || {}).replaceAll("</", "<\\/");
   const controlReport = readControlReport();
+  const draftComparisonReport = readDraftComparisonReport();
 
   return `<!doctype html>
 <html lang="en">
@@ -739,6 +801,8 @@ function render(model) {
         </section>
 
         ${renderControlCenter(controlReport)}
+
+        ${renderDraftComparison(draftComparisonReport)}
 
         ${renderPublishWorkflow()}
 
