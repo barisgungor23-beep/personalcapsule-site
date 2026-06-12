@@ -50,6 +50,7 @@ function main() {
       "Restore Dry Run",
       "Restore Result",
       "Draft Quality",
+      "Draft Fix List",
       "Draft Comparison",
       "Draft Publish Workflow",
       "New Article Draft",

@@ -9,6 +9,7 @@ const OUTPUT_FILE = path.join(ROOT, "outputs", "admin", "index.html");
 const CONTROL_REPORT_FILE = path.join(ROOT, "outputs", "admin", "control-report.json");
 const DRAFT_COMPARISON_FILE = path.join(ROOT, "outputs", "admin", "draft-comparison-report.json");
 const DRAFT_QUALITY_FILE = path.join(ROOT, "outputs", "admin", "draft-quality-report.json");
+const DRAFT_FIX_LIST_FILE = path.join(ROOT, "outputs", "admin", "draft-fix-list-report.json");
 const PUBLISH_READINESS_FILE = path.join(ROOT, "outputs", "admin", "publish-readiness-report.json");
 const PUBLISH_DRY_RUN_FILE = path.join(ROOT, "outputs", "admin", "publish-dry-run-report.json");
 const PUBLISH_ROLLBACK_FILE = path.join(ROOT, "outputs", "admin", "publish-rollback-plan.json");
@@ -152,6 +153,15 @@ function readDraftQualityReport() {
   if (!fs.existsSync(DRAFT_QUALITY_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(DRAFT_QUALITY_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readDraftFixListReport() {
+  if (!fs.existsSync(DRAFT_FIX_LIST_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(DRAFT_FIX_LIST_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -908,6 +918,64 @@ function renderDraftQuality(report) {
     </section>`;
 }
 
+function renderDraftFixList(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Draft Fix List</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No draft fix list yet</strong>
+            <span>Run node scripts/build-draft-fix-list.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const fixes = Array.isArray(report.fixes) ? report.fixes : [];
+  const status = summary.status === "passed" ? "good" : summary.status === "action_needed" ? "warn" : "bad";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Draft Fix List</h2>
+        <span class="pill ${status}">${escapeHtml(summary.status || "unknown")}</span>
+      </div>
+      <div class="health">
+        <div class="${fixes.length ? "issue warn" : "empty"}">
+          <strong>${escapeHtml(fixes.length ? "Next action" : "No draft fixes needed")}</strong>
+          <span>${escapeHtml(report.nextAction || "No draft fixes are needed right now.")}</span>
+        </div>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Fixes</span><strong>${escapeHtml(summary.fixes || 0)}</strong></div>
+        <div class="detail-stat"><span>Blockers</span><strong>${escapeHtml(summary.blockers || 0)}</strong></div>
+        <div class="detail-stat"><span>Warnings</span><strong>${escapeHtml(summary.warnings || 0)}</strong></div>
+        <div class="detail-stat"><span>Drafts</span><strong>${escapeHtml(summary.drafts || 0)}</strong></div>
+      </div>
+      <div class="mini-list draft-fix-list">
+        ${
+          fixes.length
+            ? fixes
+                .slice(0, 10)
+                .map(
+                  (item) => `
+                    <div class="${item.severity === "blocker" ? "needs-review" : "passed"}">
+                      <strong>${escapeHtml(item.draftTitle)} · ${escapeHtml(item.label)}</strong>
+                      <span>${escapeHtml(item.severity)} · ${escapeHtml(item.fix)}</span>
+                    </div>`
+                )
+                .join("")
+            : `<div class="passed"><strong>No active fixes</strong><span>Drafts are either absent or already clean.</span></div>`
+        }
+      </div>
+    </section>`;
+}
+
 function renderPublishWorkflow() {
   const steps = [
     ["Create Draft", "Published content is copied into a private draft file."],
@@ -1014,6 +1082,7 @@ function render(model) {
   const controlReport = readControlReport();
   const draftComparisonReport = readDraftComparisonReport();
   const draftQualityReport = readDraftQualityReport();
+  const draftFixListReport = readDraftFixListReport();
   const publishReadinessReport = readPublishReadinessReport();
   const publishDryRunReport = readPublishDryRunReport();
   const publishRollbackPlan = readPublishRollbackPlan();
@@ -1611,6 +1680,8 @@ function render(model) {
         ${renderRestoreReport(restoreReport)}
 
         ${renderDraftQuality(draftQualityReport)}
+
+        ${renderDraftFixList(draftFixListReport)}
 
         ${renderDraftComparison(draftComparisonReport)}
 

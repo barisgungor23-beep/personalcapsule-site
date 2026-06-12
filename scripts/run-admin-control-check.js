@@ -97,6 +97,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "build_draft_fix_list",
+    label: "Build draft fix list",
+    command: ["node", "scripts/build-draft-fix-list.js"],
+    kind: "audit",
+  },
+  {
     id: "compare_article_drafts",
     label: "Compare article drafts",
     command: ["node", "scripts/compare-article-drafts.js"],

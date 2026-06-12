@@ -167,7 +167,7 @@ function main() {
           "New article publish intent",
           draft.draftPublishIntent === "ready",
           "blocker",
-          "Keep draftPublishIntent as editing while writing; set it to ready only after final review."
+          "After every content fix is complete and reviewed, set draftPublishIntent to ready."
         )
       );
       checks.push(
