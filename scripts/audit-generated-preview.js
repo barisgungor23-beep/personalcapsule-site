@@ -83,6 +83,9 @@ function generatedHtmlFiles(dir) {
 
 function livePathForGenerated(filePath) {
   const relative = rel(filePath);
+  if (relative === "outputs/generated/blog/index.html") {
+    return path.join(ROOT, "blog/index.html");
+  }
   if (relative.startsWith("outputs/generated/category/")) {
     return path.join(ROOT, "blog/category", path.basename(filePath));
   }
@@ -100,7 +103,8 @@ function compareWithLivePage(filePath, html) {
   const liveStats = pageStats(read(liveFile));
   const generatedStats = pageStats(html);
   const isCategoryPreview = file.includes("/category/");
-  const keys = isCategoryPreview ? ["title", "h1"] : ["title", "h1", "h2", "h3", "links"];
+  const isBlogIndexPreview = file === "outputs/generated/blog/index.html";
+  const keys = isCategoryPreview || isBlogIndexPreview ? ["title", "h1"] : ["title", "h1", "h2", "h3", "links"];
 
   for (const key of keys) {
     if (liveStats[key] !== generatedStats[key]) {
@@ -117,6 +121,13 @@ function compareWithLivePage(filePath, html) {
       "notes",
       file,
       `Generated category link count differs because only migrated JSON articles are included. current=${liveStats.links} generated=${generatedStats.links}`
+    );
+  }
+  if (isBlogIndexPreview && liveStats.links !== generatedStats.links) {
+    add(
+      "notes",
+      file,
+      `Generated blog index link count differs because only migrated JSON content is included. current=${liveStats.links} generated=${generatedStats.links}`
     );
   }
 }

@@ -1,0 +1,22 @@
+{
+  "id": "blog-index",
+  "type": "blog_index",
+  "status": "published",
+  "url": "https://personalcapsule.app/blog/",
+  "seoTitle": "PersonalCapsule Blog — Memory, Growth & Time Capsules",
+  "description": "Browse PersonalCapsule blog categories for open when letters, future self letters, digital time capsules, decision journaling, reflection and memory keeping.",
+  "keywords": [
+    "open when letters",
+    "open when letter ideas",
+    "future self letters",
+    "digital time capsules",
+    "decision journaling",
+    "personal growth reflection",
+    "memory keeping",
+    "private journal"
+  ],
+  "eyebrow": "PersonalCapsule Blog",
+  "heading": "Notes on memory, growth & time.",
+  "heroText": "Practical guides on writing to your future self, building digital time capsules, journaling your decisions and reflecting on your goals.",
+  "schemaDescription": "Browse PersonalCapsule blog categories for open when letters, future self letters, digital time capsules, decision journaling, reflection and memory keeping."
+}

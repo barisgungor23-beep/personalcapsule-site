@@ -1,0 +1,249 @@
+#!/usr/bin/env node
+
+const fs = require("fs");
+const path = require("path");
+
+const ROOT = path.resolve(__dirname, "..");
+const SITE = JSON.parse(fs.readFileSync(path.join(ROOT, "content/site.json"), "utf8"));
+const BLOG = JSON.parse(fs.readFileSync(path.join(ROOT, "content/blog.json"), "utf8"));
+const OUTPUT_DIR = path.join(ROOT, "outputs/generated/blog");
+
+function readJson(relativePath) {
+  return JSON.parse(fs.readFileSync(path.join(ROOT, relativePath), "utf8"));
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function escapeAttr(value) {
+  return escapeHtml(value);
+}
+
+function jsonLd(value) {
+  return JSON.stringify(value);
+}
+
+function appStoreUrl(campaign) {
+  return SITE.appStore.campaigns[campaign] || SITE.appStore.campaigns.website;
+}
+
+function appleSvg() {
+  return '<svg viewBox="0 0 384 512"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>';
+}
+
+function readPublishedCategories() {
+  return fs
+    .readdirSync(path.join(ROOT, "content/categories"))
+    .filter((name) => name.endsWith(".json"))
+    .map((name) => readJson(`content/categories/${name}`))
+    .filter((category) => category.status === "published")
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function readPublishedArticles() {
+  return fs
+    .readdirSync(path.join(ROOT, "content/articles"))
+    .filter((name) => name.endsWith(".json"))
+    .map((name) => readJson(`content/articles/${name}`))
+    .filter((article) => article.status === "published")
+    .sort((a, b) => {
+      const aDate = a.datePublished || "";
+      const bDate = b.datePublished || "";
+      if (aDate !== bDate) return aDate.localeCompare(bDate);
+      return a.title.localeCompare(b.title);
+    });
+}
+
+function articleCountByCategory(articles) {
+  return articles.reduce((counts, article) => {
+    counts.set(article.category, (counts.get(article.category) || 0) + 1);
+    return counts;
+  }, new Map());
+}
+
+function renderHead() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${SITE.siteUrl}/#organization`,
+        name: SITE.siteName,
+        url: `${SITE.siteUrl}/`,
+        logo: SITE.assets.icon,
+        email: SITE.supportEmail,
+        founder: {
+          "@type": "Person",
+          name: SITE.author,
+        },
+        sameAs: [appStoreUrl("website")],
+      },
+      {
+        "@type": "Blog",
+        "@id": `${SITE.siteUrl}/blog/#blog`,
+        name: `${SITE.siteName} Blog`,
+        url: BLOG.url,
+        description: BLOG.schemaDescription || BLOG.description,
+        publisher: {
+          "@id": `${SITE.siteUrl}/#organization`,
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: `${SITE.siteUrl}/` },
+          { "@type": "ListItem", position: 2, name: "Blog", item: BLOG.url },
+        ],
+      },
+    ],
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${escapeHtml(BLOG.seoTitle)}</title>
+<meta name="description" content="${escapeAttr(BLOG.description)}">
+<meta name="keywords" content="${escapeAttr(BLOG.keywords.join(", "))}">
+<meta name="author" content="${escapeAttr(SITE.author)}">
+<meta name="theme-color" content="#0b0907">
+<link rel="icon" type="image/png" sizes="32x32" href="${SITE.siteUrl}/favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="${SITE.siteUrl}/apple-touch-icon.png">
+<link rel="manifest" href="${SITE.siteUrl}/site.webmanifest">
+<link rel="canonical" href="${escapeAttr(BLOG.url)}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="${escapeAttr(SITE.siteName)}">
+<meta property="og:title" content="${escapeAttr(BLOG.seoTitle)}">
+<meta property="og:description" content="${escapeAttr(BLOG.description)}">
+<meta property="og:url" content="${escapeAttr(BLOG.url)}">
+<meta property="og:image" content="${SITE.assets.ogImage}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${escapeAttr(BLOG.seoTitle)}">
+<meta name="twitter:description" content="${escapeAttr(BLOG.description)}">
+<meta name="twitter:image" content="${SITE.assets.ogImage}">
+<link rel="preload" href="../fonts/hanken-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../fonts/fraunces-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../fonts.css">
+<link rel="stylesheet" href="../styles.css">
+<script type="application/ld+json">${jsonLd(schema)}</script>
+<!-- Cloudflare Web Analytics -->
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ea06127e65ee4078b5e86ad842b9fe2c"}'></script>
+<!-- End Cloudflare Web Analytics -->
+<script id="github-pages-domain-redirect">
+(function(){
+  if (location.hostname === "barisgungor23-beep.github.io") {
+    var path = location.pathname.replace(/^\\/personalcapsule-site\\/?/, "/");
+    location.replace("https://personalcapsule.app" + path + location.search + location.hash);
+  }
+})();
+</script>
+</head>`;
+}
+
+function renderCategoryCards(categories, articles) {
+  const counts = articleCountByCategory(articles);
+  return `<div class="category-grid reveal">${categories
+    .map((category, index) => {
+      const count = counts.get(category.id) || 0;
+      const label = count === 1 ? "1 article" : `${count} articles`;
+      return `<a class="category-card" href="category/${escapeAttr(
+        category.slug
+      )}"><span>Category ${index + 1}</span><strong>${escapeHtml(
+        category.name
+      )}</strong><small>${escapeHtml(label)}</small></a>`;
+    })
+    .join("")}</div>`;
+}
+
+function renderArticleCards(articles, categories) {
+  const categoryById = new Map(categories.map((category) => [category.id, category]));
+  return `<div class="post-grid">${articles
+    .map((article) => {
+      const category = categoryById.get(article.category);
+      return `<a class="post-card reveal" href="${escapeAttr(article.slug)}"><span class="p-tag">${escapeHtml(
+        category ? category.name : article.category
+      )}</span><h2>${escapeHtml(article.title)}</h2><p>${escapeHtml(
+        article.excerpt || article.description
+      )}</p><span class="p-more">Read article</span></a>`;
+    })
+    .join("")}</div>`;
+}
+
+function renderPage() {
+  const categories = readPublishedCategories();
+  const articles = readPublishedArticles();
+  return `${renderHead()}<body>
+<div class="atmos">
+  <div class="glow-orb" style="width:520px;height:520px;top:-120px;right:-100px;background:radial-gradient(circle,rgba(216,178,90,.28),transparent 70%)"></div>
+  <div class="glow-orb" style="width:480px;height:480px;bottom:6%;left:-140px;background:radial-gradient(circle,rgba(224,120,60,.18),transparent 70%)"></div>
+  <div class="grain"></div>
+</div>
+<nav id="nav" class="solid">
+  <div class="nav-inner">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../icon.jpg" alt="PersonalCapsule icon"><span>PersonalCapsule</span></a>
+    <div class="nav-links">
+      <a href="../about/">About</a>
+      <a href="../changelog/">Changelog</a>
+      <a href="../#faq">FAQ</a>
+      <a href="./">Blog</a>
+      <a href="../open-when-capsule/">Open When</a>
+    </div>
+    <a class="appstore sm" href="${escapeAttr(
+      appStoreUrl("website")
+    )}" target="_blank" rel="noopener" aria-label="Download on the App Store">${appleSvg()}<span class="as-txt"><span class="as-small">Download on the</span><span class="as-big">App Store</span></span></a>
+  </div>
+</nav>
+<header class="blog-hero">
+  <div class="wrap">
+    <div class="eyebrow reveal">${escapeHtml(BLOG.eyebrow)}</div>
+    <h1 class="reveal" style="transition-delay:.06s">${escapeHtml(BLOG.heading)}</h1>
+    <p class="reveal" style="transition-delay:.12s">${escapeHtml(BLOG.heroText)}</p>
+  </div>
+</header>
+<section class="sec" style="padding-top:30px">
+  <div class="wrap">
+    ${renderCategoryCards(categories, articles)}
+    ${renderArticleCards(articles, categories)}
+  </div>
+</section>
+<footer>
+  <div class="foot-inner">
+    <a class="foot-brand" href="../" style="text-decoration:none;color:inherit"><img src="../icon.jpg" alt="" aria-hidden="true"><span>PersonalCapsule</span></a>
+    <div class="foot-links">
+      <a href="../about/">About</a>
+      <a href="../changelog/">Changelog</a>
+      <a href="./">Blog</a>
+      <a href="../open-when-capsule/">Open When</a>
+      <a href="../#faq">FAQ</a>
+      <a href="${SITE.siteUrl}/privacy">Privacy</a>
+      <a href="${SITE.siteUrl}/terms">Terms</a>
+      <a href="mailto:${escapeAttr(SITE.supportEmail)}">Support</a>
+    </div>
+    <div class="foot-copy">&copy; 2026 PersonalCapsule &middot; Made for your future self.</div>
+  </div>
+</footer>
+<script>
+const nav=document.getElementById("nav");addEventListener("scroll",()=>{nav.classList.toggle("solid",scrollY>40)});
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}})},{threshold:.12});
+document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+</script>
+</body>
+</html>`;
+}
+
+function main() {
+  fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+  const outputPath = path.join(OUTPUT_DIR, "index.html");
+  fs.writeFileSync(outputPath, renderPage());
+  console.log(`Generated ${path.relative(ROOT, outputPath)}`);
+}
+
+main();
