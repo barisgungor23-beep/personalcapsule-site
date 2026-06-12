@@ -35,6 +35,7 @@ function main() {
     const requiredText = [
       "PersonalCapsule Website Admin",
       "Read-only control preview",
+      "Control Center",
       "Blog articles",
       "Categories",
       "Pages",

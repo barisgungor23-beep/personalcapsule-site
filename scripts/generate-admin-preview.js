@@ -6,6 +6,7 @@ const path = require("path");
 const ROOT = path.resolve(__dirname, "..");
 const MODEL_FILE = path.join(ROOT, "outputs", "admin", "admin-read-model.json");
 const OUTPUT_FILE = path.join(ROOT, "outputs", "admin", "index.html");
+const CONTROL_REPORT_FILE = path.join(ROOT, "outputs", "admin", "control-report.json");
 
 function escapeHtml(value) {
   return String(value)
@@ -120,12 +121,72 @@ function renderPages(pages) {
   return pageRows;
 }
 
+function readControlReport() {
+  if (!fs.existsSync(CONTROL_REPORT_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(CONTROL_REPORT_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function renderControlCenter(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Control Center</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No control report yet</strong>
+            <span>Run node scripts/run-admin-control-check.js to generate a full local safety report.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const generatedAt = new Date(report.generatedAt).toLocaleString("en-US", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+  const summary = report.summary || {};
+  const steps = Array.isArray(report.steps) ? report.steps : [];
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Control Center</h2>
+        <span class="pill ${summary.status === "passed" ? "good" : "bad"}">${escapeHtml(summary.status || "unknown")}</span>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Last run</span><strong>${escapeHtml(generatedAt)}</strong></div>
+        <div class="detail-stat"><span>Passed steps</span><strong>${escapeHtml(summary.passedSteps || 0)}</strong></div>
+        <div class="detail-stat"><span>Failed steps</span><strong>${escapeHtml(summary.failedSteps || 0)}</strong></div>
+        <div class="detail-stat"><span>First failure</span><strong>${escapeHtml(summary.firstFailedStep || "None")}</strong></div>
+      </div>
+      <div class="control-steps">
+        ${steps
+          .map(
+            (step) => `
+              <div class="control-step ${step.status === "passed" ? "passed" : "failed"}">
+                <strong>${escapeHtml(step.label)}</strong>
+                <span>${escapeHtml(step.status)} · ${escapeHtml(step.durationMs)}ms</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+    </section>`;
+}
+
 function render(model) {
   const generated = new Date(model.generatedAt).toLocaleString("en-US", {
     dateStyle: "medium",
     timeStyle: "short",
   });
   const articleJson = JSON.stringify(model.articles).replaceAll("</", "<\\/");
+  const controlReport = readControlReport();
 
   return `<!doctype html>
 <html lang="en">
@@ -342,6 +403,33 @@ function render(model) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
     }
+    .control-summary {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      padding: 14px;
+      border-bottom: 1px solid rgba(216,178,90,.15);
+    }
+    .control-steps {
+      display: grid;
+      gap: 8px;
+      padding: 14px;
+    }
+    .control-step {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      border: 1px solid rgba(255,247,230,.09);
+      background: rgba(0,0,0,.12);
+      border-radius: 11px;
+      padding: 10px;
+      font-size: 13px;
+    }
+    .control-step span { color: var(--muted); white-space: nowrap; }
+    .control-step.passed { border-color: rgba(134,201,138,.2); }
+    .control-step.failed { border-color: rgba(229,139,160,.32); }
+    .control-step.failed strong { color: var(--bad); }
     .detail-stat {
       border: 1px solid rgba(255,247,230,.09);
       background: rgba(0,0,0,.13);
@@ -455,6 +543,8 @@ function render(model) {
             ${renderHealthIssues(model)}
           </div>
         </section>
+
+        ${renderControlCenter(controlReport)}
 
         <section class="panel">
           <div class="panel-head">

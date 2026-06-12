@@ -141,6 +141,17 @@ function printStep(result) {
   }
 }
 
+function refreshAdminPreview() {
+  const result = runStep({
+    id: "refresh_admin_preview",
+    label: "Refresh admin preview with control report",
+    command: ["node", "scripts/generate-admin-preview.js"],
+    kind: "generate",
+  });
+  printStep(result);
+  return result;
+}
+
 function main() {
   const results = [];
 
@@ -166,6 +177,15 @@ function main() {
 
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
   fs.writeFileSync(REPORT_FILE, `${JSON.stringify(report, null, 2)}\n`);
+  const refreshResult = refreshAdminPreview();
+  if (refreshResult.status === "failed") {
+    summary.status = "failed";
+    summary.failedSteps += 1;
+    if (!summary.firstFailedStep) summary.firstFailedStep = refreshResult.id;
+    report.summary = summary;
+    report.steps.push(refreshResult);
+    fs.writeFileSync(REPORT_FILE, `${JSON.stringify(report, null, 2)}\n`);
+  }
 
   console.log("\nSummary");
   console.log("-------");
