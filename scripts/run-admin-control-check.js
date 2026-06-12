@@ -52,6 +52,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "audit_article_drafts",
+    label: "Audit article drafts",
+    command: ["node", "scripts/audit-article-drafts.js"],
+    kind: "audit",
+  },
+  {
     id: "audit_admin_read_model",
     label: "Audit admin read model",
     command: ["node", "scripts/audit-admin-read-model.js"],
