@@ -347,6 +347,27 @@ function render(model) {
       letter-spacing: .08em;
       text-transform: uppercase;
     }
+    .field-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .field-mode {
+      border: 1px solid rgba(255,247,230,.12);
+      border-radius: 999px;
+      padding: 2px 7px;
+      font-size: 10px;
+      line-height: 1.4;
+      color: var(--muted);
+      background: rgba(255,247,230,.04);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      white-space: nowrap;
+    }
+    .field-mode.editable { color: var(--gold); border-color: rgba(216,178,90,.28); background: rgba(216,178,90,.07); }
+    .field-mode.generated { color: var(--blue); border-color: rgba(127,176,230,.28); background: rgba(127,176,230,.07); }
+    .field-mode.readonly { color: var(--faint); }
     input, select {
       width: 100%;
       min-height: 42px;
@@ -514,6 +535,12 @@ function render(model) {
       color: var(--muted);
       padding: 0 18px 18px;
       font-size: 13px;
+    }
+    .editor-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 14px 18px 0;
     }
     .block-preview {
       display: grid;
@@ -694,9 +721,14 @@ function render(model) {
               <h2>Read-only Editor</h2>
               <small>Form preview</small>
             </div>
+            <div class="editor-legend">
+              <span class="field-mode editable">Editable later</span>
+              <span class="field-mode generated">Generated</span>
+              <span class="field-mode readonly">Read-only</span>
+            </div>
             <div class="editor-grid" id="articleEditor">
               <label class="field wide">
-                <span>No article selected</span>
+                <span class="field-head"><span>No article selected</span><span class="field-mode readonly">Read-only</span></span>
                 <textarea readonly>Select an article from the table to preview how the future editor form will read its JSON fields.</textarea>
               </label>
             </div>
@@ -843,12 +875,15 @@ function render(model) {
     function field(label, value, options = {}) {
       const wide = options.wide ? " wide" : "";
       const multiline = options.multiline;
+      const mode = options.mode || "readonly";
+      const modeLabel = options.modeLabel || (mode === "editable" ? "Editable later" : mode === "generated" ? "Generated" : "Read-only");
       const safeLabel = esc(label);
       const safeValue = esc(value || "");
+      const head = "<span class='field-head'><span>" + safeLabel + "</span><span class='field-mode " + esc(mode) + "'>" + esc(modeLabel) + "</span></span>";
       if (multiline) {
-        return "<label class='field" + wide + "'><span>" + safeLabel + "</span><textarea readonly>" + safeValue + "</textarea></label>";
+        return "<label class='field" + wide + "'>" + head + "<textarea readonly>" + safeValue + "</textarea></label>";
       }
-      return "<label class='field" + wide + "'><span>" + safeLabel + "</span><input readonly value=\\"" + safeValue + "\\"></label>";
+      return "<label class='field" + wide + "'>" + head + "<input readonly value=\\"" + safeValue + "\\"></label>";
     }
 
     function renderBlocks(blocks) {
@@ -869,20 +904,21 @@ function render(model) {
     function renderEditor(article) {
       const keywordText = Array.isArray(article.keywords) ? article.keywords.join(", ") : "";
       editor.innerHTML = [
-        field("Internal ID", article.id),
-        field("Status", article.status),
-        field("Title", article.title, { wide: true }),
-        field("SEO title", article.seoTitle, { wide: true }),
-        field("Slug", article.slug),
-        field("Category", article.categoryName),
-        field("Meta description", article.description, { wide: true, multiline: true }),
-        field("Excerpt", article.excerpt || "", { wide: true, multiline: true }),
-        field("Keywords", keywordText, { wide: true, multiline: true }),
-        field("Published date", article.datePublished || ""),
-        field("Modified date", article.dateModified || ""),
-        field("CTA type", article.ctaType || "none"),
-        field("Read time", article.readTime || ""),
-        "<div class='field wide'><span>Body blocks</span><div class='block-preview'>" + renderBlocks(article.body) + "</div></div>"
+        field("Internal ID", article.id, { mode: "readonly" }),
+        field("Status", article.status, { mode: "editable" }),
+        field("Title", article.title, { wide: true, mode: "editable" }),
+        field("SEO title", article.seoTitle, { wide: true, mode: "editable" }),
+        field("Slug", article.slug, { mode: "generated" }),
+        field("Category", article.categoryName, { mode: "editable" }),
+        field("Meta description", article.description, { wide: true, multiline: true, mode: "editable" }),
+        field("Excerpt", article.excerpt || "", { wide: true, multiline: true, mode: "editable" }),
+        field("Keywords", keywordText, { wide: true, multiline: true, mode: "editable" }),
+        field("Published date", article.datePublished || "", { mode: "readonly" }),
+        field("Modified date", article.dateModified || "", { mode: "generated" }),
+        field("CTA type", article.ctaType || "none", { mode: "editable" }),
+        field("Read time", article.readTime || "", { mode: "generated" }),
+        field("Quality score", article.qualityStatus + " · " + article.qualityScore, { mode: "generated" }),
+        "<div class='field wide'><span class='field-head'><span>Body blocks</span><span class='field-mode editable'>Editable later</span></span><div class='block-preview'>" + renderBlocks(article.body) + "</div></div>"
       ].join("");
     }
 
