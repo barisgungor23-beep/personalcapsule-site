@@ -180,6 +180,35 @@ function renderControlCenter(report) {
     </section>`;
 }
 
+function renderPublishWorkflow() {
+  const steps = [
+    ["Create Draft", "Published content is copied into a private draft file."],
+    ["Edit Draft", "The founder edits the draft, not the public article."],
+    ["Preview", "The draft is rendered locally before it can become public."],
+    ["Control Check", "The full audit chain must pass before publishing."],
+    ["Publish", "Only then can generated files, sitemap, llms.txt and Git commit be created."],
+  ];
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Draft Publish Workflow</h2>
+        <span class="pill good">approved</span>
+      </div>
+      <div class="workflow-list">
+        ${steps
+          .map(
+            ([title, text], index) => `
+              <div class="workflow-step">
+                <strong>${index + 1}. ${escapeHtml(title)}</strong>
+                <span>${escapeHtml(text)}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+    </section>`;
+}
+
 function render(model) {
   const generated = new Date(model.generatedAt).toLocaleString("en-US", {
     dateStyle: "medium",
@@ -467,6 +496,21 @@ function render(model) {
     .control-step.passed { border-color: rgba(134,201,138,.2); }
     .control-step.failed { border-color: rgba(229,139,160,.32); }
     .control-step.failed strong { color: var(--bad); }
+    .workflow-list {
+      display: grid;
+      gap: 8px;
+      padding: 14px;
+    }
+    .workflow-step {
+      border: 1px solid rgba(255,247,230,.09);
+      background: rgba(0,0,0,.12);
+      border-radius: 11px;
+      padding: 10px;
+      display: grid;
+      gap: 3px;
+    }
+    .workflow-step strong { font-size: 13px; }
+    .workflow-step span { color: var(--muted); font-size: 12px; }
     .detail-stat {
       border: 1px solid rgba(255,247,230,.09);
       background: rgba(0,0,0,.13);
@@ -623,6 +667,8 @@ function render(model) {
         </section>
 
         ${renderControlCenter(controlReport)}
+
+        ${renderPublishWorkflow()}
 
         <section class="panel">
           <div class="panel-head">
