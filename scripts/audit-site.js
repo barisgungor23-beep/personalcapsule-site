@@ -38,6 +38,8 @@ function read(filePath) {
 function walk(dir, predicate, out = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     if (entry.name === ".git") continue;
+    if (entry.name === "outputs") continue;
+    if (entry.name === "docs") continue;
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       walk(full, predicate, out);
