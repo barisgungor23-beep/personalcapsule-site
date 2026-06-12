@@ -35,6 +35,13 @@ function main() {
     const requiredText = [
       "PersonalCapsule Website Admin",
       "Read-only control preview",
+      "Publish Workflow Status",
+      "System is healthy",
+      "Content health",
+      "Draft state",
+      "Preview and comparison",
+      "Restore readiness",
+      "Full control check",
       "Control Center",
       "Publish Readiness",
       "Publish Result",

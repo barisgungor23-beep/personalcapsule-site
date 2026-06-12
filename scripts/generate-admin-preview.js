@@ -210,6 +210,171 @@ function readPublishReport() {
   }
 }
 
+function reportStatus(report) {
+  if (!report) return "not_run";
+  return report.summary && report.summary.status === "passed" ? "passed" : "failed";
+}
+
+function gateClass(status) {
+  if (status === "passed" || status === "ready" || status === "idle") return "passed";
+  if (status === "not_run" || status === "review") return "needs-review";
+  return "failed";
+}
+
+function gateLabel(status) {
+  const labels = {
+    passed: "Passed",
+    failed: "Blocked",
+    not_run: "Not run",
+    ready: "Ready",
+    idle: "Idle",
+    review: "Review",
+  };
+  return labels[status] || status;
+}
+
+function renderWorkflowGate(title, status, detail) {
+  return `
+    <div class="workflow-gate ${gateClass(status)}">
+      <div>
+        <strong>${escapeHtml(title)}</strong>
+        <span>${escapeHtml(detail)}</span>
+      </div>
+      <small>${escapeHtml(gateLabel(status))}</small>
+    </div>`;
+}
+
+function renderPublishWorkflowStatus({
+  model,
+  controlReport,
+  draftComparisonReport,
+  publishReadinessReport,
+  publishDryRunReport,
+  publishRollbackPlan,
+  backupSnapshotReport,
+  restoreDryRunReport,
+}) {
+  const criticalIssues = model.health && Array.isArray(model.health.critical) ? model.health.critical.length : 0;
+  const seoWarnings = model.summary ? model.summary.seoWarnings || 0 : 0;
+  const readinessSummary = publishReadinessReport && publishReadinessReport.summary ? publishReadinessReport.summary : {};
+  const dryRunSummary = publishDryRunReport && publishDryRunReport.summary ? publishDryRunReport.summary : {};
+  const rollbackSummary = publishRollbackPlan && publishRollbackPlan.summary ? publishRollbackPlan.summary : {};
+  const backupSummary = backupSnapshotReport && backupSnapshotReport.summary ? backupSnapshotReport.summary : {};
+  const restoreSummary = restoreDryRunReport && restoreDryRunReport.summary ? restoreDryRunReport.summary : {};
+
+  const drafts = readinessSummary.drafts || 0;
+  const readyDrafts = readinessSummary.readyDrafts || 0;
+  const blockedDrafts = readinessSummary.blockedDrafts || 0;
+  const plannedOperations = dryRunSummary.plannedFileOperations || 0;
+
+  const contentStatus = criticalIssues > 0 ? "failed" : seoWarnings > 0 ? "review" : "passed";
+  const draftStatus = blockedDrafts > 0 ? "failed" : readyDrafts > 0 ? "ready" : "idle";
+  const comparisonStatus = drafts > 0 ? reportStatus(draftComparisonReport) : "idle";
+  const readinessStatus = drafts > 0 ? reportStatus(publishReadinessReport) : "idle";
+  const dryRunStatus = drafts > 0 ? reportStatus(publishDryRunReport) : "idle";
+  const rollbackStatus = drafts > 0 ? reportStatus(publishRollbackPlan) : "idle";
+  const backupStatus = drafts > 0 ? reportStatus(backupSnapshotReport) : "idle";
+  const restoreStatus = backupSummary.files > 0 || restoreSummary.restoreOperations > 0 ? reportStatus(restoreDryRunReport) : "idle";
+  const controlStatus = reportStatus(controlReport);
+
+  let headline = "System is healthy";
+  let explanation = "There are no active drafts right now. The website content system is ready for the next safe editing step.";
+  let overallStatus = "idle";
+
+  if (criticalIssues > 0 || blockedDrafts > 0 || controlStatus === "failed") {
+    headline = "Publishing is blocked";
+    explanation = "At least one safety check needs attention before any content should be published.";
+    overallStatus = "failed";
+  } else if (controlStatus === "not_run") {
+    headline = "Run the control check to refresh status";
+    explanation = "The workflow summary needs a fresh control report before it can describe the system as healthy.";
+    overallStatus = "review";
+  } else if (readyDrafts > 0 && dryRunStatus === "passed" && backupStatus === "passed") {
+    headline = "Drafts are ready for backup and publish";
+    explanation = "Ready drafts passed preview, comparison, publish dry-run, rollback planning and backup planning checks.";
+    overallStatus = "ready";
+  } else if (drafts > 0) {
+    headline = "Drafts are in progress";
+    explanation = "Drafts exist, but the full publish chain is not completely ready yet.";
+    overallStatus = "review";
+  }
+
+  return `
+    <section class="panel workflow-status-panel">
+      <div class="panel-head">
+        <h2>Publish Workflow Status</h2>
+        <span class="pill ${overallStatus === "failed" ? "bad" : overallStatus === "review" ? "warn" : "good"}">${escapeHtml(gateLabel(overallStatus))}</span>
+      </div>
+      <div class="workflow-status-hero ${gateClass(overallStatus)}">
+        <strong>${escapeHtml(headline)}</strong>
+        <p>${escapeHtml(explanation)}</p>
+      </div>
+      <div class="workflow-status-summary">
+        <div class="detail-stat"><span>Drafts</span><strong>${escapeHtml(drafts)}</strong></div>
+        <div class="detail-stat"><span>Ready drafts</span><strong>${escapeHtml(readyDrafts)}</strong></div>
+        <div class="detail-stat"><span>Blocked drafts</span><strong>${escapeHtml(blockedDrafts)}</strong></div>
+        <div class="detail-stat"><span>Planned ops</span><strong>${escapeHtml(plannedOperations)}</strong></div>
+      </div>
+      <div class="workflow-gates">
+        ${renderWorkflowGate(
+          "Content health",
+          contentStatus,
+          criticalIssues > 0
+            ? `${criticalIssues} critical issue(s) found.`
+            : seoWarnings > 0
+              ? `${seoWarnings} warning(s) should be reviewed.`
+              : "No critical content issues."
+        )}
+        ${renderWorkflowGate(
+          "Draft state",
+          draftStatus,
+          drafts === 0
+            ? "No active drafts waiting for publish."
+            : `${readyDrafts} ready, ${blockedDrafts} blocked.`
+        )}
+        ${renderWorkflowGate(
+          "Preview and comparison",
+          comparisonStatus,
+          drafts === 0 ? "No draft comparison needed." : "Draft changes have been compared with published content."
+        )}
+        ${renderWorkflowGate(
+          "Publish readiness",
+          readinessStatus,
+          drafts === 0 ? "Nothing is waiting for publish." : "Drafts have been checked for publish blockers."
+        )}
+        ${renderWorkflowGate(
+          "Publish dry run",
+          dryRunStatus,
+          drafts === 0 ? "No publish operations planned." : `${plannedOperations} local file operation(s) planned.`
+        )}
+        ${renderWorkflowGate(
+          "Rollback plan",
+          rollbackStatus,
+          drafts === 0 ? "No rollback plan needed." : `${rollbackSummary.restorePaths || 0} restore path(s) planned.`
+        )}
+        ${renderWorkflowGate(
+          "Backup plan",
+          backupStatus,
+          drafts === 0 ? "No backup needed." : `${backupSummary.files || 0} file(s) need backup before publish.`
+        )}
+        ${renderWorkflowGate(
+          "Restore readiness",
+          restoreStatus,
+          restoreStatus === "idle"
+            ? "No backup restore is currently needed."
+            : `${restoreSummary.restoreOperations || 0} restore operation(s) can be performed if needed.`
+        )}
+        ${renderWorkflowGate(
+          "Full control check",
+          controlStatus,
+          controlReport && controlReport.summary
+            ? `${controlReport.summary.passedSteps || 0} passed, ${controlReport.summary.failedSteps || 0} failed.`
+            : "Run the full control check to refresh this status."
+        )}
+      </div>
+    </section>`;
+}
+
 function renderRestoreReport(report) {
   if (!report) {
     return `
@@ -1045,6 +1210,83 @@ function render(model) {
     .control-step.passed { border-color: rgba(134,201,138,.2); }
     .control-step.failed { border-color: rgba(229,139,160,.32); }
     .control-step.failed strong { color: var(--bad); }
+    .workflow-status-hero {
+      display: grid;
+      gap: 6px;
+      margin: 14px;
+      padding: 14px;
+      border-radius: 13px;
+      border: 1px solid rgba(255,247,230,.1);
+      background: rgba(0,0,0,.14);
+    }
+    .workflow-status-hero strong {
+      font-size: 18px;
+      line-height: 1.2;
+    }
+    .workflow-status-hero p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .workflow-status-hero.passed,
+    .workflow-status-hero.idle {
+      border-color: rgba(134,201,138,.22);
+      background: rgba(134,201,138,.07);
+    }
+    .workflow-status-hero.needs-review {
+      border-color: rgba(240,207,122,.3);
+      background: rgba(240,207,122,.07);
+    }
+    .workflow-status-hero.failed {
+      border-color: rgba(229,139,160,.32);
+      background: rgba(229,139,160,.07);
+    }
+    .workflow-status-summary {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      padding: 0 14px 14px;
+      border-bottom: 1px solid rgba(216,178,90,.15);
+    }
+    .workflow-gates {
+      display: grid;
+      gap: 8px;
+      padding: 14px;
+    }
+    .workflow-gate {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border: 1px solid rgba(255,247,230,.09);
+      background: rgba(0,0,0,.12);
+      border-radius: 11px;
+      padding: 10px;
+    }
+    .workflow-gate div {
+      display: grid;
+      gap: 3px;
+      min-width: 0;
+    }
+    .workflow-gate strong { font-size: 13px; }
+    .workflow-gate span { color: var(--muted); font-size: 12px; }
+    .workflow-gate small {
+      color: var(--muted);
+      border: 1px solid rgba(255,247,230,.12);
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      white-space: nowrap;
+    }
+    .workflow-gate.passed { border-color: rgba(134,201,138,.22); }
+    .workflow-gate.passed small { color: var(--good); border-color: rgba(134,201,138,.3); background: rgba(134,201,138,.07); }
+    .workflow-gate.needs-review { border-color: rgba(240,207,122,.3); }
+    .workflow-gate.needs-review small { color: var(--warn); border-color: rgba(240,207,122,.3); background: rgba(240,207,122,.07); }
+    .workflow-gate.failed { border-color: rgba(229,139,160,.32); }
+    .workflow-gate.failed small { color: var(--bad); border-color: rgba(229,139,160,.32); background: rgba(229,139,160,.07); }
     .workflow-list {
       display: grid;
       gap: 8px;
@@ -1242,6 +1484,17 @@ function render(model) {
             ${renderHealthIssues(model)}
           </div>
         </section>
+
+        ${renderPublishWorkflowStatus({
+          model,
+          controlReport,
+          draftComparisonReport,
+          publishReadinessReport,
+          publishDryRunReport,
+          publishRollbackPlan,
+          backupSnapshotReport,
+          restoreDryRunReport,
+        })}
 
         ${renderControlCenter(controlReport)}
 
