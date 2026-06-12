@@ -12,6 +12,7 @@ const PUBLISH_READINESS_FILE = path.join(ROOT, "outputs", "admin", "publish-read
 const PUBLISH_DRY_RUN_FILE = path.join(ROOT, "outputs", "admin", "publish-dry-run-report.json");
 const PUBLISH_ROLLBACK_FILE = path.join(ROOT, "outputs", "admin", "publish-rollback-plan.json");
 const BACKUP_SNAPSHOT_FILE = path.join(ROOT, "outputs", "admin", "backup-snapshot-dry-run-report.json");
+const RESTORE_DRY_RUN_FILE = path.join(ROOT, "outputs", "admin", "restore-backup-dry-run-report.json");
 
 function escapeHtml(value) {
   return String(value)
@@ -180,6 +181,15 @@ function readBackupSnapshotReport() {
   }
 }
 
+function readRestoreDryRunReport() {
+  if (!fs.existsSync(RESTORE_DRY_RUN_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(RESTORE_DRY_RUN_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
 function renderControlCenter(report) {
   if (!report) {
     return `
@@ -226,6 +236,58 @@ function renderControlCenter(report) {
               </div>`
           )
           .join("")}
+      </div>
+    </section>`;
+}
+
+function renderRestoreDryRun(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Restore Dry Run</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No restore dry-run yet</strong>
+            <span>Run node scripts/restore-backup-snapshot-dry-run.js after creating a backup snapshot.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const plan = Array.isArray(report.restorePlan) ? report.restorePlan : [];
+  const status = summary.status === "passed" ? "good" : "bad";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Restore Dry Run</h2>
+        <span class="pill ${status}">${escapeHtml(report.mode || "dry_run")}</span>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Operations</span><strong>${escapeHtml(summary.restoreOperations || 0)}</strong></div>
+        <div class="detail-stat"><span>Missing targets</span><strong>${escapeHtml(summary.missingTargets || 0)}</strong></div>
+        <div class="detail-stat"><span>Blockers</span><strong>${escapeHtml(summary.blockers || 0)}</strong></div>
+        <div class="detail-stat"><span>Warnings</span><strong>${escapeHtml(summary.warnings || 0)}</strong></div>
+      </div>
+      <div class="mini-list restore-list">
+        ${
+          plan.length
+            ? plan
+                .slice(0, 12)
+                .map(
+                  (item) => `
+                    <div class="passed">
+                      <strong>${escapeHtml(item.to)}</strong>
+                      <span>${escapeHtml(item.action)} from ${escapeHtml(item.from)}</span>
+                    </div>`
+                )
+                .join("")
+            : `<div class="passed"><strong>No restore operations planned</strong><span>There is no backup snapshot to restore from yet.</span></div>`
+        }
       </div>
     </section>`;
 }
@@ -570,6 +632,7 @@ function render(model) {
   const publishDryRunReport = readPublishDryRunReport();
   const publishRollbackPlan = readPublishRollbackPlan();
   const backupSnapshotReport = readBackupSnapshotReport();
+  const restoreDryRunReport = readRestoreDryRunReport();
 
   return `<!doctype html>
 <html lang="en">
@@ -1064,6 +1127,8 @@ function render(model) {
         ${renderPublishRollback(publishRollbackPlan)}
 
         ${renderBackupSnapshot(backupSnapshotReport)}
+
+        ${renderRestoreDryRun(restoreDryRunReport)}
 
         ${renderDraftComparison(draftComparisonReport)}
 

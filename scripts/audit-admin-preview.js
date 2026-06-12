@@ -40,6 +40,7 @@ function main() {
       "Publish Dry Run",
       "Rollback Plan",
       "Backup Snapshot",
+      "Restore Dry Run",
       "Draft Comparison",
       "Draft Publish Workflow",
       "Create Draft",
