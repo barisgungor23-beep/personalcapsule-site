@@ -148,6 +148,14 @@ function validateArticle(file, article, categories) {
       if (block.type === "list" && (!Array.isArray(block.items) || block.items.length === 0)) {
         add("critical", file, `List block ${index} has no items.`);
       }
+      if (block.type === "list" && Array.isArray(block.items)) {
+        block.items.forEach((item, itemIndex) => {
+          if (typeof item === "string") return;
+          if (!item || typeof item !== "object" || !isNonEmptyString(item.text)) {
+            add("critical", file, `List block ${index} item ${itemIndex} is invalid.`);
+          }
+        });
+      }
     });
   }
 }
@@ -196,4 +204,3 @@ function main() {
 }
 
 main();
-

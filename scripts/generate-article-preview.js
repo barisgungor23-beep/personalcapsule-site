@@ -52,10 +52,15 @@ function renderBody(blocks) {
         return `<p>${linkText(block.text, block.links)}</p>`;
       }
       if (block.type === "heading") {
-        return `<h${block.level}>${escapeHtml(block.text)}</h${block.level}>`;
+        return `<h${block.level}>${linkText(block.text, block.links)}</h${block.level}>`;
       }
       if (block.type === "list") {
-        return `<ul>${block.items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`;
+        return `<ul>${block.items
+          .map((item) => {
+            if (typeof item === "string") return `<li>${escapeHtml(item)}</li>`;
+            return `<li>${linkText(item.text, item.links)}</li>`;
+          })
+          .join("")}</ul>`;
       }
       throw new Error(`Unsupported block type: ${block.type}`);
     })
