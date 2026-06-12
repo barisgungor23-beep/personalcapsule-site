@@ -82,10 +82,31 @@ function main() {
       add("critical", `HTML page count mismatch: summary says ${totalHtmlPages}, model has ${pages.length}.`);
     }
 
+    if (!model.summary.articleQuality || typeof model.summary.articleQuality !== "object") {
+      add("critical", "Missing summary articleQuality counts.");
+    } else {
+      const qualityTotal =
+        (model.summary.articleQuality.good || 0) +
+        (model.summary.articleQuality.review || 0) +
+        (model.summary.articleQuality.risk || 0);
+      if (qualityTotal !== articles.length) {
+        add("critical", `Article quality count mismatch: summary says ${qualityTotal}, model has ${articles.length}.`);
+      }
+    }
+
     const categoryIds = new Set(categories.map((category) => category.id));
     for (const article of articles) {
       if (!categoryIds.has(article.category)) {
         add("critical", `Article ${article.id} points to unknown category ${article.category}.`);
+      }
+      if (typeof article.qualityScore !== "number" || article.qualityScore < 0 || article.qualityScore > 100) {
+        add("critical", `Article ${article.id} has invalid qualityScore.`);
+      }
+      if (!["good", "review", "risk"].includes(article.qualityStatus)) {
+        add("critical", `Article ${article.id} has invalid qualityStatus: ${article.qualityStatus}.`);
+      }
+      if (!Array.isArray(article.qualityChecks) || article.qualityChecks.length === 0) {
+        add("critical", `Article ${article.id} has no qualityChecks.`);
       }
     }
 

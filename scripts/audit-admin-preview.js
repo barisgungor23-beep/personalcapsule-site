@@ -42,6 +42,7 @@ function main() {
       "Selected article",
       "SEO Preview",
       "Keywords",
+      "Quality checks",
       "Related links",
       "FAQ",
       "Local admin preview only",
@@ -76,9 +77,11 @@ function main() {
       'id="articleSearch"',
       'id="categoryFilter"',
       'id="statusFilter"',
+      'id="qualityFilter"',
       'id="articleCount"',
       'id="articleDetail"',
       "data-article-row",
+      "data-quality",
       "data-detail-id",
     ];
 

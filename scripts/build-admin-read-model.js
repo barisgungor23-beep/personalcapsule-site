@@ -96,6 +96,64 @@ function makeLengthStatus(value, min, max) {
   return "ok";
 }
 
+function scoreArticle(article) {
+  const checks = [
+    {
+      id: "seo_title",
+      label: "SEO title length",
+      passed: makeLengthStatus(article.seoTitle, 10, 65) === "ok",
+      weight: 20,
+    },
+    {
+      id: "meta_description",
+      label: "Meta description length",
+      passed: makeLengthStatus(article.description, 70, 165) === "ok",
+      weight: 20,
+    },
+    {
+      id: "keywords",
+      label: "Keyword coverage",
+      passed: Array.isArray(article.keywords) && article.keywords.length >= 5,
+      weight: 15,
+    },
+    {
+      id: "body_depth",
+      label: "Content depth",
+      passed: Array.isArray(article.body) && article.body.length >= 8,
+      weight: 15,
+    },
+    {
+      id: "related_links",
+      label: "Related links",
+      passed: Array.isArray(article.related) && article.related.length >= 2,
+      weight: 10,
+    },
+    {
+      id: "faq",
+      label: "FAQ coverage",
+      passed: Array.isArray(article.faq) && article.faq.length >= 1,
+      weight: 10,
+    },
+    {
+      id: "cta",
+      label: "CTA configured",
+      passed: Boolean(article.cta && article.cta.type && article.cta.heading && article.cta.text),
+      weight: 10,
+    },
+  ];
+
+  const score = checks.reduce((total, check) => total + (check.passed ? check.weight : 0), 0);
+  let status = "risk";
+  if (score >= 90) status = "good";
+  else if (score >= 70) status = "review";
+
+  return {
+    score,
+    status,
+    checks,
+  };
+}
+
 function collectWarnings({ categories, articles, pages }) {
   const warnings = [];
 
@@ -190,6 +248,7 @@ function main() {
   const articles = rawArticles
     .map((article) => {
       const category = categoryById.get(article.category);
+      const quality = scoreArticle(article);
       return {
         id: article.id,
         title: article.title,
@@ -216,6 +275,9 @@ function main() {
         readTime: article.readTime,
         ctaType: article.cta && article.cta.type ? article.cta.type : "none",
         cta: article.cta || null,
+        qualityScore: quality.score,
+        qualityStatus: quality.status,
+        qualityChecks: quality.checks,
       };
     })
     .sort((a, b) => a.categoryName.localeCompare(b.categoryName) || a.title.localeCompare(b.title));
@@ -240,6 +302,13 @@ function main() {
     .sort((a, b) => a.route.localeCompare(b.route));
 
   const warnings = collectWarnings({ categories, articles, pages });
+  const articleQualityCounts = articles.reduce(
+    (counts, article) => {
+      counts[article.qualityStatus] = (counts[article.qualityStatus] || 0) + 1;
+      return counts;
+    },
+    { good: 0, review: 0, risk: 0 }
+  );
 
   const model = {
     schemaVersion: 1,
@@ -262,6 +331,7 @@ function main() {
       totalBlogArticles: articles.length,
       articleStatuses: statusCounts(articles),
       categoryStatuses: statusCounts(categories),
+      articleQuality: articleQualityCounts,
       seoWarnings: warnings.length,
       draftPages: articles.filter((article) => article.status === "draft").length,
       archivedPages: articles.filter((article) => article.status === "archived").length,

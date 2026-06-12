@@ -56,13 +56,14 @@ function renderArticles(articles) {
   return articles
     .map(
       (article) => `
-        <tr data-article-row data-id="${escapeHtml(article.id)}" data-category="${escapeHtml(article.category)}" data-status="${escapeHtml(article.status)}" data-search="${escapeHtml(`${article.title} ${article.slug} ${article.categoryName} ${article.description}`.toLowerCase())}">
+        <tr data-article-row data-id="${escapeHtml(article.id)}" data-category="${escapeHtml(article.category)}" data-status="${escapeHtml(article.status)}" data-quality="${escapeHtml(article.qualityStatus)}" data-search="${escapeHtml(`${article.title} ${article.slug} ${article.categoryName} ${article.description}`.toLowerCase())}">
           <td>
             <strong>${escapeHtml(article.title)}</strong>
             <small>${escapeHtml(article.slug)}</small>
           </td>
           <td>${escapeHtml(article.categoryName)}</td>
           <td><span class="pill ${statusClass(article.status)}">${escapeHtml(article.status)}</span></td>
+          <td><span class="pill ${statusClass(article.qualityStatus === "good" ? "ok" : article.qualityStatus === "review" ? "short" : "missing")}">${escapeHtml(article.qualityStatus)} · ${article.qualityScore}</span></td>
           <td>${article.seoTitleLength}</td>
           <td><span class="pill ${statusClass(article.descriptionStatus)}">${escapeHtml(article.descriptionStatus)}</span></td>
           <td>${article.bodyBlockCount}</td>
@@ -267,7 +268,7 @@ function render(model) {
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .tools {
       display: grid;
-      grid-template-columns: minmax(220px, 1fr) 220px 160px auto;
+      grid-template-columns: minmax(220px, 1fr) 220px 160px 150px auto;
       gap: 10px;
       padding: 14px;
       border-bottom: 1px solid rgba(216,178,90,.15);
@@ -434,6 +435,9 @@ function render(model) {
       ${renderMetric("Drafts", model.summary.articleStatuses.draft, "Not public")}
       ${renderMetric("Archived", model.summary.articleStatuses.archived, "Hidden from publishing")}
       ${renderMetric("Warnings", model.summary.seoWarnings, "Before publish checks")}
+      ${renderMetric("Good", model.summary.articleQuality.good, "Ready quality")}
+      ${renderMetric("Review", model.summary.articleQuality.review, "Needs attention")}
+      ${renderMetric("Risk", model.summary.articleQuality.risk, "Should not publish")}
     </section>
 
     <section class="layout">
@@ -494,6 +498,15 @@ function render(model) {
                 <option value="archived">Archived</option>
               </select>
             </label>
+            <label class="field">
+              <span>Quality</span>
+              <select id="qualityFilter">
+                <option value="all">All quality</option>
+                <option value="good">Good</option>
+                <option value="review">Review</option>
+                <option value="risk">Risk</option>
+              </select>
+            </label>
             <div class="result-count"><span id="articleCount">${model.articles.length}</span>&nbsp;articles</div>
           </div>
           <div class="table-wrap">
@@ -503,6 +516,7 @@ function render(model) {
                   <th>Article</th>
                   <th>Category</th>
                   <th>Status</th>
+                  <th>Quality</th>
                   <th>SEO title</th>
                   <th>Description</th>
                   <th>Blocks</th>
@@ -587,6 +601,7 @@ function render(model) {
     const searchInput = document.getElementById("articleSearch");
     const categoryFilter = document.getElementById("categoryFilter");
     const statusFilter = document.getElementById("statusFilter");
+    const qualityFilter = document.getElementById("qualityFilter");
     const articleCount = document.getElementById("articleCount");
     const detail = document.getElementById("articleDetail");
     const rows = Array.from(document.querySelectorAll("[data-article-row]"));
@@ -603,13 +618,15 @@ function render(model) {
       const query = searchInput.value.trim().toLowerCase();
       const category = categoryFilter.value;
       const status = statusFilter.value;
+      const quality = qualityFilter.value;
       let visible = 0;
 
       for (const row of rows) {
         const matchesSearch = query === "" || row.dataset.search.includes(query);
         const matchesCategory = category === "all" || row.dataset.category === category;
         const matchesStatus = status === "all" || row.dataset.status === status;
-        const show = matchesSearch && matchesCategory && matchesStatus;
+        const matchesQuality = quality === "all" || row.dataset.quality === quality;
+        const show = matchesSearch && matchesCategory && matchesStatus && matchesQuality;
         row.classList.toggle("hidden-row", !show);
         if (show) visible += 1;
       }
@@ -621,6 +638,7 @@ function render(model) {
       const keywords = Array.isArray(article.keywords) ? article.keywords : [];
       const related = Array.isArray(article.related) ? article.related : [];
       const faq = Array.isArray(article.faq) ? article.faq : [];
+      const qualityChecks = Array.isArray(article.qualityChecks) ? article.qualityChecks : [];
       const cta = article.cta || {};
 
       detail.innerHTML = [
@@ -635,11 +653,14 @@ function render(model) {
         "<div class='detail-grid'>",
           "<div class='detail-stat'><span>Category</span><strong>" + esc(article.categoryName) + "</strong></div>",
           "<div class='detail-stat'><span>Status</span><strong>" + esc(article.status) + "</strong></div>",
+          "<div class='detail-stat'><span>Quality</span><strong>" + esc(article.qualityStatus) + " · " + esc(article.qualityScore) + "</strong></div>",
           "<div class='detail-stat'><span>SEO title length</span><strong>" + esc(article.seoTitleLength) + "</strong></div>",
           "<div class='detail-stat'><span>Description length</span><strong>" + esc(article.descriptionLength) + "</strong></div>",
           "<div class='detail-stat'><span>Body blocks</span><strong>" + esc(article.bodyBlockCount) + "</strong></div>",
           "<div class='detail-stat'><span>Related articles</span><strong>" + esc(article.relatedCount) + "</strong></div>",
         "</div>",
+        "<div class='section-label'>Quality checks</div>",
+        "<div class='mini-list'>" + qualityChecks.map((check) => "<div><strong>" + (check.passed ? "Passed" : "Needs review") + " · " + esc(check.label) + "</strong><span>Weight: " + esc(check.weight) + "</span></div>").join("") + "</div>",
         "<div class='section-label'>Keywords</div>",
         "<div class='tag-list'>" + keywords.map((keyword) => "<span class='tag'>" + esc(keyword) + "</span>").join("") + "</div>",
         "<div class='section-label'>CTA</div>",
@@ -655,6 +676,7 @@ function render(model) {
     searchInput.addEventListener("input", applyFilters);
     categoryFilter.addEventListener("change", applyFilters);
     statusFilter.addEventListener("change", applyFilters);
+    qualityFilter.addEventListener("change", applyFilters);
 
     document.addEventListener("click", (event) => {
       const button = event.target.closest("[data-detail-id]");
