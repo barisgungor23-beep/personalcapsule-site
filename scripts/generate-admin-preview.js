@@ -209,12 +209,49 @@ function renderPublishWorkflow() {
     </section>`;
 }
 
+function renderEditorRules(rules) {
+  if (!rules || !Array.isArray(rules.fields)) return "";
+
+  const counts = rules.fields.reduce((summary, field) => {
+    summary[field.mode] = (summary[field.mode] || 0) + 1;
+    return summary;
+  }, {});
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Editor Rules</h2>
+        <span class="pill good">draft-safe</span>
+      </div>
+      <div class="rule-summary">
+        <div class="detail-stat"><span>Editable</span><strong>${escapeHtml(counts.editable || 0)}</strong></div>
+        <div class="detail-stat"><span>Controlled</span><strong>${escapeHtml(counts.controlled || 0)}</strong></div>
+        <div class="detail-stat"><span>Generated</span><strong>${escapeHtml(counts.generated || 0)}</strong></div>
+        <div class="detail-stat"><span>Locked</span><strong>${escapeHtml(counts.locked || 0)}</strong></div>
+      </div>
+      <div class="rule-list">
+        ${rules.fields
+          .map(
+            (field) => `
+              <div class="rule-item risk-${escapeHtml(field.publishRisk)}">
+                <strong>${escapeHtml(field.label)}</strong>
+                <span class="field-mode ${escapeHtml(field.mode)}">${escapeHtml(field.mode)}</span>
+                <p>${escapeHtml(field.why)}</p>
+                <small>Publish risk: ${escapeHtml(field.publishRisk)}</small>
+              </div>`
+          )
+          .join("")}
+      </div>
+    </section>`;
+}
+
 function render(model) {
   const generated = new Date(model.generatedAt).toLocaleString("en-US", {
     dateStyle: "medium",
     timeStyle: "short",
   });
   const articleJson = JSON.stringify(model.articles).replaceAll("</", "<\\/");
+  const editorRulesJson = JSON.stringify(model.editorRules.article || {}).replaceAll("</", "<\\/");
   const controlReport = readControlReport();
 
   return `<!doctype html>
@@ -376,6 +413,11 @@ function render(model) {
       letter-spacing: .08em;
       text-transform: uppercase;
     }
+    .field small {
+      color: var(--faint);
+      font-size: 11px;
+      line-height: 1.35;
+    }
     .field-head {
       display: flex;
       align-items: center;
@@ -396,6 +438,8 @@ function render(model) {
     }
     .field-mode.editable { color: var(--gold); border-color: rgba(216,178,90,.28); background: rgba(216,178,90,.07); }
     .field-mode.generated { color: var(--blue); border-color: rgba(127,176,230,.28); background: rgba(127,176,230,.07); }
+    .field-mode.controlled { color: var(--warn); border-color: rgba(240,207,122,.28); background: rgba(240,207,122,.07); }
+    .field-mode.locked { color: var(--bad); border-color: rgba(229,139,160,.28); background: rgba(229,139,160,.07); }
     .field-mode.readonly { color: var(--faint); }
     input, select {
       width: 100%;
@@ -511,6 +555,34 @@ function render(model) {
     }
     .workflow-step strong { font-size: 13px; }
     .workflow-step span { color: var(--muted); font-size: 12px; }
+    .rule-summary {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      padding: 14px;
+      border-bottom: 1px solid rgba(216,178,90,.15);
+    }
+    .rule-list {
+      display: grid;
+      gap: 8px;
+      padding: 14px;
+      max-height: 540px;
+      overflow: auto;
+    }
+    .rule-item {
+      border: 1px solid rgba(255,247,230,.09);
+      background: rgba(0,0,0,.12);
+      border-radius: 11px;
+      padding: 10px;
+      display: grid;
+      gap: 6px;
+    }
+    .rule-item strong { font-size: 13px; }
+    .rule-item p { margin: 0; color: var(--muted); font-size: 12px; }
+    .rule-item small { color: var(--faint); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; }
+    .rule-item.risk-high { border-color: rgba(229,139,160,.26); }
+    .rule-item.risk-medium { border-color: rgba(240,207,122,.24); }
+    .rule-item.risk-low { border-color: rgba(134,201,138,.2); }
     .detail-stat {
       border: 1px solid rgba(255,247,230,.09);
       background: rgba(0,0,0,.13);
@@ -670,6 +742,8 @@ function render(model) {
 
         ${renderPublishWorkflow()}
 
+        ${renderEditorRules(model.editorRules.article)}
+
         <section class="panel">
           <div class="panel-head">
             <h2>Category map</h2>
@@ -769,8 +843,9 @@ function render(model) {
             </div>
             <div class="editor-legend">
               <span class="field-mode editable">Editable later</span>
+              <span class="field-mode controlled">Controlled</span>
               <span class="field-mode generated">Generated</span>
-              <span class="field-mode readonly">Read-only</span>
+              <span class="field-mode locked">Locked</span>
             </div>
             <div class="editor-grid" id="articleEditor">
               <label class="field wide">
@@ -835,6 +910,8 @@ function render(model) {
   </main>
   <script>
     const articles = ${articleJson};
+    const editorRules = ${editorRulesJson};
+    const editorRuleByKey = new Map((editorRules.fields || []).map((rule) => [rule.key, rule]));
     const articleById = new Map(articles.map((article) => [article.id, article]));
     const searchInput = document.getElementById("articleSearch");
     const categoryFilter = document.getElementById("categoryFilter");
@@ -918,18 +995,36 @@ function render(model) {
       ].join("");
     }
 
-    function field(label, value, options = {}) {
+    function labelForMode(mode) {
+      if (mode === "editable") return "Editable";
+      if (mode === "controlled") return "Controlled";
+      if (mode === "generated") return "Generated";
+      if (mode === "locked") return "Locked";
+      return "Read-only";
+    }
+
+    function ruleFor(key, fallback = {}) {
+      return editorRuleByKey.get(key) || fallback;
+    }
+
+    function field(key, label, value, options = {}) {
+      const rule = ruleFor(key, {
+        label,
+        mode: options.mode || "locked",
+        why: "No editor rule is defined for this field yet.",
+      });
       const wide = options.wide ? " wide" : "";
       const multiline = options.multiline;
-      const mode = options.mode || "readonly";
-      const modeLabel = options.modeLabel || (mode === "editable" ? "Editable later" : mode === "generated" ? "Generated" : "Read-only");
-      const safeLabel = esc(label);
+      const mode = rule.mode || options.mode || "locked";
+      const modeLabel = options.modeLabel || labelForMode(mode);
+      const safeLabel = esc(rule.label || label);
       const safeValue = esc(value || "");
       const head = "<span class='field-head'><span>" + safeLabel + "</span><span class='field-mode " + esc(mode) + "'>" + esc(modeLabel) + "</span></span>";
+      const help = rule.why ? "<small>" + esc(rule.why) + "</small>" : "";
       if (multiline) {
-        return "<label class='field" + wide + "'>" + head + "<textarea readonly>" + safeValue + "</textarea></label>";
+        return "<label class='field" + wide + "'>" + head + "<textarea readonly>" + safeValue + "</textarea>" + help + "</label>";
       }
-      return "<label class='field" + wide + "'>" + head + "<input readonly value=\\"" + safeValue + "\\"></label>";
+      return "<label class='field" + wide + "'>" + head + "<input readonly value=\\"" + safeValue + "\\">" + help + "</label>";
     }
 
     function renderBlocks(blocks) {
@@ -950,21 +1045,21 @@ function render(model) {
     function renderEditor(article) {
       const keywordText = Array.isArray(article.keywords) ? article.keywords.join(", ") : "";
       editor.innerHTML = [
-        field("Internal ID", article.id, { mode: "readonly" }),
-        field("Status", article.status, { mode: "editable" }),
-        field("Title", article.title, { wide: true, mode: "editable" }),
-        field("SEO title", article.seoTitle, { wide: true, mode: "editable" }),
-        field("Slug", article.slug, { mode: "generated" }),
-        field("Category", article.categoryName, { mode: "editable" }),
-        field("Meta description", article.description, { wide: true, multiline: true, mode: "editable" }),
-        field("Excerpt", article.excerpt || "", { wide: true, multiline: true, mode: "editable" }),
-        field("Keywords", keywordText, { wide: true, multiline: true, mode: "editable" }),
-        field("Published date", article.datePublished || "", { mode: "readonly" }),
-        field("Modified date", article.dateModified || "", { mode: "generated" }),
-        field("CTA type", article.ctaType || "none", { mode: "editable" }),
-        field("Read time", article.readTime || "", { mode: "generated" }),
-        field("Quality score", article.qualityStatus + " · " + article.qualityScore, { mode: "generated" }),
-        "<div class='field wide'><span class='field-head'><span>Body blocks</span><span class='field-mode editable'>Editable later</span></span><div class='block-preview'>" + renderBlocks(article.body) + "</div></div>"
+        field("id", "Internal ID", article.id),
+        field("status", "Status", article.status),
+        field("title", "Title", article.title, { wide: true }),
+        field("seoTitle", "SEO title", article.seoTitle, { wide: true }),
+        field("slug", "Slug", article.slug),
+        field("category", "Category", article.categoryName),
+        field("description", "Meta description", article.description, { wide: true, multiline: true }),
+        field("excerpt", "Excerpt", article.excerpt || "", { wide: true, multiline: true }),
+        field("keywords", "Keywords", keywordText, { wide: true, multiline: true }),
+        field("datePublished", "Published date", article.datePublished || ""),
+        field("dateModified", "Modified date", article.dateModified || ""),
+        field("cta", "CTA type", article.ctaType || "none"),
+        field("readTime", "Read time", article.readTime || ""),
+        field("qualityScore", "Quality score", article.qualityStatus + " · " + article.qualityScore, { mode: "generated" }),
+        "<div class='field wide'><span class='field-head'><span>Body blocks</span><span class='field-mode " + esc(ruleFor("body").mode || "editable") + "'>" + esc(labelForMode(ruleFor("body").mode || "editable")) + "</span></span><div class='block-preview'>" + renderBlocks(article.body) + "</div><small>" + esc(ruleFor("body").why || "") + "</small></div>"
       ].join("");
     }
 

@@ -58,6 +58,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "audit_editor_rules",
+    label: "Audit editor rules",
+    command: ["node", "scripts/audit-editor-rules.js"],
+    kind: "audit",
+  },
+  {
     id: "audit_article_drafts",
     label: "Audit article drafts",
     command: ["node", "scripts/audit-article-drafts.js"],

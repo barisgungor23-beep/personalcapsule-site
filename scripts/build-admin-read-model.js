@@ -241,6 +241,7 @@ function collectWarnings({ categories, articles, pages }) {
 function main() {
   const site = readJson(path.join(CONTENT_DIR, "site.json"));
   const blog = readJson(path.join(CONTENT_DIR, "blog.json"));
+  const articleEditorRules = readJson(path.join(CONTENT_DIR, "admin", "article-editor-rules.json"));
 
   const rawCategories = listJson(path.join(CONTENT_DIR, "categories")).map(readJson);
   const rawArticles = listJson(path.join(CONTENT_DIR, "articles")).map(readJson);
@@ -370,6 +371,9 @@ function main() {
     health: {
       critical: [],
       warnings,
+    },
+    editorRules: {
+      article: articleEditorRules,
     },
     categories,
     articles,

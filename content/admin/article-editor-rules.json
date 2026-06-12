@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "contentType": "blog_article",
+  "workflow": [
+    {
+      "id": "draft_first",
+      "label": "Draft first",
+      "description": "Published article files are never edited directly. Create a draft copy first."
+    },
+    {
+      "id": "preview_before_publish",
+      "label": "Preview before publish",
+      "description": "Draft HTML must be generated and reviewed before the draft can replace published content."
+    },
+    {
+      "id": "audit_before_publish",
+      "label": "Audit before publish",
+      "description": "The full admin control check must pass before publishing generated files."
+    }
+  ],
+  "fields": [
+    {
+      "key": "id",
+      "label": "Internal ID",
+      "mode": "locked",
+      "why": "The ID connects the article to its source file, drafts, previews, and internal references.",
+      "publishRisk": "high"
+    },
+    {
+      "key": "status",
+      "label": "Status",
+      "mode": "controlled",
+      "why": "Status changes affect whether content is public, private draft, or archived.",
+      "publishRisk": "high"
+    },
+    {
+      "key": "title",
+      "label": "Title",
+      "mode": "editable",
+      "why": "The visible article headline can be improved for clarity and conversion.",
+      "publishRisk": "medium"
+    },
+    {
+      "key": "seoTitle",
+      "label": "SEO title",
+      "mode": "editable",
+      "why": "The search-result title should be optimized without changing the article identity.",
+      "publishRisk": "medium"
+    },
+    {
+      "key": "slug",
+      "label": "Slug",
+      "mode": "generated",
+      "why": "URL changes can break indexed pages and internal links, so slug changes must be handled by a dedicated redirect-aware tool later.",
+      "publishRisk": "high"
+    },
+    {
+      "key": "category",
+      "label": "Category",
+      "mode": "controlled",
+      "why": "Changing category affects breadcrumbs, category pages, internal links, sitemap grouping, and AI topic clustering.",
+      "publishRisk": "medium"
+    },
+    {
+      "key": "description",
+      "label": "Meta description",
+      "mode": "editable",
+      "why": "The meta description helps search engines, AI systems, and users understand the page quickly.",
+      "publishRisk": "medium"
+    },
+    {
+      "key": "excerpt",
+      "label": "Excerpt",
+      "mode": "editable",
+      "why": "Excerpt text appears in lists and previews, so it can be improved safely inside a draft.",
+      "publishRisk": "low"
+    },
+    {
+      "key": "keywords",
+      "label": "Keywords",
+      "mode": "editable",
+      "why": "Keywords support admin search, topic clustering, SEO review, and future content planning.",
+      "publishRisk": "low"
+    },
+    {
+      "key": "body",
+      "label": "Body blocks",
+      "mode": "editable",
+      "why": "Article content can be revised inside a draft, then previewed and audited before publish.",
+      "publishRisk": "medium"
+    },
+    {
+      "key": "faq",
+      "label": "FAQ",
+      "mode": "editable",
+      "why": "FAQ answers improve direct usefulness and structured-data clarity.",
+      "publishRisk": "medium"
+    },
+    {
+      "key": "related",
+      "label": "Related articles",
+      "mode": "controlled",
+      "why": "Internal links affect navigation, crawl paths, and topical authority.",
+      "publishRisk": "medium"
+    },
+    {
+      "key": "datePublished",
+      "label": "Published date",
+      "mode": "locked",
+      "why": "Published date is historical and should not change during normal edits.",
+      "publishRisk": "medium"
+    },
+    {
+      "key": "dateModified",
+      "label": "Modified date",
+      "mode": "generated",
+      "why": "Modified date should update automatically when a draft is published.",
+      "publishRisk": "low"
+    },
+    {
+      "key": "readTime",
+      "label": "Read time",
+      "mode": "generated",
+      "why": "Read time should be recalculated from article length instead of typed manually.",
+      "publishRisk": "low"
+    },
+    {
+      "key": "cta",
+      "label": "CTA",
+      "mode": "controlled",
+      "why": "CTA links should use approved App Store campaign URLs and match the article intent.",
+      "publishRisk": "medium"
+    },
+    {
+      "key": "url",
+      "label": "Canonical URL",
+      "mode": "generated",
+      "why": "Canonical URL depends on the site URL and slug and should not be typed manually.",
+      "publishRisk": "high"
+    }
+  ]
+}
