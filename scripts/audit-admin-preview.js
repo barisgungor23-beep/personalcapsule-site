@@ -37,6 +37,7 @@ function main() {
       "Read-only control preview",
       "Control Center",
       "Publish Readiness",
+      "Publish Result",
       "Publish Dry Run",
       "Rollback Plan",
       "Backup Snapshot",

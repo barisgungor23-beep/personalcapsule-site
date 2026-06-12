@@ -13,6 +13,7 @@ const PUBLISH_DRY_RUN_FILE = path.join(ROOT, "outputs", "admin", "publish-dry-ru
 const PUBLISH_ROLLBACK_FILE = path.join(ROOT, "outputs", "admin", "publish-rollback-plan.json");
 const BACKUP_SNAPSHOT_FILE = path.join(ROOT, "outputs", "admin", "backup-snapshot-dry-run-report.json");
 const RESTORE_DRY_RUN_FILE = path.join(ROOT, "outputs", "admin", "restore-backup-dry-run-report.json");
+const PUBLISH_REPORT_FILE = path.join(ROOT, "outputs", "admin", "publish-report.json");
 
 function escapeHtml(value) {
   return String(value)
@@ -190,6 +191,15 @@ function readRestoreDryRunReport() {
   }
 }
 
+function readPublishReport() {
+  if (!fs.existsSync(PUBLISH_REPORT_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(PUBLISH_REPORT_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
 function renderControlCenter(report) {
   if (!report) {
     return `
@@ -236,6 +246,58 @@ function renderControlCenter(report) {
               </div>`
           )
           .join("")}
+      </div>
+    </section>`;
+}
+
+function renderPublishReport(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Publish Result</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No publish report yet</strong>
+            <span>Run node scripts/publish-article-draft.js --confirm only after all safety gates pass.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const operations = Array.isArray(report.operations) ? report.operations : [];
+  const status = summary.status === "passed" ? "good" : "bad";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Publish Result</h2>
+        <span class="pill ${status}">${escapeHtml(report.mode || "confirmed_publish")}</span>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Published</span><strong>${escapeHtml(summary.publishedDrafts || 0)}</strong></div>
+        <div class="detail-stat"><span>Operations</span><strong>${escapeHtml(summary.operations || 0)}</strong></div>
+        <div class="detail-stat"><span>Blockers</span><strong>${escapeHtml(summary.blockers || 0)}</strong></div>
+        <div class="detail-stat"><span>Warnings</span><strong>${escapeHtml(summary.warnings || 0)}</strong></div>
+      </div>
+      <div class="mini-list publish-result-list">
+        ${
+          operations.length
+            ? operations
+                .slice(0, 12)
+                .map(
+                  (item) => `
+                    <div class="${item.type === "cleanup" ? "needs-review" : "passed"}">
+                      <strong>${escapeHtml(item.type)}</strong>
+                      <span>${escapeHtml(item.to || item.path || "")}</span>
+                    </div>`
+                )
+                .join("")
+            : `<div class="passed"><strong>No publish operations yet</strong><span>Nothing has been published by the local command.</span></div>`
+        }
       </div>
     </section>`;
 }
@@ -633,6 +695,7 @@ function render(model) {
   const publishRollbackPlan = readPublishRollbackPlan();
   const backupSnapshotReport = readBackupSnapshotReport();
   const restoreDryRunReport = readRestoreDryRunReport();
+  const publishReport = readPublishReport();
 
   return `<!doctype html>
 <html lang="en">
@@ -1121,6 +1184,8 @@ function render(model) {
         ${renderControlCenter(controlReport)}
 
         ${renderPublishReadiness(publishReadinessReport)}
+
+        ${renderPublishReport(publishReport)}
 
         ${renderPublishDryRun(publishDryRunReport)}
 

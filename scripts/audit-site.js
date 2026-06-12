@@ -64,6 +64,15 @@ function attr(tag, name) {
   return match ? match[1] : "";
 }
 
+function decodeHtmlAttribute(value) {
+  return value
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
+}
+
 function matchAll(text, pattern) {
   return Array.from(text.matchAll(pattern));
 }
@@ -96,7 +105,7 @@ function getH1s(html) {
 function getAnchors(html) {
   return matchAll(html, /<a\b[^>]*>/gi)
     .map((m) => m[0])
-    .map((tag) => attr(tag, "href"))
+    .map((tag) => decodeHtmlAttribute(attr(tag, "href")))
     .filter(Boolean);
 }
 
