@@ -1,0 +1,28 @@
+{
+  "id": "reflection-personal-growth",
+  "type": "blog_category",
+  "status": "published",
+  "name": "Reflection & Personal Growth",
+  "slug": "reflection-personal-growth",
+  "url": "https://personalcapsule.app/blog/category/reflection-personal-growth",
+  "seoTitle": "Reflection & Personal Growth - PersonalCapsule Blog",
+  "description": "Simple reflection methods, monthly questions and low-pressure growth ideas for understanding your life over time.",
+  "keywords": [
+    "reflection & personal growth",
+    "PersonalCapsule",
+    "private journal",
+    "future reflection"
+  ],
+  "eyebrow": "Reflection & Personal Growth",
+  "heading": "Reflection & Personal Growth",
+  "heroText": "Low-pressure reflection ideas for noticing patterns, reviewing goals, and understanding your own growth over time.",
+  "intro": "Simple reflection methods, monthly questions and low-pressure growth ideas for understanding your life over time.",
+  "schemaAbout": [
+    "personal growth reflection",
+    "goal reflection",
+    "monthly reflection questions",
+    "self reflection"
+  ],
+  "llmsInclude": true,
+  "sitemapInclude": true
+}
