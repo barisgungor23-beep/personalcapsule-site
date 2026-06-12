@@ -11,6 +11,7 @@ const DRAFT_COMPARISON_FILE = path.join(ROOT, "outputs", "admin", "draft-compari
 const PUBLISH_READINESS_FILE = path.join(ROOT, "outputs", "admin", "publish-readiness-report.json");
 const PUBLISH_DRY_RUN_FILE = path.join(ROOT, "outputs", "admin", "publish-dry-run-report.json");
 const PUBLISH_ROLLBACK_FILE = path.join(ROOT, "outputs", "admin", "publish-rollback-plan.json");
+const BACKUP_SNAPSHOT_FILE = path.join(ROOT, "outputs", "admin", "backup-snapshot-dry-run-report.json");
 
 function escapeHtml(value) {
   return String(value)
@@ -170,6 +171,15 @@ function readPublishRollbackPlan() {
   }
 }
 
+function readBackupSnapshotReport() {
+  if (!fs.existsSync(BACKUP_SNAPSHOT_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(BACKUP_SNAPSHOT_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
 function renderControlCenter(report) {
   if (!report) {
     return `
@@ -216,6 +226,58 @@ function renderControlCenter(report) {
               </div>`
           )
           .join("")}
+      </div>
+    </section>`;
+}
+
+function renderBackupSnapshot(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Backup Snapshot</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No backup snapshot dry-run yet</strong>
+            <span>Run node scripts/backup-snapshot-dry-run.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const files = Array.isArray(report.files) ? report.files : [];
+  const status = summary.status === "passed" ? "good" : "bad";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Backup Snapshot</h2>
+        <span class="pill ${status}">${escapeHtml(report.mode || "dry_run")}</span>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Files</span><strong>${escapeHtml(summary.files || 0)}</strong></div>
+        <div class="detail-stat"><span>Total bytes</span><strong>${escapeHtml(summary.totalBytes || 0)}</strong></div>
+        <div class="detail-stat"><span>Blockers</span><strong>${escapeHtml(summary.blockers || 0)}</strong></div>
+        <div class="detail-stat"><span>Warnings</span><strong>${escapeHtml(summary.warnings || 0)}</strong></div>
+      </div>
+      <div class="mini-list backup-list">
+        ${
+          files.length
+            ? files
+                .slice(0, 12)
+                .map(
+                  (item) => `
+                    <div class="passed">
+                      <strong>${escapeHtml(item.path)}</strong>
+                      <span>${escapeHtml(item.sizeBytes)} bytes · ${escapeHtml(item.reason)}</span>
+                    </div>`
+                )
+                .join("")
+            : `<div class="passed"><strong>No backup files needed</strong><span>There are no ready drafts waiting for publish.</span></div>`
+        }
       </div>
     </section>`;
 }
@@ -507,6 +569,7 @@ function render(model) {
   const publishReadinessReport = readPublishReadinessReport();
   const publishDryRunReport = readPublishDryRunReport();
   const publishRollbackPlan = readPublishRollbackPlan();
+  const backupSnapshotReport = readBackupSnapshotReport();
 
   return `<!doctype html>
 <html lang="en">
@@ -999,6 +1062,8 @@ function render(model) {
         ${renderPublishDryRun(publishDryRunReport)}
 
         ${renderPublishRollback(publishRollbackPlan)}
+
+        ${renderBackupSnapshot(backupSnapshotReport)}
 
         ${renderDraftComparison(draftComparisonReport)}
 

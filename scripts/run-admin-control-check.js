@@ -100,6 +100,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "backup_snapshot_dry_run",
+    label: "Backup snapshot dry run",
+    command: ["node", "scripts/backup-snapshot-dry-run.js"],
+    kind: "audit",
+  },
+  {
     id: "audit_admin_read_model",
     label: "Audit admin read model",
     command: ["node", "scripts/audit-admin-read-model.js"],

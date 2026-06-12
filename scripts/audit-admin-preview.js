@@ -39,6 +39,7 @@ function main() {
       "Publish Readiness",
       "Publish Dry Run",
       "Rollback Plan",
+      "Backup Snapshot",
       "Draft Comparison",
       "Draft Publish Workflow",
       "Create Draft",
