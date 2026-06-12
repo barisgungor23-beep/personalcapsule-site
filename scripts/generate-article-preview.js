@@ -209,15 +209,23 @@ ${renderFaq(article.faq)}
 }
 
 function main() {
-  const articleId = process.argv[2] || "open-when-letters";
-  const article = readJson(`content/articles/${articleId}.json`);
-  const category = readJson(`content/categories/${article.category}.json`);
-
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-  const outputPath = path.join(OUTPUT_DIR, `${article.slug}.html`);
-  fs.writeFileSync(outputPath, renderPage(article, category));
-  console.log(`Generated ${path.relative(ROOT, outputPath)}`);
+  const arg = process.argv[2] || "open-when-letters";
+  const articleFiles =
+    arg === "--all"
+      ? fs
+          .readdirSync(path.join(ROOT, "content/articles"))
+          .filter((name) => name.endsWith(".json"))
+          .map((name) => path.basename(name, ".json"))
+      : [arg];
+
+  for (const articleId of articleFiles) {
+    const article = readJson(`content/articles/${articleId}.json`);
+    const category = readJson(`content/categories/${article.category}.json`);
+    const outputPath = path.join(OUTPUT_DIR, `${article.slug}.html`);
+    fs.writeFileSync(outputPath, renderPage(article, category));
+    console.log(`Generated ${path.relative(ROOT, outputPath)}`);
+  }
 }
 
 main();
-
