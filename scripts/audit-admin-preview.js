@@ -39,6 +39,7 @@ function main() {
       "Categories",
       "Pages",
       "Health",
+      "Selected article",
       "Local admin preview only",
     ];
 
@@ -65,6 +66,22 @@ function main() {
     const articleRows = (html.match(/<tr>/g) || []).length;
     if (articleRows < 40) {
       add("warnings", `Admin preview has fewer table rows than expected: ${articleRows}`);
+    }
+
+    const requiredControls = [
+      'id="articleSearch"',
+      'id="categoryFilter"',
+      'id="statusFilter"',
+      'id="articleCount"',
+      'id="articleDetail"',
+      "data-article-row",
+      "data-detail-id",
+    ];
+
+    for (const control of requiredControls) {
+      if (!html.includes(control)) {
+        add("critical", `Admin preview is missing required control: ${control}`);
+      }
     }
   }
 

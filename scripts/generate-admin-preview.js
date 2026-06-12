@@ -56,7 +56,7 @@ function renderArticles(articles) {
   return articles
     .map(
       (article) => `
-        <tr>
+        <tr data-article-row data-id="${escapeHtml(article.id)}" data-category="${escapeHtml(article.category)}" data-status="${escapeHtml(article.status)}" data-search="${escapeHtml(`${article.title} ${article.slug} ${article.categoryName} ${article.description}`.toLowerCase())}">
           <td>
             <strong>${escapeHtml(article.title)}</strong>
             <small>${escapeHtml(article.slug)}</small>
@@ -69,8 +69,15 @@ function renderArticles(articles) {
           <td>${article.faqCount}</td>
           <td>${article.relatedCount}</td>
           <td>${escapeHtml(article.dateModified || "")}</td>
+          <td><button class="mini-btn" type="button" data-detail-id="${escapeHtml(article.id)}">View</button></td>
         </tr>`
     )
+    .join("");
+}
+
+function renderCategoryOptions(categories) {
+  return categories
+    .map((category) => `<option value="${escapeHtml(category.id)}">${escapeHtml(category.name)}</option>`)
     .join("");
 }
 
@@ -116,6 +123,7 @@ function render(model) {
     dateStyle: "medium",
     timeStyle: "short",
   });
+  const articleJson = JSON.stringify(model.articles).replaceAll("</", "<\\/");
 
   return `<!doctype html>
 <html lang="en">
@@ -257,10 +265,94 @@ function render(model) {
     .side-item strong { font-size: 14px; }
     .side-item span { color: var(--muted); font-size: 13px; }
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .tools {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) 220px 160px auto;
+      gap: 10px;
+      padding: 14px;
+      border-bottom: 1px solid rgba(216,178,90,.15);
+      background: rgba(0,0,0,.08);
+    }
+    .field {
+      display: grid;
+      gap: 5px;
+    }
+    .field span {
+      color: var(--faint);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    input, select {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid rgba(255,247,230,.13);
+      border-radius: 11px;
+      background: rgba(0,0,0,.18);
+      color: var(--cream);
+      padding: 0 12px;
+      font: inherit;
+      outline: none;
+    }
+    input:focus, select:focus { border-color: rgba(216,178,90,.55); box-shadow: 0 0 0 3px rgba(216,178,90,.1); }
+    .mini-btn {
+      min-height: 34px;
+      border: 1px solid rgba(216,178,90,.28);
+      border-radius: 10px;
+      background: rgba(216,178,90,.08);
+      color: var(--gold);
+      padding: 0 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .mini-btn:hover { border-color: rgba(216,178,90,.55); background: rgba(216,178,90,.13); }
+    .result-count {
+      align-self: end;
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 11px;
+      background: rgba(255,247,230,.045);
+      color: var(--muted);
+      font-size: 13px;
+      border: 1px solid rgba(255,247,230,.09);
+      white-space: nowrap;
+    }
+    .detail-card {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+    .detail-card h3 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.15;
+    }
+    .detail-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .detail-stat {
+      border: 1px solid rgba(255,247,230,.09);
+      background: rgba(0,0,0,.13);
+      border-radius: 12px;
+      padding: 11px;
+    }
+    .detail-stat span { display: block; color: var(--faint); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+    .detail-stat strong { display: block; margin-top: 4px; font-size: 16px; }
+    .hidden-row { display: none; }
     footer { color: var(--faint); padding: 20px 0 4px; font-size: 13px; }
     @media (max-width: 1100px) {
       .metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      .layout, .two-col { grid-template-columns: 1fr; }
+      .layout, .two-col, .tools { grid-template-columns: 1fr; }
       header { display: grid; }
       .syncbox { min-width: 0; }
     }
@@ -333,7 +425,30 @@ function render(model) {
         <section class="panel">
           <div class="panel-head">
             <h2>Blog articles</h2>
-            <small>Read-only list</small>
+            <small>Read-only searchable list</small>
+          </div>
+          <div class="tools" aria-label="Article filters">
+            <label class="field">
+              <span>Search</span>
+              <input id="articleSearch" type="search" placeholder="Search title, slug, category or description">
+            </label>
+            <label class="field">
+              <span>Category</span>
+              <select id="categoryFilter">
+                <option value="all">All categories</option>
+                ${renderCategoryOptions(model.categories)}
+              </select>
+            </label>
+            <label class="field">
+              <span>Status</span>
+              <select id="statusFilter">
+                <option value="all">All statuses</option>
+                <option value="published">Published</option>
+                <option value="draft">Draft</option>
+                <option value="archived">Archived</option>
+              </select>
+            </label>
+            <div class="result-count"><span id="articleCount">${model.articles.length}</span>&nbsp;articles</div>
           </div>
           <div class="table-wrap">
             <table>
@@ -348,6 +463,7 @@ function render(model) {
                   <th>FAQ</th>
                   <th>Related</th>
                   <th>Modified</th>
+                  <th>Detail</th>
                 </tr>
               </thead>
               <tbody>${renderArticles(model.articles)}</tbody>
@@ -356,6 +472,17 @@ function render(model) {
         </section>
 
         <section class="two-col">
+          <section class="panel">
+            <div class="panel-head">
+              <h2>Selected article</h2>
+              <small>Read-only detail</small>
+            </div>
+            <div class="detail-card" id="articleDetail">
+              <h3>No article selected</h3>
+              <p>Use the View button in the article table to inspect SEO, structure and publishing fields before editing features exist.</p>
+            </div>
+          </section>
+
           <section class="panel">
             <div class="panel-head">
               <h2>Categories</h2>
@@ -408,6 +535,70 @@ function render(model) {
       Local admin preview only. Next step: turn this read-only preview into a protected interface.
     </footer>
   </main>
+  <script>
+    const articles = ${articleJson};
+    const articleById = new Map(articles.map((article) => [article.id, article]));
+    const searchInput = document.getElementById("articleSearch");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const statusFilter = document.getElementById("statusFilter");
+    const articleCount = document.getElementById("articleCount");
+    const detail = document.getElementById("articleDetail");
+    const rows = Array.from(document.querySelectorAll("[data-article-row]"));
+
+    function esc(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+    }
+
+    function applyFilters() {
+      const query = searchInput.value.trim().toLowerCase();
+      const category = categoryFilter.value;
+      const status = statusFilter.value;
+      let visible = 0;
+
+      for (const row of rows) {
+        const matchesSearch = query === "" || row.dataset.search.includes(query);
+        const matchesCategory = category === "all" || row.dataset.category === category;
+        const matchesStatus = status === "all" || row.dataset.status === status;
+        const show = matchesSearch && matchesCategory && matchesStatus;
+        row.classList.toggle("hidden-row", !show);
+        if (show) visible += 1;
+      }
+
+      articleCount.textContent = visible;
+    }
+
+    function renderDetail(article) {
+      detail.innerHTML = [
+        "<h3>" + esc(article.title) + "</h3>",
+        "<p>" + esc(article.description) + "</p>",
+        "<div class='detail-grid'>",
+          "<div class='detail-stat'><span>Category</span><strong>" + esc(article.categoryName) + "</strong></div>",
+          "<div class='detail-stat'><span>Status</span><strong>" + esc(article.status) + "</strong></div>",
+          "<div class='detail-stat'><span>SEO title length</span><strong>" + esc(article.seoTitleLength) + "</strong></div>",
+          "<div class='detail-stat'><span>Description length</span><strong>" + esc(article.descriptionLength) + "</strong></div>",
+          "<div class='detail-stat'><span>Body blocks</span><strong>" + esc(article.bodyBlockCount) + "</strong></div>",
+          "<div class='detail-stat'><span>Related articles</span><strong>" + esc(article.relatedCount) + "</strong></div>",
+        "</div>",
+        "<p><strong>Slug:</strong> " + esc(article.slug) + "</p>",
+        "<p><strong>URL:</strong> " + esc(article.url) + "</p>"
+      ].join("");
+    }
+
+    searchInput.addEventListener("input", applyFilters);
+    categoryFilter.addEventListener("change", applyFilters);
+    statusFilter.addEventListener("change", applyFilters);
+
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-detail-id]");
+      if (!button) return;
+      const article = articleById.get(button.dataset.detailId);
+      if (article) renderDetail(article);
+    });
+  </script>
 </body>
 </html>`;
 }
