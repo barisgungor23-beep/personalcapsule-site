@@ -871,6 +871,37 @@ function renderPublishWorkflow() {
     </section>`;
 }
 
+function renderNewArticleWorkflow(categories) {
+  const defaultCategory = categories.find((category) => category.id === "open-when-letters") || categories[0];
+  const categoryId = defaultCategory ? defaultCategory.id : "open-when-letters";
+  const command = `node scripts/create-new-article-draft.js new-article-slug --category ${categoryId} --title "New Article Title" --confirm`;
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>New Article Draft</h2>
+        <span class="pill good">draft-only</span>
+      </div>
+      <div class="health">
+        <div class="empty">New articles start as private drafts. They do not become public until preview, comparison, readiness, backup, and publish checks pass.</div>
+      </div>
+      <div class="workflow-list">
+        <div class="workflow-step">
+          <strong>1. Create a private draft</strong>
+          <span>${escapeHtml(command)}</span>
+        </div>
+        <div class="workflow-step">
+          <strong>2. Replace placeholders</strong>
+          <span>Edit title, description, body, FAQ, related links, keywords, and CTA inside the draft JSON.</span>
+        </div>
+        <div class="workflow-step">
+          <strong>3. Mark ready only after review</strong>
+          <span>Set draftPublishIntent to ready only when the article is complete and should enter the publish chain.</span>
+        </div>
+      </div>
+    </section>`;
+}
+
 function renderEditorRules(rules) {
   if (!rules || !Array.isArray(rules.fields)) return "";
 
@@ -1515,6 +1546,8 @@ function render(model) {
         ${renderDraftComparison(draftComparisonReport)}
 
         ${renderPublishWorkflow()}
+
+        ${renderNewArticleWorkflow(model.categories)}
 
         ${renderEditorRules(model.editorRules.article)}
 

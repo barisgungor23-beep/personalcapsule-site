@@ -70,6 +70,21 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "create_new_article_draft_dry_run",
+    label: "Create new article draft dry run",
+    command: [
+      "node",
+      "scripts/create-new-article-draft.js",
+      "sample-new-article-draft",
+      "--category",
+      "open-when-letters",
+      "--title",
+      "Sample New Article Draft",
+      "--dry-run",
+    ],
+    kind: "audit",
+  },
+  {
     id: "audit_draft_previews",
     label: "Audit draft previews",
     command: ["node", "scripts/audit-draft-previews.js"],

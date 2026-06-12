@@ -11,6 +11,8 @@ const REPORT_FILE = path.join(OUTPUT_DIR, "draft-comparison-report.json");
 
 const ignoredFields = new Set([
   "status",
+  "draftKind",
+  "draftPublishIntent",
   "draftOf",
   "draftCreatedAt",
   "draftUpdatedAt",
@@ -95,13 +97,41 @@ function main() {
   for (const draftPath of drafts) {
     const draft = readJson(draftPath);
     const draftFile = path.relative(ROOT, draftPath).replace(/\\/g, "/");
+    const isNewArticleDraft = draft.draftKind === "new_article";
     const sourceId = draft.draftOf || draft.id;
     const sourcePath = path.join(ARTICLES_DIR, `${sourceId}.json`);
 
     if (!fs.existsSync(sourcePath)) {
-      critical.push({
+      if (!isNewArticleDraft) {
+        critical.push({
+          draft: draftFile,
+          message: `Published source is missing: content/articles/${sourceId}.json`,
+        });
+        continue;
+      }
+
+      const changes = Object.keys(draft)
+        .filter((key) => !ignoredFields.has(key))
+        .sort()
+        .map((key) => ({
+          field: key,
+          risk: fieldRisk[key] || "info",
+          before: "new article",
+          after: summarize(draft[key]),
+        }));
+
+      comparisons.push({
+        id: draft.id,
         draft: draftFile,
-        message: `Published source is missing: content/articles/${sourceId}.json`,
+        source: null,
+        title: draft.title,
+        slug: draft.slug,
+        kind: "new_article",
+        changedFields: changes.map((change) => change.field),
+        changeCount: changes.length,
+        criticalChangeCount: 0,
+        warningChangeCount: 0,
+        changes,
       });
       continue;
     }

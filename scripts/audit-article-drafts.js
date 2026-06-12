@@ -42,6 +42,19 @@ function validateDraft(filePath) {
     add("critical", relative, `Draft status must be "draft", found "${draft.status}".`);
   }
 
+  const isNewArticleDraft = draft.draftKind === "new_article";
+
+  if (isNewArticleDraft) {
+    if (draft.draftPublishIntent !== "editing" && draft.draftPublishIntent !== "ready") {
+      add("critical", relative, "New article draft must have draftPublishIntent set to editing or ready.");
+    }
+    const sourcePath = path.join(ARTICLES_DIR, `${draft.id}.json`);
+    if (fs.existsSync(sourcePath)) {
+      add("critical", relative, `New article draft already has a published source: content/articles/${draft.id}.json`);
+    }
+    return;
+  }
+
   if (!draft.draftOf || typeof draft.draftOf !== "string") {
     add("critical", relative, "Missing draftOf.");
     return;

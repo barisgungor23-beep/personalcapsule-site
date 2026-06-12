@@ -32,6 +32,34 @@ function draftPreviewPath(draft) {
   return path.join(DRAFT_OUTPUT_DIR, `${draft.slug}.draft.html`);
 }
 
+function hasPlaceholderText(value) {
+  if (typeof value === "string") {
+    return /\bdraft\b|placeholder|replace this|new article title/i.test(value);
+  }
+  if (Array.isArray(value)) {
+    return value.some((item) => hasPlaceholderText(item));
+  }
+  if (value && typeof value === "object") {
+    return Object.values(value).some((item) => hasPlaceholderText(item));
+  }
+  return false;
+}
+
+function publicDraftContent(draft) {
+  const {
+    draftKind,
+    draftPublishIntent,
+    draftOf,
+    draftCreatedAt,
+    draftUpdatedAt,
+    draftSourcePath,
+    draftNote,
+    status,
+    ...content
+  } = draft;
+  return content;
+}
+
 function main() {
   const comparison = readJsonIfExists(COMPARISON_FILE);
   const blockers = [];
@@ -67,6 +95,15 @@ function main() {
 
     if (draft.status !== "draft") {
       itemBlockers.push("Draft status must be draft.");
+    }
+    if (draft.draftKind === "new_article" && draft.draftPublishIntent !== "ready") {
+      itemBlockers.push("New article draft must set draftPublishIntent to ready before publishing.");
+    }
+    if (draft.draftKind === "new_article" && hasPlaceholderText(publicDraftContent(draft))) {
+      itemBlockers.push("New article draft still contains placeholder text.");
+    }
+    if (draft.draftKind === "new_article" && (!Array.isArray(draft.related) || draft.related.length < 2)) {
+      itemBlockers.push("New article draft needs at least 2 related links before publishing.");
     }
     if (!fs.existsSync(previewPath)) {
       itemBlockers.push(`Draft preview is missing: ${relative(previewPath)}`);

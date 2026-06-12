@@ -12,6 +12,8 @@ const BACKUP_REPORT_FILE = path.join(ADMIN_OUTPUT_DIR, "backup-snapshot-report.j
 const PUBLISH_REPORT_FILE = path.join(ADMIN_OUTPUT_DIR, "publish-report.json");
 
 const draftOnlyKeys = new Set([
+  "draftKind",
+  "draftPublishIntent",
   "draftOf",
   "draftCreatedAt",
   "draftUpdatedAt",
