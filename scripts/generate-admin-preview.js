@@ -358,6 +358,22 @@ function render(model) {
       font: inherit;
       outline: none;
     }
+    textarea {
+      width: 100%;
+      min-height: 92px;
+      border: 1px solid rgba(255,247,230,.13);
+      border-radius: 11px;
+      background: rgba(0,0,0,.18);
+      color: var(--cream);
+      padding: 12px;
+      font: inherit;
+      resize: vertical;
+      outline: none;
+    }
+    input[readonly], textarea[readonly], select:disabled {
+      color: var(--muted);
+      cursor: default;
+    }
     input:focus, select:focus { border-color: rgba(216,178,90,.55); box-shadow: 0 0 0 3px rgba(216,178,90,.1); }
     .mini-btn {
       min-height: 34px;
@@ -487,6 +503,41 @@ function render(model) {
       font-weight: 800;
       margin-bottom: -6px;
     }
+    .editor-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      padding: 18px;
+    }
+    .editor-grid .wide { grid-column: 1 / -1; }
+    .editor-help {
+      color: var(--muted);
+      padding: 0 18px 18px;
+      font-size: 13px;
+    }
+    .block-preview {
+      display: grid;
+      gap: 8px;
+      max-height: 360px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+    .block-item {
+      border: 1px solid rgba(255,247,230,.09);
+      background: rgba(0,0,0,.12);
+      border-radius: 11px;
+      padding: 10px;
+      display: grid;
+      gap: 4px;
+    }
+    .block-item span {
+      color: var(--gold);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-weight: 800;
+    }
+    .block-item p { margin: 0; color: var(--muted); font-size: 13px; }
     .hidden-row { display: none; }
     footer { color: var(--faint); padding: 20px 0 4px; font-size: 13px; }
     @media (max-width: 1100px) {
@@ -640,6 +691,20 @@ function render(model) {
 
           <section class="panel">
             <div class="panel-head">
+              <h2>Read-only Editor</h2>
+              <small>Form preview</small>
+            </div>
+            <div class="editor-grid" id="articleEditor">
+              <label class="field wide">
+                <span>No article selected</span>
+                <textarea readonly>Select an article from the table to preview how the future editor form will read its JSON fields.</textarea>
+              </label>
+            </div>
+            <p class="editor-help">This editor preview is intentionally read-only. It does not save, publish, delete, commit or deploy anything.</p>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
               <h2>Categories</h2>
               <small>Sitemap and llms status</small>
             </div>
@@ -699,6 +764,7 @@ function render(model) {
     const qualityFilter = document.getElementById("qualityFilter");
     const articleCount = document.getElementById("articleCount");
     const detail = document.getElementById("articleDetail");
+    const editor = document.getElementById("articleEditor");
     const rows = Array.from(document.querySelectorAll("[data-article-row]"));
 
     function esc(value) {
@@ -774,6 +840,52 @@ function render(model) {
       ].join("");
     }
 
+    function field(label, value, options = {}) {
+      const wide = options.wide ? " wide" : "";
+      const multiline = options.multiline;
+      const safeLabel = esc(label);
+      const safeValue = esc(value || "");
+      if (multiline) {
+        return "<label class='field" + wide + "'><span>" + safeLabel + "</span><textarea readonly>" + safeValue + "</textarea></label>";
+      }
+      return "<label class='field" + wide + "'><span>" + safeLabel + "</span><input readonly value=\\"" + safeValue + "\\"></label>";
+    }
+
+    function renderBlocks(blocks) {
+      if (!Array.isArray(blocks) || blocks.length === 0) {
+        return "<div class='block-item'><span>Empty</span><p>No body blocks found.</p></div>";
+      }
+      return blocks.map((block, index) => {
+        const type = block.type || "unknown";
+        const label = type + " " + (block.level ? "H" + block.level + " " : "") + "#" + (index + 1);
+        let text = block.text || "";
+        if (Array.isArray(block.items)) {
+          text = block.items.map((item) => typeof item === "string" ? item : item.text).filter(Boolean).join(" · ");
+        }
+        return "<div class='block-item'><span>" + esc(label) + "</span><p>" + esc(text) + "</p></div>";
+      }).join("");
+    }
+
+    function renderEditor(article) {
+      const keywordText = Array.isArray(article.keywords) ? article.keywords.join(", ") : "";
+      editor.innerHTML = [
+        field("Internal ID", article.id),
+        field("Status", article.status),
+        field("Title", article.title, { wide: true }),
+        field("SEO title", article.seoTitle, { wide: true }),
+        field("Slug", article.slug),
+        field("Category", article.categoryName),
+        field("Meta description", article.description, { wide: true, multiline: true }),
+        field("Excerpt", article.excerpt || "", { wide: true, multiline: true }),
+        field("Keywords", keywordText, { wide: true, multiline: true }),
+        field("Published date", article.datePublished || ""),
+        field("Modified date", article.dateModified || ""),
+        field("CTA type", article.ctaType || "none"),
+        field("Read time", article.readTime || ""),
+        "<div class='field wide'><span>Body blocks</span><div class='block-preview'>" + renderBlocks(article.body) + "</div></div>"
+      ].join("");
+    }
+
     searchInput.addEventListener("input", applyFilters);
     categoryFilter.addEventListener("change", applyFilters);
     statusFilter.addEventListener("change", applyFilters);
@@ -783,7 +895,10 @@ function render(model) {
       const button = event.target.closest("[data-detail-id]");
       if (!button) return;
       const article = articleById.get(button.dataset.detailId);
-      if (article) renderDetail(article);
+      if (article) {
+        renderDetail(article);
+        renderEditor(article);
+      }
     });
   </script>
 </body>
