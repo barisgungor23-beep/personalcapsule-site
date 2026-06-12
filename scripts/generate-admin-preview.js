@@ -8,6 +8,7 @@ const MODEL_FILE = path.join(ROOT, "outputs", "admin", "admin-read-model.json");
 const OUTPUT_FILE = path.join(ROOT, "outputs", "admin", "index.html");
 const CONTROL_REPORT_FILE = path.join(ROOT, "outputs", "admin", "control-report.json");
 const DRAFT_COMPARISON_FILE = path.join(ROOT, "outputs", "admin", "draft-comparison-report.json");
+const PUBLISH_READINESS_FILE = path.join(ROOT, "outputs", "admin", "publish-readiness-report.json");
 
 function escapeHtml(value) {
   return String(value)
@@ -140,6 +141,15 @@ function readDraftComparisonReport() {
   }
 }
 
+function readPublishReadinessReport() {
+  if (!fs.existsSync(PUBLISH_READINESS_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(PUBLISH_READINESS_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
 function renderControlCenter(report) {
   if (!report) {
     return `
@@ -186,6 +196,62 @@ function renderControlCenter(report) {
               </div>`
           )
           .join("")}
+      </div>
+    </section>`;
+}
+
+function renderPublishReadiness(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Publish Readiness</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No readiness report yet</strong>
+            <span>Run node scripts/check-publish-readiness.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const items = Array.isArray(report.items) ? report.items : [];
+  const status = summary.status === "passed" ? "good" : "bad";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Publish Readiness</h2>
+        <span class="pill ${status}">${escapeHtml(summary.status || "unknown")}</span>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Drafts</span><strong>${escapeHtml(summary.drafts || 0)}</strong></div>
+        <div class="detail-stat"><span>Ready</span><strong>${escapeHtml(summary.readyDrafts || 0)}</strong></div>
+        <div class="detail-stat"><span>Blocked</span><strong>${escapeHtml(summary.blockedDrafts || 0)}</strong></div>
+        <div class="detail-stat"><span>Warnings</span><strong>${escapeHtml(summary.warnings || 0)}</strong></div>
+      </div>
+      <div class="mini-list readiness-list">
+        ${
+          items.length
+            ? items
+                .map(
+                  (item) => `
+                    <div class="${item.status === "ready" ? "passed" : "needs-review"}">
+                      <strong>${escapeHtml(item.title)}</strong>
+                      <span>${escapeHtml(item.status)} · ${escapeHtml(item.changeCount)} changes</span>
+                      ${
+                        item.blockers.length
+                          ? `<span>Blockers: ${escapeHtml(item.blockers.join(" · "))}</span>`
+                          : `<span>Preview and comparison checks are ready.</span>`
+                      }
+                    </div>`
+                )
+                .join("")
+            : `<div class="passed"><strong>No active drafts</strong><span>There is nothing waiting for publish.</span></div>`
+        }
       </div>
     </section>`;
 }
@@ -315,6 +381,7 @@ function render(model) {
   const editorRulesJson = JSON.stringify(model.editorRules.article || {}).replaceAll("</", "<\\/");
   const controlReport = readControlReport();
   const draftComparisonReport = readDraftComparisonReport();
+  const publishReadinessReport = readPublishReadinessReport();
 
   return `<!doctype html>
 <html lang="en">
@@ -801,6 +868,8 @@ function render(model) {
         </section>
 
         ${renderControlCenter(controlReport)}
+
+        ${renderPublishReadiness(publishReadinessReport)}
 
         ${renderDraftComparison(draftComparisonReport)}
 

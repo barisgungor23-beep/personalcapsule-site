@@ -82,6 +82,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "check_publish_readiness",
+    label: "Check publish readiness",
+    command: ["node", "scripts/check-publish-readiness.js"],
+    kind: "audit",
+  },
+  {
     id: "audit_admin_read_model",
     label: "Audit admin read model",
     command: ["node", "scripts/audit-admin-read-model.js"],
