@@ -9,6 +9,7 @@ const OUTPUT_DIR = path.join(ROOT, "outputs/generated");
 const report = {
   critical: [],
   warnings: [],
+  notes: [],
 };
 
 function add(level, file, message) {
@@ -71,6 +72,55 @@ function pageStats(html) {
   };
 }
 
+function generatedHtmlFiles(dir) {
+  if (!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const entryPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) return generatedHtmlFiles(entryPath);
+    return entry.name.endsWith(".html") ? [entryPath] : [];
+  });
+}
+
+function livePathForGenerated(filePath) {
+  const relative = rel(filePath);
+  if (relative.startsWith("outputs/generated/category/")) {
+    return path.join(ROOT, "blog/category", path.basename(filePath));
+  }
+  return path.join(ROOT, "blog", path.basename(filePath));
+}
+
+function compareWithLivePage(filePath, html) {
+  const file = rel(filePath);
+  const liveFile = livePathForGenerated(filePath);
+  if (!fs.existsSync(liveFile)) {
+    add("warnings", file, "No matching live blog page exists for comparison.");
+    return;
+  }
+
+  const liveStats = pageStats(read(liveFile));
+  const generatedStats = pageStats(html);
+  const isCategoryPreview = file.includes("/category/");
+  const keys = isCategoryPreview ? ["title", "h1"] : ["title", "h1", "h2", "h3", "links"];
+
+  for (const key of keys) {
+    if (liveStats[key] !== generatedStats[key]) {
+      add(
+        "warnings",
+        file,
+        `Generated ${key} differs from current page. current=${liveStats[key]} generated=${generatedStats[key]}`
+      );
+    }
+  }
+
+  if (isCategoryPreview && liveStats.links !== generatedStats.links) {
+    add(
+      "notes",
+      file,
+      `Generated category link count differs because only migrated JSON articles are included. current=${liveStats.links} generated=${generatedStats.links}`
+    );
+  }
+}
+
 function auditGeneratedFile(filePath) {
   const file = rel(filePath);
   const html = read(filePath);
@@ -94,23 +144,7 @@ function auditGeneratedFile(filePath) {
     }
   }
 
-  const slug = path.basename(filePath);
-  const liveFile = path.join(ROOT, "blog", slug);
-  if (fs.existsSync(liveFile)) {
-    const liveStats = pageStats(read(liveFile));
-    const generatedStats = pageStats(html);
-    for (const key of ["title", "h1", "h2", "h3", "links"]) {
-      if (liveStats[key] !== generatedStats[key]) {
-        add(
-          "warnings",
-          file,
-          `Generated ${key} differs from current page. current=${liveStats[key]} generated=${generatedStats[key]}`
-        );
-      }
-    }
-  } else {
-    add("warnings", file, "No matching live blog page exists for comparison.");
-  }
+  compareWithLivePage(filePath, html);
 }
 
 function printSection(title, items) {
@@ -128,10 +162,7 @@ function main() {
   if (!fs.existsSync(OUTPUT_DIR)) {
     add("critical", "outputs/generated", "Generated output directory does not exist.");
   } else {
-    const files = fs
-      .readdirSync(OUTPUT_DIR)
-      .filter((name) => name.endsWith(".html"))
-      .map((name) => path.join(OUTPUT_DIR, name));
+    const files = generatedHtmlFiles(OUTPUT_DIR);
     if (files.length === 0) {
       add("critical", "outputs/generated", "No generated HTML files found.");
     }
@@ -142,8 +173,10 @@ function main() {
   console.log("=======================================");
   console.log(`Critical: ${report.critical.length}`);
   console.log(`Warnings: ${report.warnings.length}`);
+  console.log(`Notes: ${report.notes.length}`);
   printSection("Critical Issues", report.critical);
   printSection("Warnings", report.warnings);
+  printSection("Notes", report.notes);
 
   if (report.critical.length > 0) {
     process.exitCode = 1;
@@ -151,4 +184,3 @@ function main() {
 }
 
 main();
-
