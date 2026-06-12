@@ -1,0 +1,28 @@
+{
+  "id": "digital-time-capsules",
+  "type": "blog_category",
+  "status": "published",
+  "name": "Digital Time Capsules",
+  "slug": "digital-time-capsules",
+  "url": "https://personalcapsule.app/blog/category/digital-time-capsules",
+  "seoTitle": "Digital Time Capsules - PersonalCapsule Blog",
+  "description": "Ideas, guides and comparisons for creating private digital time capsules with text, photos and voice notes.",
+  "keywords": [
+    "digital time capsules",
+    "PersonalCapsule",
+    "private journal",
+    "future reflection"
+  ],
+  "eyebrow": "Digital Time Capsules",
+  "heading": "Digital Time Capsules",
+  "heroText": "Practical guides for creating digital time capsules, choosing what to save, and reopening meaningful memories later.",
+  "intro": "Ideas, guides and comparisons for creating private digital time capsules with text, photos and voice notes.",
+  "schemaAbout": [
+    "digital time capsules",
+    "private digital time capsule",
+    "future reflection",
+    "memory keeping"
+  ],
+  "llmsInclude": true,
+  "sitemapInclude": true
+}

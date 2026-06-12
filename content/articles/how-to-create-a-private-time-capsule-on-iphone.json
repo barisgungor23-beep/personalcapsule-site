@@ -1,0 +1,171 @@
+{
+  "id": "how-to-create-a-private-time-capsule-on-iphone",
+  "type": "blog_article",
+  "status": "published",
+  "category": "digital-time-capsules",
+  "title": "How to Create a Private Time Capsule on iPhone",
+  "seoTitle": "Create a Private Time Capsule on iPhone — PersonalCapsule",
+  "slug": "how-to-create-a-private-time-capsule-on-iphone",
+  "url": "https://personalcapsule.app/blog/how-to-create-a-private-time-capsule-on-iphone",
+  "description": "A step-by-step guide to creating a private digital time capsule on iPhone — kept on your device, sealed until you choose.",
+  "keywords": [
+    "private time capsule iphone",
+    "digital time capsule iphone",
+    "time capsule app ios",
+    "future self iphone",
+    "private journal iphone",
+    "on-device journal"
+  ],
+  "excerpt": "A step-by-step guide to creating a private digital time capsule on iPhone — kept on your device, sealed until you choose.",
+  "eyebrow": "Digital Time Capsules",
+  "readTime": "4 min read",
+  "datePublished": "2026-06-05",
+  "dateModified": "2026-06-06",
+  "schemaAbout": [],
+  "body": [
+    {
+      "type": "paragraph",
+      "text": "If you want to keep a personal time capsule somewhere genuinely private, your iPhone is a great place to start. Here's how to create a private time capsule on iPhone and keep the contents to yourself."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Step 1: Decide what \"private\" means to you"
+    },
+    {
+      "type": "paragraph",
+      "text": "Before choosing an app, get clear on your privacy needs. For a true time capsule, \"private\" usually means:"
+    },
+    {
+      "type": "paragraph",
+      "text": "No account required to start."
+    },
+    {
+      "type": "paragraph",
+      "text": "Content kept on your device rather than uploaded by default."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "The app doesn't collect your entries, photos, or recordings."
+    },
+    {
+      "type": "paragraph",
+      "text": "Knowing this upfront makes choosing an app much easier."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Step 2: Choose a private-first app"
+    },
+    {
+      "type": "paragraph",
+      "text": "Pick an app that's built for personal use rather than sharing. On iOS, a private-first time capsule app keeps your content on your device, and any cloud sync happens through your own iCloud — under your control, not a company's server."
+    },
+    {
+      "type": "paragraph",
+      "text": "This is the difference between a capsule that's truly yours and one that lives on someone else's infrastructure."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Step 3: Create your first capsule"
+    },
+    {
+      "type": "paragraph",
+      "text": "Once you've chosen an app, the basic flow is simple:"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Start a new capsule."
+    },
+    {
+      "type": "paragraph",
+      "text": "Choose the type — a letter, a memory, a decision, or a goal."
+    },
+    {
+      "type": "paragraph",
+      "text": "Write your entry, and add a photo or voice note if you like."
+    },
+    {
+      "type": "paragraph",
+      "text": "Set the date you want it to reopen."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Seal it."
+    },
+    {
+      "type": "paragraph",
+      "text": "That's it. The capsule stays closed until your chosen date."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Step 4: Pick a meaningful reopen date"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Match the date to the content:"
+    },
+    {
+      "type": "paragraph",
+      "text": "One year for goals and check-ins."
+    },
+    {
+      "type": "paragraph",
+      "text": "Five years for identity and life-direction letters."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "A specific occasion — a birthday, an anniversary, the end of a hard season."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Step 5: Let it rest"
+    },
+    {
+      "type": "paragraph",
+      "text": "The hardest part is leaving it alone. The value of a time capsule comes from forgetting the details, so resist reopening early."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "A note on backups"
+    },
+    {
+      "type": "paragraph",
+      "text": "If you want your capsule to survive a lost or replaced phone, enable your app's optional iCloud sync. With PersonalCapsule, for example, content stays on your device and syncs only through your personal iCloud if you choose — so you get a backup without handing your private writing to a third-party server."
+    },
+    {
+      "type": "paragraph",
+      "text": "Learning to create a private time capsule on iPhone really comes down to one decision: choosing a tool that keeps your most personal words where they belong — with you."
+    }
+  ],
+  "faq": [],
+  "cta": {
+    "heading": "Start your first capsule",
+    "text": "PersonalCapsule is a private, on-device time capsule built for iPhone, with no account required and optional iCloud sync. Download it free on the App Store and seal your first capsule today.",
+    "appStoreTracking": "website"
+  },
+  "related": [
+    {
+      "href": "what-is-a-digital-time-capsule",
+      "label": "What Is a Digital Time Capsule?"
+    },
+    {
+      "href": "what-to-put-in-a-digital-time-capsule",
+      "label": "What to Put in a Digital Time Capsule"
+    },
+    {
+      "href": "best-digital-time-capsule-apps",
+      "label": "Best Digital Time Capsule Apps: What to Look For"
+    }
+  ],
+  "breadcrumbOpenWhen": true
+}
