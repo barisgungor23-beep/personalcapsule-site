@@ -11,6 +11,7 @@ const DRAFT_COMPARISON_FILE = path.join(ROOT, "outputs", "admin", "draft-compari
 const DRAFT_QUALITY_FILE = path.join(ROOT, "outputs", "admin", "draft-quality-report.json");
 const DRAFT_FIX_LIST_FILE = path.join(ROOT, "outputs", "admin", "draft-fix-list-report.json");
 const DRAFT_EDIT_PLAN_FILE = path.join(ROOT, "outputs", "admin", "draft-edit-plan-report.json");
+const DRAFT_EDIT_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "draft-edit-guide-report.json");
 const PUBLISH_READINESS_FILE = path.join(ROOT, "outputs", "admin", "publish-readiness-report.json");
 const PUBLISH_DRY_RUN_FILE = path.join(ROOT, "outputs", "admin", "publish-dry-run-report.json");
 const PUBLISH_ROLLBACK_FILE = path.join(ROOT, "outputs", "admin", "publish-rollback-plan.json");
@@ -172,6 +173,15 @@ function readDraftEditPlanReport() {
   if (!fs.existsSync(DRAFT_EDIT_PLAN_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(DRAFT_EDIT_PLAN_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readDraftEditGuideReport() {
+  if (!fs.existsSync(DRAFT_EDIT_GUIDE_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(DRAFT_EDIT_GUIDE_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -1057,6 +1067,72 @@ function renderDraftEditPlan(report) {
     </section>`;
 }
 
+function renderDraftEditGuide(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Draft Edit Guide</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No draft edit guide yet</strong>
+            <span>Run node scripts/build-draft-edit-guide.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const steps = Array.isArray(report.steps) ? report.steps : [];
+  const workflow = Array.isArray(report.workflow) ? report.workflow : [];
+  const status = summary.status === "passed" ? "good" : summary.status === "action_needed" ? "warn" : "bad";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Draft Edit Guide</h2>
+        <span class="pill ${status}">${escapeHtml(summary.status || "unknown")}</span>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Draft fixes</span><strong>${escapeHtml(summary.draftFixes || 0)}</strong></div>
+        <div class="detail-stat"><span>High-risk steps</span><strong>${escapeHtml(summary.highRiskSteps || 0)}</strong></div>
+        <div class="detail-stat"><span>Controlled steps</span><strong>${escapeHtml(summary.controlledSteps || 0)}</strong></div>
+        <div class="detail-stat"><span>Locked steps</span><strong>${escapeHtml(summary.lockedSteps || 0)}</strong></div>
+      </div>
+      <div class="mini-list draft-edit-guide-list">
+        ${
+          steps.length
+            ? steps
+                .slice(0, 8)
+                .map(
+                  (step) => `
+                    <div class="${step.publishRisk === "high" || step.editMode === "locked" ? "needs-review" : "passed"}">
+                      <strong>${escapeHtml(step.order)}. ${escapeHtml(step.draftTitle)} · ${escapeHtml(step.fieldLabel)}</strong>
+                      <span>${escapeHtml(step.severity)} · ${escapeHtml(step.editMode)} · ${escapeHtml(step.publishRisk)} risk</span>
+                      <span>${escapeHtml(step.instruction)}</span>
+                      <span>Done when: ${escapeHtml(step.doneWhen)}</span>
+                    </div>`
+                )
+                .join("")
+            : `<div class="passed"><strong>No guided edits needed</strong><span>There are no active draft fixes waiting for manual editing.</span></div>`
+        }
+      </div>
+      <div class="workflow-list">
+        ${workflow
+          .map(
+            (item, index) => `
+              <div class="workflow-step">
+                <strong>${index + 1}. Safe editing rule</strong>
+                <span>${escapeHtml(item)}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+    </section>`;
+}
+
 function renderPublishWorkflow() {
   const steps = [
     ["Create Draft", "Published content is copied into a private draft file."],
@@ -1165,6 +1241,7 @@ function render(model) {
   const draftQualityReport = readDraftQualityReport();
   const draftFixListReport = readDraftFixListReport();
   const draftEditPlanReport = readDraftEditPlanReport();
+  const draftEditGuideReport = readDraftEditGuideReport();
   const publishReadinessReport = readPublishReadinessReport();
   const publishDryRunReport = readPublishDryRunReport();
   const publishRollbackPlan = readPublishRollbackPlan();
@@ -1766,6 +1843,8 @@ function render(model) {
         ${renderDraftFixList(draftFixListReport)}
 
         ${renderDraftEditPlan(draftEditPlanReport)}
+
+        ${renderDraftEditGuide(draftEditGuideReport)}
 
         ${renderDraftComparison(draftComparisonReport)}
 
