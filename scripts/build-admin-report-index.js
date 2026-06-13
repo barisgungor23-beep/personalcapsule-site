@@ -37,6 +37,7 @@ const reports = [
   ["pre_publish", "Pre-publish checklist", "pre-publish-checklist-report.json"],
   ["draft_publish_simulation", "Draft publish simulation summary", "draft-publish-simulation-summary-report.json"],
   ["backup_restore_center", "Backup / Restore Center", "backup-restore-center-report.json"],
+  ["publish_wizard", "Publish wizard", "publish-wizard-report.json"],
   ["restore_dry_run", "Restore dry run", "restore-backup-dry-run-report.json"],
   ["publish_result", "Publish result", "publish-report.json"],
   ["restore_result", "Restore result", "restore-backup-report.json"],

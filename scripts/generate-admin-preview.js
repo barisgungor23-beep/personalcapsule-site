@@ -36,6 +36,7 @@ const BACKUP_SNAPSHOT_FILE = path.join(ROOT, "outputs", "admin", "backup-snapsho
 const PRE_PUBLISH_CHECKLIST_FILE = path.join(ROOT, "outputs", "admin", "pre-publish-checklist-report.json");
 const DRAFT_PUBLISH_SIMULATION_FILE = path.join(ROOT, "outputs", "admin", "draft-publish-simulation-summary-report.json");
 const BACKUP_RESTORE_CENTER_FILE = path.join(ROOT, "outputs", "admin", "backup-restore-center-report.json");
+const PUBLISH_WIZARD_FILE = path.join(ROOT, "outputs", "admin", "publish-wizard-report.json");
 const RESTORE_DRY_RUN_FILE = path.join(ROOT, "outputs", "admin", "restore-backup-dry-run-report.json");
 const RESTORE_REPORT_FILE = path.join(ROOT, "outputs", "admin", "restore-backup-report.json");
 const PUBLISH_REPORT_FILE = path.join(ROOT, "outputs", "admin", "publish-report.json");
@@ -418,6 +419,15 @@ function readBackupRestoreCenter() {
   if (!fs.existsSync(BACKUP_RESTORE_CENTER_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(BACKUP_RESTORE_CENTER_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readPublishWizard() {
+  if (!fs.existsSync(PUBLISH_WIZARD_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(PUBLISH_WIZARD_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -1985,6 +1995,79 @@ function renderBackupRestoreCenter(report) {
     </section>`;
 }
 
+function renderPublishWizard(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Publish Wizard</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>Step-by-step publish decision is not available yet</strong>
+            <span>Run node scripts/build-publish-wizard.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const steps = Array.isArray(report.steps) ? report.steps : [];
+  const rules = Array.isArray(report.finalSafetyRules) ? report.finalSafetyRules : [];
+  const statusClassName =
+    summary.status === "blocked"
+      ? "bad"
+      : summary.status === "ready_for_human_publish_review" || summary.status === "idle"
+        ? "good"
+        : "warn";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Publish Wizard</h2>
+        <span class="pill ${statusClassName}">${escapeHtml(summary.status || "unknown")}</span>
+      </div>
+      <div class="health">
+        <div class="${summary.status === "blocked" ? "issue bad" : summary.status === "idle" ? "empty" : "issue warn"}">
+          <strong>Step-by-step publish decision</strong>
+          <span>${escapeHtml(report.nextAction || "Review every publish step before confirmed publish.")}</span>
+        </div>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Current step</span><strong>${escapeHtml(summary.currentStep || "unknown")}</strong></div>
+        <div class="detail-stat"><span>Ready drafts</span><strong>${escapeHtml(summary.readyDrafts || 0)}</strong></div>
+        <div class="detail-stat"><span>Blocked drafts</span><strong>${escapeHtml(summary.blockedDrafts || 0)}</strong></div>
+        <div class="detail-stat"><span>Planned ops</span><strong>${escapeHtml(summary.plannedFileOperations || 0)}</strong></div>
+      </div>
+      <div class="mini-list publish-wizard-list">
+        ${steps
+          .map((item) => {
+            const itemClass = item.status === "blocked" || item.status === "not_run" ? "needs-review" : "passed";
+            return `
+              <div class="${itemClass}">
+                <strong>${escapeHtml(item.label)} · ${escapeHtml(item.status)}</strong>
+                <span>${escapeHtml(item.detail)}</span>
+                <span>${escapeHtml(item.action)}</span>
+                <span>${escapeHtml(item.source)}</span>
+              </div>`;
+          })
+          .join("")}
+      </div>
+      <div class="workflow-list">
+        ${rules
+          .map(
+            (item, index) => `
+              <div class="workflow-step">
+                <strong>${index + 1}. Publish wizard rule</strong>
+                <span>${escapeHtml(item)}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+    </section>`;
+}
+
 function renderPrePublishChecklist(report) {
   if (!report) {
     return `
@@ -2806,6 +2889,7 @@ function render(model) {
   const prePublishChecklist = readPrePublishChecklist();
   const draftPublishSimulationSummary = readDraftPublishSimulationSummary();
   const backupRestoreCenter = readBackupRestoreCenter();
+  const publishWizard = readPublishWizard();
   const restoreDryRunReport = readRestoreDryRunReport();
   const restoreReport = readRestoreReport();
   const publishReport = readPublishReport();
@@ -3594,6 +3678,7 @@ function render(model) {
             ${renderPublishRollback(publishRollbackPlan)}
             ${renderBackupSnapshot(backupSnapshotReport)}
             ${renderBackupRestoreCenter(backupRestoreCenter)}
+            ${renderPublishWizard(publishWizard)}
             ${renderPrePublishChecklist(prePublishChecklist)}
             ${renderDraftPublishSimulationSummary(draftPublishSimulationSummary)}
             ${renderRestoreDryRun(restoreDryRunReport)}

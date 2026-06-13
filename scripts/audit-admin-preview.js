@@ -84,6 +84,8 @@ function main() {
       "Operations principle",
       "Publish Readiness",
       "Publish Result",
+      "Publish Wizard",
+      "Step-by-step publish decision",
       "Publish Dry Run",
       "Rollback Plan",
       "Backup Snapshot",

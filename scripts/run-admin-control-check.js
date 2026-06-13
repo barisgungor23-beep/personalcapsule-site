@@ -187,6 +187,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "build_publish_wizard",
+    label: "Build publish wizard",
+    command: ["node", "scripts/build-publish-wizard.js"],
+    kind: "audit",
+  },
+  {
     id: "build_git_status_report",
     label: "Build Git status report",
     command: ["node", "scripts/build-git-status-report.js"],
@@ -376,6 +382,17 @@ function refreshDashboardSnapshot() {
   return result;
 }
 
+function refreshPublishWizard() {
+  const result = runStep({
+    id: "refresh_publish_wizard",
+    label: "Refresh publish wizard with control report",
+    command: ["node", "scripts/build-publish-wizard.js"],
+    kind: "audit",
+  });
+  printStep(result);
+  return result;
+}
+
 function refreshHomeBrief() {
   const result = runStep({
     id: "refresh_admin_home_brief",
@@ -412,6 +429,15 @@ function main() {
 
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
   fs.writeFileSync(REPORT_FILE, `${JSON.stringify(report, null, 2)}\n`);
+  const publishWizardResult = refreshPublishWizard();
+  if (publishWizardResult.status === "failed") {
+    summary.status = "failed";
+    summary.failedSteps += 1;
+    if (!summary.firstFailedStep) summary.firstFailedStep = publishWizardResult.id;
+    report.summary = summary;
+    report.steps.push(publishWizardResult);
+    fs.writeFileSync(REPORT_FILE, `${JSON.stringify(report, null, 2)}\n`);
+  }
   const snapshotResult = refreshDashboardSnapshot();
   if (snapshotResult.status === "failed") {
     summary.status = "failed";
