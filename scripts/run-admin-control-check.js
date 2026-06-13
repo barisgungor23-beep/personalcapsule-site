@@ -103,6 +103,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "build_draft_edit_plan",
+    label: "Build draft edit plan",
+    command: ["node", "scripts/build-draft-edit-plan.js"],
+    kind: "audit",
+  },
+  {
     id: "compare_article_drafts",
     label: "Compare article drafts",
     command: ["node", "scripts/compare-article-drafts.js"],

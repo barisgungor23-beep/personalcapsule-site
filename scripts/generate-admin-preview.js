@@ -10,6 +10,7 @@ const CONTROL_REPORT_FILE = path.join(ROOT, "outputs", "admin", "control-report.
 const DRAFT_COMPARISON_FILE = path.join(ROOT, "outputs", "admin", "draft-comparison-report.json");
 const DRAFT_QUALITY_FILE = path.join(ROOT, "outputs", "admin", "draft-quality-report.json");
 const DRAFT_FIX_LIST_FILE = path.join(ROOT, "outputs", "admin", "draft-fix-list-report.json");
+const DRAFT_EDIT_PLAN_FILE = path.join(ROOT, "outputs", "admin", "draft-edit-plan-report.json");
 const PUBLISH_READINESS_FILE = path.join(ROOT, "outputs", "admin", "publish-readiness-report.json");
 const PUBLISH_DRY_RUN_FILE = path.join(ROOT, "outputs", "admin", "publish-dry-run-report.json");
 const PUBLISH_ROLLBACK_FILE = path.join(ROOT, "outputs", "admin", "publish-rollback-plan.json");
@@ -162,6 +163,15 @@ function readDraftFixListReport() {
   if (!fs.existsSync(DRAFT_FIX_LIST_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(DRAFT_FIX_LIST_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readDraftEditPlanReport() {
+  if (!fs.existsSync(DRAFT_EDIT_PLAN_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(DRAFT_EDIT_PLAN_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -978,6 +988,75 @@ function renderDraftFixList(report) {
     </section>`;
 }
 
+function renderDraftEditPlan(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Draft Edit Plan</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No draft edit plan yet</strong>
+            <span>Run node scripts/build-draft-edit-plan.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const plans = Array.isArray(report.plans) ? report.plans : [];
+  const status = summary.status === "passed" ? "good" : "bad";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Draft Edit Plan</h2>
+        <span class="pill ${status}">${escapeHtml(summary.status || "unknown")}</span>
+      </div>
+      <div class="health">
+        <div class="empty">Editable fields can be changed inside a draft. Controlled fields need review. Generated and locked fields should not be typed manually.</div>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Drafts</span><strong>${escapeHtml(summary.drafts || 0)}</strong></div>
+        <div class="detail-stat"><span>Editable fields</span><strong>${escapeHtml(summary.editableFields || 0)}</strong></div>
+        <div class="detail-stat"><span>Controlled fields</span><strong>${escapeHtml(summary.controlledFields || 0)}</strong></div>
+        <div class="detail-stat"><span>Locked fields</span><strong>${escapeHtml(summary.lockedFields || 0)}</strong></div>
+      </div>
+      <div class="mini-list draft-edit-plan-list">
+        ${
+          plans.length
+            ? plans
+                .slice(0, 6)
+                .map((plan) => {
+                  const fields = Array.isArray(plan.fields) ? plan.fields : [];
+                  const previewFields = fields
+                    .filter((field) => field.mode === "editable" || field.mode === "controlled" || field.publishRisk === "high")
+                    .slice(0, 6);
+                  return `
+                    <div class="passed">
+                      <strong>${escapeHtml(plan.title || plan.id)} · ${escapeHtml(plan.kind || "draft")}</strong>
+                      <span>${escapeHtml(plan.draft || "")}</span>
+                      <span>Editable ${escapeHtml(plan.summary ? plan.summary.editable : 0)} · Controlled ${escapeHtml(plan.summary ? plan.summary.controlled : 0)} · Locked ${escapeHtml(plan.summary ? plan.summary.locked : 0)}</span>
+                      ${
+                        previewFields.length
+                          ? `<span>${escapeHtml(
+                              previewFields
+                                .map((field) => `${field.label}: ${field.action}`)
+                                .join(" · ")
+                            )}</span>`
+                          : `<span>No editable or controlled fields found for this draft.</span>`
+                      }
+                    </div>`;
+                })
+                .join("")
+            : `<div class="passed"><strong>No active draft edit plan</strong><span>There are no draft files waiting to be edited.</span></div>`
+        }
+      </div>
+    </section>`;
+}
+
 function renderPublishWorkflow() {
   const steps = [
     ["Create Draft", "Published content is copied into a private draft file."],
@@ -1085,6 +1164,7 @@ function render(model) {
   const draftComparisonReport = readDraftComparisonReport();
   const draftQualityReport = readDraftQualityReport();
   const draftFixListReport = readDraftFixListReport();
+  const draftEditPlanReport = readDraftEditPlanReport();
   const publishReadinessReport = readPublishReadinessReport();
   const publishDryRunReport = readPublishDryRunReport();
   const publishRollbackPlan = readPublishRollbackPlan();
@@ -1684,6 +1764,8 @@ function render(model) {
         ${renderDraftQuality(draftQualityReport)}
 
         ${renderDraftFixList(draftFixListReport)}
+
+        ${renderDraftEditPlan(draftEditPlanReport)}
 
         ${renderDraftComparison(draftComparisonReport)}
 
