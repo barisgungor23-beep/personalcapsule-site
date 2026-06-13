@@ -150,6 +150,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "build_admin_workflow_guide",
+    label: "Build admin workflow guide",
+    command: ["node", "scripts/build-admin-workflow-guide.js"],
+    kind: "audit",
+  },
+  {
     id: "build_admin_command_risk_matrix",
     label: "Build admin command risk matrix",
     command: ["node", "scripts/build-admin-command-risk-matrix.js"],

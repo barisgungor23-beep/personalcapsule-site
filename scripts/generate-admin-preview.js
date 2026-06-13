@@ -19,6 +19,7 @@ const ADMIN_WORK_QUEUE_FILE = path.join(ROOT, "outputs", "admin", "admin-work-qu
 const ADMIN_DASHBOARD_SNAPSHOT_FILE = path.join(ROOT, "outputs", "admin", "admin-dashboard-snapshot-report.json");
 const ADMIN_COMMAND_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "admin-command-guide-report.json");
 const ADMIN_ACTION_FLOW_FILE = path.join(ROOT, "outputs", "admin", "admin-action-flow-report.json");
+const ADMIN_WORKFLOW_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "admin-workflow-guide-report.json");
 const ADMIN_COMMAND_RISK_MATRIX_FILE = path.join(ROOT, "outputs", "admin", "admin-command-risk-matrix-report.json");
 const GIT_STATUS_FILE = path.join(ROOT, "outputs", "admin", "git-status-report.json");
 const PUSH_PACKAGE_FILE = path.join(ROOT, "outputs", "admin", "push-package-report.json");
@@ -273,6 +274,15 @@ function readAdminActionFlow() {
   if (!fs.existsSync(ADMIN_ACTION_FLOW_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(ADMIN_ACTION_FLOW_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readAdminWorkflowGuide() {
+  if (!fs.existsSync(ADMIN_WORKFLOW_GUIDE_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(ADMIN_WORKFLOW_GUIDE_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -1557,6 +1567,100 @@ function renderAdminActionFlow(report) {
             (item, index) => `
               <div class="workflow-step">
                 <strong>${index + 1}. Action button rule</strong>
+                <span>${escapeHtml(item)}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+    </section>`;
+}
+
+function renderAdminWorkflowGuide(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Admin Workflow Guide</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No workflow guide yet</strong>
+            <span>Run node scripts/build-admin-workflow-guide.js or the full control check.</span>
+          </div>
+        </div>
+        <div class="workflow-list">
+          <div class="workflow-step">
+            <strong>1. Workflow rule</strong>
+            <span>Run the full control check before trusting workflow actions.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const workflows = Array.isArray(report.workflows) ? report.workflows : [];
+  const rules = Array.isArray(report.rules) ? report.rules : [];
+  const recommendation = report.activeRecommendation || null;
+  const statusClassName = summary.status === "blocked" ? "bad" : summary.status === "review" ? "warn" : "good";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Admin Workflow Guide</h2>
+        <span class="pill ${statusClassName}">${escapeHtml(summary.status || "unknown")}</span>
+      </div>
+      <div class="health">
+        <div class="${summary.status === "blocked" ? "issue bad" : summary.status === "review" ? "issue warn" : "empty"}">
+          <strong>${escapeHtml(recommendation ? recommendation.title : "Choose a workflow")}</strong>
+          <span>${escapeHtml(recommendation ? recommendation.reason : "Pick the workflow that matches what you want to do next.")}</span>
+        </div>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Workflows</span><strong>${escapeHtml(summary.workflows || 0)}</strong></div>
+        <div class="detail-stat"><span>Ready</span><strong>${escapeHtml(summary.ready || 0)}</strong></div>
+        <div class="detail-stat"><span>Review</span><strong>${escapeHtml(summary.review || 0)}</strong></div>
+        <div class="detail-stat"><span>Idle</span><strong>${escapeHtml(summary.idle || 0)}</strong></div>
+        <div class="detail-stat"><span>Copy steps</span><strong>${escapeHtml(summary.copyableSteps || 0)}</strong></div>
+        <div class="detail-stat"><span>Manual steps</span><strong>${escapeHtml(summary.manualSteps || 0)}</strong></div>
+      </div>
+      <div class="mini-list workflow-guide-list">
+        ${workflows
+          .map(
+            (workflow) => `
+              <div class="${workflow.status === "blocked" ? "issue bad" : workflow.status === "review" ? "needs-review" : "passed"}">
+                <strong>${escapeHtml(workflow.title)} · ${escapeHtml(workflow.status)}</strong>
+                <span>${escapeHtml(workflow.purpose)}</span>
+                <span>${escapeHtml(workflow.risk)} risk · ${escapeHtml(workflow.safestMode)}</span>
+                <div class="workflow-list compact-workflow-list">
+                  ${(workflow.steps || [])
+                    .map(
+                      (step) => `
+                        <div class="workflow-step">
+                          <strong>${escapeHtml(step.order)}. ${escapeHtml(step.label)}</strong>
+                          <span class="command-line">${escapeHtml(step.command)}</span>
+                          <span>${escapeHtml(step.expectedResult)}</span>
+                          <span class="command-actions">
+                            ${
+                              step.buttonMode === "copy_command"
+                                ? `<button class="mini-btn" type="button" data-copy-command="${escapeHtml(step.command)}">Copy command</button>`
+                                : `<b>${escapeHtml(step.buttonMode.replaceAll("_", " "))}</b>`
+                            }
+                          </span>
+                        </div>`
+                    )
+                    .join("")}
+                </div>
+              </div>`
+          )
+          .join("")}
+      </div>
+      <div class="workflow-list">
+        ${rules
+          .map(
+            (item, index) => `
+              <div class="workflow-step">
+                <strong>${index + 1}. Workflow rule</strong>
                 <span>${escapeHtml(item)}</span>
               </div>`
           )
@@ -3544,6 +3648,7 @@ function render(model) {
   const adminDashboardSnapshot = readAdminDashboardSnapshot();
   const adminCommandGuide = readAdminCommandGuide();
   const adminActionFlow = readAdminActionFlow();
+  const adminWorkflowGuide = readAdminWorkflowGuide();
   const adminCommandRiskMatrix = readAdminCommandRiskMatrix();
   const gitStatusReport = readGitStatusReport();
   const pushPackageReport = readPushPackageReport();
@@ -4503,6 +4608,7 @@ function render(model) {
             ${renderAdminQuickStart(adminQuickStart)}
             ${renderAdminCommandGuide(adminCommandGuide)}
             ${renderAdminActionFlow(adminActionFlow)}
+            ${renderAdminWorkflowGuide(adminWorkflowGuide)}
             ${renderAdminCommandRiskMatrix(adminCommandRiskMatrix)}
             ${renderAdminOperationsManual(adminOperationsManual)}
           `

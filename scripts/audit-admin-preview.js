@@ -83,6 +83,8 @@ function main() {
       "Action button rule",
       "Copy command",
       "Manual confirmation required",
+      "Admin Workflow Guide",
+      "Workflow rule",
       "Admin Command Risk Matrix",
       "Command risk rule",
       "Git Status / Push Safety",
