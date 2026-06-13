@@ -181,6 +181,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "build_admin_quick_start",
+    label: "Build admin quick start",
+    command: ["node", "scripts/build-admin-quick-start.js"],
+    kind: "audit",
+  },
+  {
     id: "audit_admin_read_model",
     label: "Audit admin read model",
     command: ["node", "scripts/audit-admin-read-model.js"],

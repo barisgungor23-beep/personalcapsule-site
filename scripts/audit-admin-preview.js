@@ -42,6 +42,8 @@ function main() {
       "Restore readiness",
       "Full control check",
       "Control Center",
+      "Admin Quick Start",
+      "Safest default",
       "Admin Command Guide",
       "Command safety rule",
       "Git Status / Push Safety",

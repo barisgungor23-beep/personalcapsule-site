@@ -12,6 +12,7 @@ const GIT_STATUS_FILE = path.join(ROOT, "outputs", "admin", "git-status-report.j
 const PUSH_PACKAGE_FILE = path.join(ROOT, "outputs", "admin", "push-package-report.json");
 const DEPLOYMENT_READINESS_FILE = path.join(ROOT, "outputs", "admin", "deployment-readiness-report.json");
 const ADMIN_OPERATIONS_MANUAL_FILE = path.join(ROOT, "outputs", "admin", "admin-operations-manual-report.json");
+const ADMIN_QUICK_START_FILE = path.join(ROOT, "outputs", "admin", "admin-quick-start-report.json");
 const DRAFT_COMPARISON_FILE = path.join(ROOT, "outputs", "admin", "draft-comparison-report.json");
 const DRAFT_QUALITY_FILE = path.join(ROOT, "outputs", "admin", "draft-quality-report.json");
 const DRAFT_FIX_LIST_FILE = path.join(ROOT, "outputs", "admin", "draft-fix-list-report.json");
@@ -188,6 +189,15 @@ function readAdminOperationsManual() {
   if (!fs.existsSync(ADMIN_OPERATIONS_MANUAL_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(ADMIN_OPERATIONS_MANUAL_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readAdminQuickStart() {
+  if (!fs.existsSync(ADMIN_QUICK_START_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(ADMIN_QUICK_START_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -913,6 +923,55 @@ function renderAdminOperationsManual(report) {
               <div class="workflow-step">
                 <strong>${index + 1}. Operations principle</strong>
                 <span>${escapeHtml(item)}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+    </section>`;
+}
+
+function renderAdminQuickStart(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Admin Quick Start</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No quick start guide yet</strong>
+            <span>Run node scripts/build-admin-quick-start.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const cards = Array.isArray(report.cards) ? report.cards : [];
+  const status = summary.status === "passed" ? "good" : "bad";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Admin Quick Start</h2>
+        <span class="pill ${status}">${escapeHtml(summary.status || "unknown")}</span>
+      </div>
+      <div class="health">
+        <div class="empty">
+          <strong>Safest default</strong>
+          <span>${escapeHtml(report.safestDefault || "When unsure, run the full control check first.")}</span>
+        </div>
+      </div>
+      <div class="mini-list quick-start-list">
+        ${cards
+          .map(
+            (card) => `
+              <div class="${card.status === "blocked" ? "needs-review" : "passed"}">
+                <strong>${escapeHtml(card.priority)}. ${escapeHtml(card.title)}</strong>
+                <span>${escapeHtml(card.instruction)}</span>
+                <span>${escapeHtml(card.command)}</span>
+                <span>Done when: ${escapeHtml(card.doneWhen)}</span>
               </div>`
           )
           .join("")}
@@ -1714,6 +1773,7 @@ function render(model) {
   const pushPackageReport = readPushPackageReport();
   const deploymentReadiness = readDeploymentReadiness();
   const adminOperationsManual = readAdminOperationsManual();
+  const adminQuickStart = readAdminQuickStart();
   const draftComparisonReport = readDraftComparisonReport();
   const draftQualityReport = readDraftQualityReport();
   const draftFixListReport = readDraftFixListReport();
@@ -2301,6 +2361,8 @@ function render(model) {
         })}
 
         ${renderControlCenter(controlReport)}
+
+        ${renderAdminQuickStart(adminQuickStart)}
 
         ${renderAdminCommandGuide(adminCommandGuide)}
 
