@@ -217,6 +217,18 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "build_domain_safety_policy",
+    label: "Build domain safety policy",
+    command: ["node", "scripts/build-domain-safety-policy.js"],
+    kind: "audit",
+  },
+  {
+    id: "build_push_confirmation_guide",
+    label: "Build push confirmation guide",
+    command: ["node", "scripts/build-push-confirmation-guide.js"],
+    kind: "audit",
+  },
+  {
     id: "build_admin_operations_manual",
     label: "Build admin operations manual",
     command: ["node", "scripts/build-admin-operations-manual.js"],
@@ -416,6 +428,28 @@ function refreshSafePushChecklist() {
   return result;
 }
 
+function refreshDomainSafetyPolicy() {
+  const result = runStep({
+    id: "refresh_domain_safety_policy",
+    label: "Refresh domain safety policy",
+    command: ["node", "scripts/build-domain-safety-policy.js"],
+    kind: "audit",
+  });
+  printStep(result);
+  return result;
+}
+
+function refreshPushConfirmationGuide() {
+  const result = runStep({
+    id: "refresh_push_confirmation_guide",
+    label: "Refresh push confirmation guide",
+    command: ["node", "scripts/build-push-confirmation-guide.js"],
+    kind: "audit",
+  });
+  printStep(result);
+  return result;
+}
+
 function refreshDeploymentReadiness() {
   const result = runStep({
     id: "refresh_deployment_readiness",
@@ -521,6 +555,24 @@ function main() {
     if (!summary.firstFailedStep) summary.firstFailedStep = safePushResult.id;
     report.summary = summary;
     report.steps.push(safePushResult);
+    fs.writeFileSync(REPORT_FILE, `${JSON.stringify(report, null, 2)}\n`);
+  }
+  const domainSafetyResult = refreshDomainSafetyPolicy();
+  if (domainSafetyResult.status === "failed") {
+    summary.status = "failed";
+    summary.failedSteps += 1;
+    if (!summary.firstFailedStep) summary.firstFailedStep = domainSafetyResult.id;
+    report.summary = summary;
+    report.steps.push(domainSafetyResult);
+    fs.writeFileSync(REPORT_FILE, `${JSON.stringify(report, null, 2)}\n`);
+  }
+  const pushConfirmationResult = refreshPushConfirmationGuide();
+  if (pushConfirmationResult.status === "failed") {
+    summary.status = "failed";
+    summary.failedSteps += 1;
+    if (!summary.firstFailedStep) summary.firstFailedStep = pushConfirmationResult.id;
+    report.summary = summary;
+    report.steps.push(pushConfirmationResult);
     fs.writeFileSync(REPORT_FILE, `${JSON.stringify(report, null, 2)}\n`);
   }
   const snapshotResult = refreshDashboardSnapshot();

@@ -23,6 +23,8 @@ const GIT_STATUS_FILE = path.join(ROOT, "outputs", "admin", "git-status-report.j
 const PUSH_PACKAGE_FILE = path.join(ROOT, "outputs", "admin", "push-package-report.json");
 const DEPLOYMENT_READINESS_FILE = path.join(ROOT, "outputs", "admin", "deployment-readiness-report.json");
 const SAFE_PUSH_CHECKLIST_FILE = path.join(ROOT, "outputs", "admin", "safe-push-checklist-report.json");
+const DOMAIN_SAFETY_POLICY_FILE = path.join(ROOT, "outputs", "admin", "domain-safety-policy-report.json");
+const PUSH_CONFIRMATION_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "push-confirmation-guide-report.json");
 const ADMIN_OPERATIONS_MANUAL_FILE = path.join(ROOT, "outputs", "admin", "admin-operations-manual-report.json");
 const ADMIN_QUICK_START_FILE = path.join(ROOT, "outputs", "admin", "admin-quick-start-report.json");
 const DRAFT_COMPARISON_FILE = path.join(ROOT, "outputs", "admin", "draft-comparison-report.json");
@@ -304,6 +306,24 @@ function readSafePushChecklist() {
   if (!fs.existsSync(SAFE_PUSH_CHECKLIST_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(SAFE_PUSH_CHECKLIST_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readDomainSafetyPolicy() {
+  if (!fs.existsSync(DOMAIN_SAFETY_POLICY_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(DOMAIN_SAFETY_POLICY_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readPushConfirmationGuide() {
+  if (!fs.existsSync(PUSH_CONFIRMATION_GUIDE_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(PUSH_CONFIRMATION_GUIDE_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -1801,6 +1821,137 @@ function renderSafePushChecklist(report) {
     </section>`;
 }
 
+function renderDomainSafetyPolicy(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Domain Safety Policy</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No domain safety policy yet</strong>
+            <span>Run node scripts/build-domain-safety-policy.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const checks = Array.isArray(report.checks) ? report.checks : [];
+  const policy = Array.isArray(report.policy) ? report.policy : [];
+  const statusClassName = summary.status === "blocked" ? "bad" : summary.status === "review" ? "warn" : "good";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Domain Safety Policy</h2>
+        <span class="pill ${statusClassName}">${escapeHtml(summary.policyDecision || "unknown")}</span>
+      </div>
+      <div class="health">
+        <div class="${summary.status === "blocked" ? "issue bad" : summary.status === "review" ? "issue warn" : "empty"}">
+          <strong>CNAME / domain safety</strong>
+          <span>${escapeHtml(report.nextAction || "Review domain policy before push.")}</span>
+        </div>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Domain files</span><strong>${escapeHtml(summary.domainFiles || 0)}</strong></div>
+        <div class="detail-stat"><span>Staged</span><strong>${escapeHtml(summary.stagedDomainFiles || 0)}</strong></div>
+        <div class="detail-stat"><span>Tracked</span><strong>${escapeHtml(summary.trackedDomainFiles || 0)}</strong></div>
+        <div class="detail-stat"><span>Untracked</span><strong>${escapeHtml(summary.untrackedDomainFiles || 0)}</strong></div>
+      </div>
+      <div class="workflow-gates">
+        ${checks
+          .map(
+            (item) => `
+              <div class="workflow-gate ${item.status === "passed" ? "passed" : item.status === "blocked" || item.status === "not_run" ? "failed" : "needs-review"}">
+                <div>
+                  <strong>${escapeHtml(item.label)}</strong>
+                  <span>${escapeHtml(item.detail)}</span>
+                </div>
+                <small>${escapeHtml(item.status)}</small>
+              </div>`
+          )
+          .join("")}
+      </div>
+      <div class="workflow-list">
+        ${policy
+          .map(
+            (item, index) => `
+              <div class="workflow-step">
+                <strong>${index + 1}. Domain rule</strong>
+                <span>${escapeHtml(item)}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+    </section>`;
+}
+
+function renderPushConfirmationGuide(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Push Confirmation Guide</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No push confirmation guide yet</strong>
+            <span>Run node scripts/build-push-confirmation-guide.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const checklist = Array.isArray(report.checklist) ? report.checklist : [];
+  const statusClassName = summary.status === "blocked" ? "bad" : summary.status === "review" ? "warn" : "good";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Push Confirmation Guide</h2>
+        <span class="pill ${statusClassName}">${escapeHtml(summary.finalDecision || "unknown")}</span>
+      </div>
+      <div class="health">
+        <div class="${summary.status === "blocked" ? "issue bad" : summary.status === "review" ? "issue warn" : "empty"}">
+          <strong>Final human confirmation</strong>
+          <span>${escapeHtml(report.nextAction || "Read the final confirmation before pushing.")}</span>
+        </div>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Items</span><strong>${escapeHtml(summary.checklistItems || 0)}</strong></div>
+        <div class="detail-stat"><span>Ready</span><strong>${escapeHtml(summary.ready || 0)}</strong></div>
+        <div class="detail-stat"><span>Review</span><strong>${escapeHtml(summary.review || 0)}</strong></div>
+        <div class="detail-stat"><span>Blocked</span><strong>${escapeHtml(summary.blocked || 0)}</strong></div>
+      </div>
+      <div class="workflow-gates">
+        ${checklist
+          .map(
+            (item) => `
+              <div class="workflow-gate ${item.status === "ready" ? "passed" : item.status === "blocked" ? "failed" : "needs-review"}">
+                <div>
+                  <strong>${escapeHtml(item.label)}</strong>
+                  <span>${escapeHtml(item.confirmation)}</span>
+                  <span>${escapeHtml(item.evidence)}</span>
+                </div>
+                <small>${escapeHtml(item.status)}</small>
+              </div>`
+          )
+          .join("")}
+      </div>
+      <div class="workflow-list">
+        <div class="workflow-step">
+          <strong>Final confirmation text</strong>
+          <span>${escapeHtml(report.finalConfirmationText || "Review every push gate before pushing.")}</span>
+        </div>
+      </div>
+    </section>`;
+}
+
 function renderAdminOperationsManual(report) {
   if (!report) {
     return `
@@ -3049,6 +3200,8 @@ function render(model) {
   const pushPackageReport = readPushPackageReport();
   const deploymentReadiness = readDeploymentReadiness();
   const safePushChecklist = readSafePushChecklist();
+  const domainSafetyPolicy = readDomainSafetyPolicy();
+  const pushConfirmationGuide = readPushConfirmationGuide();
   const adminOperationsManual = readAdminOperationsManual();
   const adminQuickStart = readAdminQuickStart();
   const draftComparisonReport = readDraftComparisonReport();
@@ -3841,6 +3994,8 @@ function render(model) {
             ${renderGitStatusReport(gitStatusReport)}
             ${renderPushPackageReport(pushPackageReport)}
             ${renderSafePushChecklist(safePushChecklist)}
+            ${renderDomainSafetyPolicy(domainSafetyPolicy)}
+            ${renderPushConfirmationGuide(pushConfirmationGuide)}
             ${renderDeploymentReadiness(deploymentReadiness)}
           `
         )}

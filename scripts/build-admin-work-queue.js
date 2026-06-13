@@ -17,6 +17,8 @@ const GIT_FILE = path.join(ADMIN_OUTPUT_DIR, "git-status-report.json");
 const PUSH_PACKAGE_FILE = path.join(ADMIN_OUTPUT_DIR, "push-package-report.json");
 const DEPLOYMENT_FILE = path.join(ADMIN_OUTPUT_DIR, "deployment-readiness-report.json");
 const SAFE_PUSH_FILE = path.join(ADMIN_OUTPUT_DIR, "safe-push-checklist-report.json");
+const DOMAIN_POLICY_FILE = path.join(ADMIN_OUTPUT_DIR, "domain-safety-policy-report.json");
+const PUSH_CONFIRMATION_FILE = path.join(ADMIN_OUTPUT_DIR, "push-confirmation-guide-report.json");
 const BACKUP_RESTORE_FILE = path.join(ADMIN_OUTPUT_DIR, "backup-restore-center-report.json");
 const REPORT_FRESHNESS_FILE = path.join(ADMIN_OUTPUT_DIR, "admin-report-freshness-report.json");
 
@@ -59,6 +61,8 @@ function main() {
   const pushPackage = readJsonIfExists(PUSH_PACKAGE_FILE);
   const deployment = readJsonIfExists(DEPLOYMENT_FILE);
   const safePush = readJsonIfExists(SAFE_PUSH_FILE);
+  const domainPolicy = readJsonIfExists(DOMAIN_POLICY_FILE);
+  const pushConfirmation = readJsonIfExists(PUSH_CONFIRMATION_FILE);
   const backupRestore = readJsonIfExists(BACKUP_RESTORE_FILE);
   const freshness = readJsonIfExists(REPORT_FRESHNESS_FILE);
 
@@ -72,6 +76,8 @@ function main() {
   const pushSummary = summaryOf(pushPackage);
   const deploymentSummary = summaryOf(deployment);
   const safePushSummary = summaryOf(safePush);
+  const domainPolicySummary = summaryOf(domainPolicy);
+  const pushConfirmationSummary = summaryOf(pushConfirmation);
   const backupSummary = summaryOf(backupRestore);
   const freshnessSummary = summaryOf(freshness);
 
@@ -176,6 +182,40 @@ function main() {
         "node scripts/build-safe-push-checklist.js",
         "Safe push checklist says safe_after_human_review or you intentionally decide to wait.",
         "This queue does not push. It only points you to the final push decision report."
+      )
+    );
+  }
+
+  if (domainPolicySummary.policyDecision && domainPolicySummary.policyDecision !== "domain_safe") {
+    tasks.push(
+      task(
+        "review_domain_safety_policy",
+        "Review the domain safety policy",
+        4.5,
+        domainPolicySummary.status === "blocked" ? "blocked" : "review",
+        "domain",
+        `Domain decision: ${domainPolicySummary.policyDecision}. ${domainPolicy.nextAction || "Review domain policy before push."}`,
+        "outputs/admin/domain-safety-policy-report.json",
+        "node scripts/build-domain-safety-policy.js",
+        "CNAME is not staged, or you intentionally decide to change domain behavior.",
+        "Domain files can change where your public site points. Review them before push."
+      )
+    );
+  }
+
+  if (pushConfirmationSummary.finalDecision && pushConfirmationSummary.finalDecision !== "ready_after_human_confirmation") {
+    tasks.push(
+      task(
+        "review_push_confirmation_guide",
+        "Review the push confirmation guide",
+        4.75,
+        pushConfirmationSummary.status === "blocked" ? "blocked" : "review",
+        "deploy",
+        `Push confirmation: ${pushConfirmationSummary.finalDecision}. ${pushConfirmation.nextAction || "Review confirmation guide before push."}`,
+        "outputs/admin/push-confirmation-guide-report.json",
+        "node scripts/build-push-confirmation-guide.js",
+        "You have read and accepted every final confirmation line.",
+        "This guide is the last human review step before GitHub push."
       )
     );
   }
@@ -286,6 +326,8 @@ function main() {
       relative(PUSH_PACKAGE_FILE),
       relative(DEPLOYMENT_FILE),
       relative(SAFE_PUSH_FILE),
+      relative(DOMAIN_POLICY_FILE),
+      relative(PUSH_CONFIRMATION_FILE),
       relative(BACKUP_RESTORE_FILE),
       relative(REPORT_FRESHNESS_FILE),
     ],
