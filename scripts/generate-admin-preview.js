@@ -8,6 +8,7 @@ const MODEL_FILE = path.join(ROOT, "outputs", "admin", "admin-read-model.json");
 const OUTPUT_FILE = path.join(ROOT, "outputs", "admin", "index.html");
 const CONTROL_REPORT_FILE = path.join(ROOT, "outputs", "admin", "control-report.json");
 const ADMIN_COMMAND_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "admin-command-guide-report.json");
+const GIT_STATUS_FILE = path.join(ROOT, "outputs", "admin", "git-status-report.json");
 const DRAFT_COMPARISON_FILE = path.join(ROOT, "outputs", "admin", "draft-comparison-report.json");
 const DRAFT_QUALITY_FILE = path.join(ROOT, "outputs", "admin", "draft-quality-report.json");
 const DRAFT_FIX_LIST_FILE = path.join(ROOT, "outputs", "admin", "draft-fix-list-report.json");
@@ -148,6 +149,15 @@ function readAdminCommandGuide() {
   if (!fs.existsSync(ADMIN_COMMAND_GUIDE_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(ADMIN_COMMAND_GUIDE_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readGitStatusReport() {
+  if (!fs.existsSync(GIT_STATUS_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(GIT_STATUS_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -588,6 +598,81 @@ function renderAdminCommandGuide(report) {
             (item, index) => `
               <div class="workflow-step">
                 <strong>${index + 1}. Command safety rule</strong>
+                <span>${escapeHtml(item)}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+    </section>`;
+}
+
+function renderGitStatusReport(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Git Status / Push Safety</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No Git status report yet</strong>
+            <span>Run node scripts/build-git-status-report.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const files = Array.isArray(report.files) ? report.files : [];
+  const rules = Array.isArray(report.rules) ? report.rules : [];
+  const pushSafety = summary.pushSafety || "unknown";
+  const safetyClass = pushSafety === "clean" ? "good" : pushSafety === "blocked" ? "bad" : "warn";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Git Status / Push Safety</h2>
+        <span class="pill ${safetyClass}">${escapeHtml(pushSafety)}</span>
+      </div>
+      <div class="health">
+        <div class="${pushSafety === "blocked" ? "issue bad" : pushSafety === "clean" ? "empty" : "issue warn"}">
+          <strong>${escapeHtml(pushSafety === "clean" ? "Working tree is clean" : "Review before push")}</strong>
+          <span>${escapeHtml(report.nextAction || "Review Git status before pushing.")}</span>
+        </div>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Branch</span><strong>${escapeHtml(summary.branch || "unknown")}</strong></div>
+        <div class="detail-stat"><span>Changed files</span><strong>${escapeHtml(summary.totalChangedFiles || 0)}</strong></div>
+        <div class="detail-stat"><span>Staged</span><strong>${escapeHtml(summary.staged || 0)}</strong></div>
+        <div class="detail-stat"><span>Untracked</span><strong>${escapeHtml(summary.untracked || 0)}</strong></div>
+      </div>
+      <div class="mini-list git-status-list">
+        ${
+          files.length
+            ? files
+                .slice(0, 12)
+                .map(
+                  (item) => `
+                    <div class="${item.group === "untracked" ? "needs-review" : "passed"}">
+                      <strong>${escapeHtml(item.file)}</strong>
+                      <span>${escapeHtml(item.rawStatus)} · ${escapeHtml(item.group)}</span>
+                    </div>`
+                )
+                .join("")
+            : `<div class="passed"><strong>No changed files</strong><span>Git status has no tracked or untracked file changes.</span></div>`
+        }
+      </div>
+      <div class="workflow-list">
+        <div class="workflow-step">
+          <strong>Latest commit</strong>
+          <span>${escapeHtml(summary.latestCommit || "unknown")}</span>
+        </div>
+        ${rules
+          .map(
+            (item, index) => `
+              <div class="workflow-step">
+                <strong>${index + 1}. Push safety rule</strong>
                 <span>${escapeHtml(item)}</span>
               </div>`
           )
@@ -1386,6 +1471,7 @@ function render(model) {
   const editorRulesJson = JSON.stringify(model.editorRules.article || {}).replaceAll("</", "<\\/");
   const controlReport = readControlReport();
   const adminCommandGuide = readAdminCommandGuide();
+  const gitStatusReport = readGitStatusReport();
   const draftComparisonReport = readDraftComparisonReport();
   const draftQualityReport = readDraftQualityReport();
   const draftFixListReport = readDraftFixListReport();
@@ -1975,6 +2061,8 @@ function render(model) {
         ${renderControlCenter(controlReport)}
 
         ${renderAdminCommandGuide(adminCommandGuide)}
+
+        ${renderGitStatusReport(gitStatusReport)}
 
         ${renderPublishReadiness(publishReadinessReport)}
 

@@ -44,6 +44,8 @@ function main() {
       "Control Center",
       "Admin Command Guide",
       "Command safety rule",
+      "Git Status / Push Safety",
+      "Push safety rule",
       "Publish Readiness",
       "Publish Result",
       "Publish Dry Run",

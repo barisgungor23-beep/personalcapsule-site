@@ -157,6 +157,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "build_git_status_report",
+    label: "Build Git status report",
+    command: ["node", "scripts/build-git-status-report.js"],
+    kind: "audit",
+  },
+  {
     id: "audit_admin_read_model",
     label: "Audit admin read model",
     command: ["node", "scripts/audit-admin-read-model.js"],
