@@ -265,6 +265,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "build_founder_decision_center",
+    label: "Build founder decision center",
+    command: ["node", "scripts/build-founder-decision-center.js"],
+    kind: "audit",
+  },
+  {
     id: "build_admin_report_index",
     label: "Build admin report index",
     command: ["node", "scripts/build-admin-report-index.js"],
@@ -450,6 +456,17 @@ function refreshPushConfirmationGuide() {
   return result;
 }
 
+function refreshFounderDecisionCenter() {
+  const result = runStep({
+    id: "refresh_founder_decision_center",
+    label: "Refresh founder decision center",
+    command: ["node", "scripts/build-founder-decision-center.js"],
+    kind: "audit",
+  });
+  printStep(result);
+  return result;
+}
+
 function refreshDeploymentReadiness() {
   const result = runStep({
     id: "refresh_deployment_readiness",
@@ -600,6 +617,15 @@ function main() {
     if (!summary.firstFailedStep) summary.firstFailedStep = workQueueResult.id;
     report.summary = summary;
     report.steps.push(workQueueResult);
+    fs.writeFileSync(REPORT_FILE, `${JSON.stringify(report, null, 2)}\n`);
+  }
+  const founderDecisionResult = refreshFounderDecisionCenter();
+  if (founderDecisionResult.status === "failed") {
+    summary.status = "failed";
+    summary.failedSteps += 1;
+    if (!summary.firstFailedStep) summary.firstFailedStep = founderDecisionResult.id;
+    report.summary = summary;
+    report.steps.push(founderDecisionResult);
     fs.writeFileSync(REPORT_FILE, `${JSON.stringify(report, null, 2)}\n`);
   }
   const reportIndexResult = refreshReportIndex();

@@ -13,6 +13,7 @@ const ADMIN_FAILURE_PLAYBOOK_FILE = path.join(ROOT, "outputs", "admin", "admin-f
 const ADMIN_DEPENDENCY_MAP_FILE = path.join(ROOT, "outputs", "admin", "admin-dependency-map-report.json");
 const ADMIN_REPORT_DETAIL_VIEWER_FILE = path.join(ROOT, "outputs", "admin", "admin-report-detail-viewer-report.json");
 const ADMIN_SYSTEM_OVERVIEW_FILE = path.join(ROOT, "outputs", "admin", "admin-system-overview-report.json");
+const FOUNDER_DECISION_CENTER_FILE = path.join(ROOT, "outputs", "admin", "founder-decision-center-report.json");
 const ADMIN_HOME_BRIEF_FILE = path.join(ROOT, "outputs", "admin", "admin-home-brief-report.json");
 const ADMIN_WORK_QUEUE_FILE = path.join(ROOT, "outputs", "admin", "admin-work-queue-report.json");
 const ADMIN_DASHBOARD_SNAPSHOT_FILE = path.join(ROOT, "outputs", "admin", "admin-dashboard-snapshot-report.json");
@@ -216,6 +217,15 @@ function readAdminSystemOverview() {
   if (!fs.existsSync(ADMIN_SYSTEM_OVERVIEW_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(ADMIN_SYSTEM_OVERVIEW_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readFounderDecisionCenter() {
+  if (!fs.existsSync(FOUNDER_DECISION_CENTER_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(FOUNDER_DECISION_CENTER_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -532,6 +542,82 @@ function renderWorkflowGate(title, status, detail) {
       </div>
       <small>${escapeHtml(gateLabel(status))}</small>
     </div>`;
+}
+
+function renderFounderDecisionCenter(report) {
+  if (!report) {
+    return `
+      <section class="founder-center founder-center-review">
+        <div class="founder-center-main">
+          <span class="home-eyebrow">Founder Decision Center</span>
+          <h2>Can I safely act now?</h2>
+          <p>Run node scripts/run-admin-control-check.js to generate the founder decision center.</p>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const decisions = Array.isArray(report.decisions) ? report.decisions : [];
+  const nextSteps = Array.isArray(report.nextSteps) ? report.nextSteps : [];
+  const guardrails = Array.isArray(report.guardrails) ? report.guardrails : [];
+  const centerClass =
+    summary.status === "safe"
+      ? "founder-center-safe"
+      : summary.status === "blocked"
+        ? "founder-center-blocked"
+        : "founder-center-review";
+
+  return `
+    <section class="founder-center ${centerClass}">
+      <div class="founder-center-main">
+        <span class="home-eyebrow">Founder Decision Center</span>
+        <h2>Can I safely act now?</h2>
+        <strong>${escapeHtml(summary.headline || "Review before action")}</strong>
+        <p>${escapeHtml(report.founderAnswer || "Review the admin reports before any live action.")}</p>
+        <div class="home-action">
+          <span>Safest action</span>
+          <b>${escapeHtml(report.safestAction || "Run the full control check.")}</b>
+        </div>
+      </div>
+      <div class="founder-decision-strip">
+        ${decisions
+          .map((item) => {
+            const className =
+              item.status === "blocked" ? "decision-blocked" : item.status === "review" ? "decision-review" : "decision-safe";
+            return `
+              <article class="founder-decision ${className}">
+                <span>${escapeHtml(item.label)}</span>
+                <strong>${escapeHtml(item.answer)}</strong>
+                <small>${escapeHtml(item.plainMeaning || item.detail)}</small>
+                <em>${escapeHtml(item.source)}</em>
+              </article>`;
+          })
+          .join("")}
+      </div>
+      <div class="founder-next-steps">
+        ${nextSteps
+          .map((item) => {
+            const className =
+              item.status === "blocked" ? "failed" : item.status === "review" ? "needs-review" : "passed";
+            return `
+              <div class="workflow-gate ${className}">
+                <div>
+                  <strong>${escapeHtml(item.label)}</strong>
+                  <span>${escapeHtml(item.why)}</span>
+                  <span>Source: ${escapeHtml(item.source)}</span>
+                </div>
+                <small>${escapeHtml(item.status)}</small>
+              </div>`;
+          })
+          .join("")}
+      </div>
+      <div class="home-rules">
+        ${guardrails
+          .slice(0, 4)
+          .map((item) => `<span>${escapeHtml(item)}</span>`)
+          .join("")}
+      </div>
+    </section>`;
 }
 
 function renderPublishWorkflowStatus({
@@ -3190,6 +3276,7 @@ function render(model) {
   const adminDependencyMap = readAdminDependencyMap();
   const adminReportDetailViewer = readAdminReportDetailViewer();
   const adminSystemOverview = readAdminSystemOverview();
+  const founderDecisionCenter = readFounderDecisionCenter();
   const adminHomeBrief = readAdminHomeBrief();
   const adminWorkQueue = readAdminWorkQueue();
   const adminDashboardSnapshot = readAdminDashboardSnapshot();
@@ -3288,6 +3375,93 @@ function render(model) {
     }
     .metric span, .metric small { display: block; color: var(--muted); font-size: 13px; }
     .metric strong { display: block; font-size: 32px; line-height: 1.1; margin: 10px 0; }
+    .founder-center {
+      display: grid;
+      grid-template-columns: minmax(320px, .76fr) minmax(0, 1.24fr);
+      gap: 16px;
+      margin-bottom: 16px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background:
+        radial-gradient(circle at top right, rgba(216,178,90,.12), transparent 38%),
+        linear-gradient(145deg, rgba(255,247,230,.085), rgba(0,0,0,.18));
+    }
+    .founder-center-safe { border-color: rgba(134,201,138,.34); }
+    .founder-center-review { border-color: rgba(240,207,122,.38); }
+    .founder-center-blocked { border-color: rgba(229,139,160,.42); }
+    .founder-center-main {
+      display: grid;
+      align-content: start;
+      gap: 10px;
+      padding: 4px;
+    }
+    .founder-center-main h2 {
+      font-size: clamp(28px, 3.4vw, 46px);
+      line-height: .98;
+      margin: 0;
+      letter-spacing: -.04em;
+    }
+    .founder-center-main strong {
+      color: var(--cream);
+      font-size: 18px;
+      line-height: 1.25;
+    }
+    .founder-center-main p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .founder-decision-strip {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 9px;
+    }
+    .founder-decision {
+      display: grid;
+      align-content: start;
+      gap: 5px;
+      min-height: 154px;
+      padding: 12px;
+      border: 1px solid rgba(255,247,230,.1);
+      border-radius: 13px;
+      background: rgba(0,0,0,.15);
+    }
+    .founder-decision span {
+      color: var(--faint);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+    .founder-decision strong {
+      font-size: 16px;
+      line-height: 1.18;
+    }
+    .founder-decision small {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.34;
+    }
+    .founder-decision em {
+      color: var(--faint);
+      font-size: 10px;
+      line-height: 1.25;
+      font-style: normal;
+      overflow-wrap: anywhere;
+    }
+    .founder-decision.decision-safe { border-color: rgba(134,201,138,.24); }
+    .founder-decision.decision-safe strong { color: var(--good); }
+    .founder-decision.decision-review { border-color: rgba(240,207,122,.34); }
+    .founder-decision.decision-review strong { color: var(--warn); }
+    .founder-decision.decision-blocked { border-color: rgba(229,139,160,.38); }
+    .founder-decision.decision-blocked strong { color: var(--bad); }
+    .founder-next-steps {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
     .home-brief {
       display: grid;
       grid-template-columns: minmax(280px, .85fr) minmax(0, 1.15fr);
@@ -3886,7 +4060,7 @@ function render(model) {
     footer { color: var(--faint); padding: 20px 0 4px; font-size: 13px; }
     @media (max-width: 1100px) {
       .metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      .layout, .two-col, .tools, .home-brief, .home-rules { grid-template-columns: 1fr; }
+      .layout, .two-col, .tools, .home-brief, .home-rules, .founder-center, .founder-decision-strip, .founder-next-steps { grid-template-columns: 1fr; }
       header { display: grid; }
       .syncbox { min-width: 0; }
     }
@@ -3915,6 +4089,7 @@ function render(model) {
       </aside>
     </header>
 
+    ${renderFounderDecisionCenter(founderDecisionCenter)}
     ${renderAdminHomeBrief(adminHomeBrief)}
     ${renderAdminWorkQueue(adminWorkQueue)}
 
