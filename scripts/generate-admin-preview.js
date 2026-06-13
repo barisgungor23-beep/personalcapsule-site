@@ -3250,8 +3250,18 @@ function renderEditorRules(rules) {
 }
 
 function renderPanelGroup(title, description, body) {
+  const sectionIds = {
+    System: "system-section",
+    Reports: "reports-section",
+    Guides: "guides-section",
+    "Git / Deploy": "git-deploy-section",
+    "Publish Safety": "publish-section",
+    Drafts: "drafts-section",
+  };
+  const sectionId = sectionIds[title] ? ` id="${escapeHtml(sectionIds[title])}"` : "";
+
   return `
-    <section class="panel-group" aria-label="${escapeHtml(title)}">
+    <section${sectionId} class="panel-group admin-anchor" aria-label="${escapeHtml(title)}">
       <div class="group-head">
         <strong>${escapeHtml(title)}</strong>
         <span>${escapeHtml(description)}</span>
@@ -3260,6 +3270,38 @@ function renderPanelGroup(title, description, body) {
         ${body}
       </div>
     </section>`;
+}
+
+function renderAdminNavigation() {
+  const items = [
+    ["Founder Center", "#founder-center", "Start here"],
+    ["System", "#system-section", "Health and status"],
+    ["Reports", "#reports-section", "Inventory and freshness"],
+    ["Guides", "#guides-section", "Safe operating rules"],
+    ["Git / Deploy", "#git-deploy-section", "Push and domain checks"],
+    ["Publish", "#publish-section", "Dry-run and backup"],
+    ["Drafts", "#drafts-section", "Draft workflow"],
+    ["Content", "#content-section", "Articles and pages"],
+  ];
+
+  return `
+    <nav class="admin-nav" aria-label="Admin Navigation">
+      <div class="admin-nav-head">
+        <span class="home-eyebrow">Admin Navigation</span>
+        <strong>Jump to the area you need</strong>
+      </div>
+      <div class="admin-nav-links">
+        ${items
+          .map(
+            ([label, href, hint]) => `
+              <a href="${escapeHtml(href)}">
+                <strong>${escapeHtml(label)}</strong>
+                <span>${escapeHtml(hint)}</span>
+              </a>`
+          )
+          .join("")}
+      </div>
+    </nav>`;
 }
 
 function render(model) {
@@ -3375,6 +3417,58 @@ function render(model) {
     }
     .metric span, .metric small { display: block; color: var(--muted); font-size: 13px; }
     .metric strong { display: block; font-size: 32px; line-height: 1.1; margin: 10px 0; }
+    .admin-anchor { scroll-margin-top: 18px; }
+    .admin-nav {
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
+      gap: 12px;
+      align-items: stretch;
+      margin-bottom: 16px;
+      padding: 12px;
+      border: 1px solid rgba(216,178,90,.2);
+      border-radius: 18px;
+      background: rgba(0,0,0,.14);
+    }
+    .admin-nav-head {
+      display: grid;
+      align-content: center;
+      gap: 4px;
+      padding: 10px;
+    }
+    .admin-nav-head strong {
+      color: var(--cream);
+      font-size: 15px;
+      line-height: 1.25;
+    }
+    .admin-nav-links {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .admin-nav a {
+      display: grid;
+      gap: 3px;
+      min-height: 62px;
+      padding: 10px 11px;
+      border: 1px solid rgba(255,247,230,.1);
+      border-radius: 12px;
+      background: rgba(255,247,230,.045);
+      text-decoration: none;
+    }
+    .admin-nav a:hover {
+      border-color: rgba(216,178,90,.42);
+      background: rgba(216,178,90,.08);
+    }
+    .admin-nav a strong {
+      color: var(--gold);
+      font-size: 13px;
+      line-height: 1.2;
+    }
+    .admin-nav a span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.25;
+    }
     .founder-center {
       display: grid;
       grid-template-columns: minmax(320px, .76fr) minmax(0, 1.24fr);
@@ -4060,14 +4154,15 @@ function render(model) {
     footer { color: var(--faint); padding: 20px 0 4px; font-size: 13px; }
     @media (max-width: 1100px) {
       .metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      .layout, .two-col, .tools, .home-brief, .home-rules, .founder-center, .founder-decision-strip, .founder-next-steps { grid-template-columns: 1fr; }
+      .layout, .two-col, .tools, .home-brief, .home-rules, .founder-center, .founder-decision-strip, .founder-next-steps, .admin-nav { grid-template-columns: 1fr; }
+      .admin-nav-links { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       header { display: grid; }
       .syncbox { min-width: 0; }
     }
     @media (max-width: 680px) {
       .shell { padding: 16px; }
       header { padding: 18px; border-radius: 14px; }
-      .metrics, .home-decision-grid { grid-template-columns: 1fr; }
+      .metrics, .home-decision-grid, .admin-nav-links { grid-template-columns: 1fr; }
       .metric { min-height: 104px; padding: 14px; }
       .metric strong { font-size: 26px; }
       th, td { padding: 11px; }
@@ -4089,9 +4184,13 @@ function render(model) {
       </aside>
     </header>
 
-    ${renderFounderDecisionCenter(founderDecisionCenter)}
-    ${renderAdminHomeBrief(adminHomeBrief)}
-    ${renderAdminWorkQueue(adminWorkQueue)}
+    ${renderAdminNavigation()}
+
+    <section id="founder-center" class="admin-anchor">
+      ${renderFounderDecisionCenter(founderDecisionCenter)}
+      ${renderAdminHomeBrief(adminHomeBrief)}
+      ${renderAdminWorkQueue(adminWorkQueue)}
+    </section>
 
     <section class="grid metrics" aria-label="Website summary">
       ${renderMetric("HTML pages", model.summary.totalHtmlPages, "Current static pages")}
@@ -4228,7 +4327,7 @@ function render(model) {
         </section>
       </aside>
 
-      <div class="stack">
+      <div id="content-section" class="stack admin-anchor">
         <section class="panel">
           <div class="panel-head">
             <h2>Blog articles</h2>
