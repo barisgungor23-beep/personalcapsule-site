@@ -1609,8 +1609,15 @@ function renderPushPackageReport(report) {
         <div class="detail-stat"><span>Upstream</span><strong>${escapeHtml(summary.upstream || "none")}</strong></div>
         <div class="detail-stat"><span>Ahead</span><strong>${escapeHtml(summary.ahead || 0)}</strong></div>
         <div class="detail-stat"><span>Behind</span><strong>${escapeHtml(summary.behind || 0)}</strong></div>
+        <div class="detail-stat"><span>Listed</span><strong>${escapeHtml(summary.commits || 0)}</strong></div>
+        <div class="detail-stat"><span>Complete</span><strong>${summary.commitListComplete === false ? "No" : "Yes"}</strong></div>
       </div>
       <div class="mini-list push-package-list">
+        ${
+          summary.commitListComplete === false
+            ? `<div class="needs-review"><strong>Commit list is incomplete</strong><span>${escapeHtml(summary.missingCommitCount || 0)} commit(s) are missing from the local push package report.</span></div>`
+            : ""
+        }
         ${
           commits.length
             ? commits

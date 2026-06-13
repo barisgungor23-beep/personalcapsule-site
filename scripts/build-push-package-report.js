@@ -75,7 +75,7 @@ function main() {
       });
     }
 
-    const log = runGit(["log", "--oneline", "--max-count=50", `${upstream.stdout}..HEAD`]);
+    const log = runGit(["log", "--oneline", `${upstream.stdout}..HEAD`]);
     if (log.status === 0 && log.stdout) {
       commits = log.stdout.split("\n").filter(Boolean).map(parseCommit);
     }
@@ -104,6 +104,8 @@ function main() {
       ahead,
       behind,
       commits: commits.length,
+      commitListComplete: commits.length === ahead,
+      missingCommitCount: Math.max(0, ahead - commits.length),
       blockers: blockers.length,
       warnings: warnings.length,
     },
@@ -114,6 +116,7 @@ function main() {
     commits,
     rules: [
       "Review every local commit before pushing.",
+      "The push package report must list every local commit waiting for push.",
       "Do not push if the branch is behind upstream.",
       "Remember that Cloudflare Pages may deploy after GitHub receives the push.",
       "Push only when deployment readiness and local content checks are acceptable.",

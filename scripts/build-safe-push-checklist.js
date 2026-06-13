@@ -160,11 +160,13 @@ function main() {
         ? "not_run"
         : pushSummary.status === "blocked" || (pushSummary.behind || 0) > 0
           ? "blocked"
+          : pushSummary.commitListComplete === false
+            ? "blocked"
           : (pushSummary.ahead || 0) > 0
             ? "review"
             : "passed",
       pushPackage
-        ? `${pushSummary.ahead || 0} commit(s) ahead, ${pushSummary.behind || 0} behind.`
+        ? `${pushSummary.ahead || 0} commit(s) ahead, ${pushSummary.behind || 0} behind, ${pushSummary.commits || 0} listed.`
         : "Push package report is missing.",
       "outputs/admin/push-package-report.json",
       "This tells you exactly whether GitHub will receive new commits."
