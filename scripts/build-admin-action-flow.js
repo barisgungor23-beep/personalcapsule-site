@@ -89,6 +89,15 @@ function main() {
       "Run full control check after editing the draft."
     ),
     action(
+      "create_existing_edit_draft",
+      "Create existing article edit draft",
+      "draft",
+      commandText(commands, "create_existing_article_edit_draft", "node scripts/create-article-draft.js what-is-a-digital-time-capsule --confirm"),
+      "draft_only",
+      "Use when improving a published article without touching the live file directly.",
+      "Generate draft preview, then run draft quality and comparison checks."
+    ),
+    action(
       "generate_preview",
       "Generate draft previews",
       "preview",

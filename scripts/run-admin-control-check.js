@@ -85,6 +85,17 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "create_existing_article_edit_draft_dry_run",
+    label: "Create existing article edit draft dry run",
+    command: [
+      "node",
+      "scripts/create-article-draft.js",
+      "what-is-a-digital-time-capsule",
+      "--dry-run",
+    ],
+    kind: "audit",
+  },
+  {
     id: "audit_draft_previews",
     label: "Audit draft previews",
     command: ["node", "scripts/audit-draft-previews.js"],

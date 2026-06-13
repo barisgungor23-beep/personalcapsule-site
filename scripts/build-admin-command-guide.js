@@ -30,6 +30,16 @@ const commands = [
     changesFiles: "draft_file",
   },
   {
+    id: "create_existing_article_edit_draft",
+    label: "Create existing article edit draft",
+    command: "node scripts/create-article-draft.js what-is-a-digital-time-capsule --confirm",
+    group: "draft_creation",
+    safety: "draft_only",
+    whenToUse: "Use this when you want to improve an already published article without editing the live article directly.",
+    whatItDoes: "Copies a published article into a private edit draft under content/drafts/articles.",
+    changesFiles: "draft_file",
+  },
+  {
     id: "generate_draft_previews",
     label: "Generate draft previews",
     command: "node scripts/generate-draft-preview.js --all",

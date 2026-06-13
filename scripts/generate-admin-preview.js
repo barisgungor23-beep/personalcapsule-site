@@ -3213,6 +3213,42 @@ function renderNewArticleWorkflow(categories) {
     </section>`;
 }
 
+function renderExistingArticleEditWorkflow(articles) {
+  const defaultArticle = articles.find((article) => article.status === "published") || articles[0];
+  const articleId = defaultArticle ? defaultArticle.id : "what-is-a-digital-time-capsule";
+  const dryRunCommand = `node scripts/create-article-draft.js ${articleId} --dry-run`;
+  const confirmCommand = `node scripts/create-article-draft.js ${articleId} --confirm`;
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Existing Article Edit Draft</h2>
+        <span class="pill good">draft-first</span>
+      </div>
+      <div class="health">
+        <div class="empty">Existing published articles are edited through private drafts. The live article file is not changed when the draft is created.</div>
+      </div>
+      <div class="workflow-list">
+        <div class="workflow-step">
+          <strong>1. Test the draft creation</strong>
+          <span>${escapeHtml(dryRunCommand)}</span>
+        </div>
+        <div class="workflow-step">
+          <strong>2. Create the private edit draft</strong>
+          <span>${escapeHtml(confirmCommand)}</span>
+        </div>
+        <div class="workflow-step">
+          <strong>3. Edit only the draft file</strong>
+          <span>Make changes inside content/drafts/articles/${escapeHtml(articleId)}.draft.json, then generate preview and run full control.</span>
+        </div>
+        <div class="workflow-step">
+          <strong>4. Publish only after checks</strong>
+          <span>Preview, quality audit, comparison, publish dry-run, rollback plan, and backup must all be reviewed before any confirmed publish.</span>
+        </div>
+      </div>
+    </section>`;
+}
+
 function renderEditorRules(rules) {
   if (!rules || !Array.isArray(rules.fields)) return "";
 
@@ -4304,6 +4340,7 @@ function render(model) {
             ${renderDraftComparison(draftComparisonReport)}
             ${renderPublishWorkflow()}
             ${renderNewArticleWorkflow(model.categories)}
+            ${renderExistingArticleEditWorkflow(model.articles)}
             ${renderEditorRules(model.editorRules.article)}
           `
         )}
