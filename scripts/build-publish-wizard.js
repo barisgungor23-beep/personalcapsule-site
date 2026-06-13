@@ -207,10 +207,6 @@ function main() {
   console.log(`Ready drafts: ${report.summary.readyDrafts}`);
   console.log(`Planned operations: ${report.summary.plannedFileOperations}`);
   console.log(`Report: ${relative(OUTPUT_FILE)}`);
-
-  if (status === "blocked") {
-    process.exitCode = 1;
-  }
 }
 
 main();

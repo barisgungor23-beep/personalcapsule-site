@@ -211,6 +211,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "build_safe_push_checklist",
+    label: "Build safe push checklist",
+    command: ["node", "scripts/build-safe-push-checklist.js"],
+    kind: "audit",
+  },
+  {
     id: "build_admin_operations_manual",
     label: "Build admin operations manual",
     command: ["node", "scripts/build-admin-operations-manual.js"],
@@ -399,6 +405,28 @@ function refreshPublishWizard() {
   return result;
 }
 
+function refreshSafePushChecklist() {
+  const result = runStep({
+    id: "refresh_safe_push_checklist",
+    label: "Refresh safe push checklist with control report",
+    command: ["node", "scripts/build-safe-push-checklist.js"],
+    kind: "audit",
+  });
+  printStep(result);
+  return result;
+}
+
+function refreshDeploymentReadiness() {
+  const result = runStep({
+    id: "refresh_deployment_readiness",
+    label: "Refresh deployment readiness with control report",
+    command: ["node", "scripts/build-deployment-readiness.js"],
+    kind: "audit",
+  });
+  printStep(result);
+  return result;
+}
+
 function refreshHomeBrief() {
   const result = runStep({
     id: "refresh_admin_home_brief",
@@ -415,6 +443,28 @@ function refreshWorkQueue() {
     id: "refresh_admin_work_queue",
     label: "Refresh admin work queue with control report",
     command: ["node", "scripts/build-admin-work-queue.js"],
+    kind: "audit",
+  });
+  printStep(result);
+  return result;
+}
+
+function refreshReportIndex() {
+  const result = runStep({
+    id: "refresh_admin_report_index",
+    label: "Refresh admin report index with control report",
+    command: ["node", "scripts/build-admin-report-index.js"],
+    kind: "audit",
+  });
+  printStep(result);
+  return result;
+}
+
+function refreshReportFreshness() {
+  const result = runStep({
+    id: "refresh_admin_report_freshness",
+    label: "Refresh admin report freshness with control report",
+    command: ["node", "scripts/build-admin-report-freshness.js"],
     kind: "audit",
   });
   printStep(result);
@@ -455,6 +505,24 @@ function main() {
     report.steps.push(publishWizardResult);
     fs.writeFileSync(REPORT_FILE, `${JSON.stringify(report, null, 2)}\n`);
   }
+  const deploymentReadinessResult = refreshDeploymentReadiness();
+  if (deploymentReadinessResult.status === "failed") {
+    summary.status = "failed";
+    summary.failedSteps += 1;
+    if (!summary.firstFailedStep) summary.firstFailedStep = deploymentReadinessResult.id;
+    report.summary = summary;
+    report.steps.push(deploymentReadinessResult);
+    fs.writeFileSync(REPORT_FILE, `${JSON.stringify(report, null, 2)}\n`);
+  }
+  const safePushResult = refreshSafePushChecklist();
+  if (safePushResult.status === "failed") {
+    summary.status = "failed";
+    summary.failedSteps += 1;
+    if (!summary.firstFailedStep) summary.firstFailedStep = safePushResult.id;
+    report.summary = summary;
+    report.steps.push(safePushResult);
+    fs.writeFileSync(REPORT_FILE, `${JSON.stringify(report, null, 2)}\n`);
+  }
   const snapshotResult = refreshDashboardSnapshot();
   if (snapshotResult.status === "failed") {
     summary.status = "failed";
@@ -480,6 +548,24 @@ function main() {
     if (!summary.firstFailedStep) summary.firstFailedStep = workQueueResult.id;
     report.summary = summary;
     report.steps.push(workQueueResult);
+    fs.writeFileSync(REPORT_FILE, `${JSON.stringify(report, null, 2)}\n`);
+  }
+  const reportIndexResult = refreshReportIndex();
+  if (reportIndexResult.status === "failed") {
+    summary.status = "failed";
+    summary.failedSteps += 1;
+    if (!summary.firstFailedStep) summary.firstFailedStep = reportIndexResult.id;
+    report.summary = summary;
+    report.steps.push(reportIndexResult);
+    fs.writeFileSync(REPORT_FILE, `${JSON.stringify(report, null, 2)}\n`);
+  }
+  const reportFreshnessResult = refreshReportFreshness();
+  if (reportFreshnessResult.status === "failed") {
+    summary.status = "failed";
+    summary.failedSteps += 1;
+    if (!summary.firstFailedStep) summary.firstFailedStep = reportFreshnessResult.id;
+    report.summary = summary;
+    report.steps.push(reportFreshnessResult);
     fs.writeFileSync(REPORT_FILE, `${JSON.stringify(report, null, 2)}\n`);
   }
   const refreshResult = refreshAdminPreview();

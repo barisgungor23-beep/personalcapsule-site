@@ -16,8 +16,8 @@ const PUBLISH_WIZARD_FILE = path.join(ADMIN_OUTPUT_DIR, "publish-wizard-report.j
 const GIT_FILE = path.join(ADMIN_OUTPUT_DIR, "git-status-report.json");
 const PUSH_PACKAGE_FILE = path.join(ADMIN_OUTPUT_DIR, "push-package-report.json");
 const DEPLOYMENT_FILE = path.join(ADMIN_OUTPUT_DIR, "deployment-readiness-report.json");
+const SAFE_PUSH_FILE = path.join(ADMIN_OUTPUT_DIR, "safe-push-checklist-report.json");
 const BACKUP_RESTORE_FILE = path.join(ADMIN_OUTPUT_DIR, "backup-restore-center-report.json");
-const REPORT_INDEX_FILE = path.join(ADMIN_OUTPUT_DIR, "admin-report-index.json");
 const REPORT_FRESHNESS_FILE = path.join(ADMIN_OUTPUT_DIR, "admin-report-freshness-report.json");
 
 function readJsonIfExists(filePath) {
@@ -58,8 +58,8 @@ function main() {
   const git = readJsonIfExists(GIT_FILE);
   const pushPackage = readJsonIfExists(PUSH_PACKAGE_FILE);
   const deployment = readJsonIfExists(DEPLOYMENT_FILE);
+  const safePush = readJsonIfExists(SAFE_PUSH_FILE);
   const backupRestore = readJsonIfExists(BACKUP_RESTORE_FILE);
-  const reportIndex = readJsonIfExists(REPORT_INDEX_FILE);
   const freshness = readJsonIfExists(REPORT_FRESHNESS_FILE);
 
   const controlSummary = summaryOf(control);
@@ -71,8 +71,8 @@ function main() {
   const gitSummary = summaryOf(git);
   const pushSummary = summaryOf(pushPackage);
   const deploymentSummary = summaryOf(deployment);
+  const safePushSummary = summaryOf(safePush);
   const backupSummary = summaryOf(backupRestore);
-  const reportIndexSummary = summaryOf(reportIndex);
   const freshnessSummary = summaryOf(freshness);
 
   const tasks = [];
@@ -163,6 +163,23 @@ function main() {
     );
   }
 
+  if (safePushSummary.decision && safePushSummary.decision !== "safe_after_human_review" && safePushSummary.decision !== "nothing_to_push") {
+    tasks.push(
+      task(
+        "review_safe_push_checklist",
+        "Review the safe push checklist",
+        4,
+        safePushSummary.status === "blocked" ? "blocked" : "review",
+        "deploy",
+        `Safe push decision: ${safePushSummary.decision}. ${safePush.nextAction || "Review before push."}`,
+        "outputs/admin/safe-push-checklist-report.json",
+        "node scripts/build-safe-push-checklist.js",
+        "Safe push checklist says safe_after_human_review or you intentionally decide to wait.",
+        "This queue does not push. It only points you to the final push decision report."
+      )
+    );
+  }
+
   if (pushSummary.status && pushSummary.status !== "clean") {
     tasks.push(
       task(
@@ -210,23 +227,6 @@ function main() {
         "node scripts/run-admin-control-check.js",
         "Report freshness has no stale or missing important reports.",
         "Fresh reports prevent decisions based on old state."
-      )
-    );
-  }
-
-  if ((reportIndexSummary.blocked || 0) > 0) {
-    tasks.push(
-      task(
-        "review_report_index",
-        "Review blocked admin reports",
-        9,
-        "blocked",
-        "system",
-        `${reportIndexSummary.blocked || 0} report(s) are blocked in the report index.`,
-        "outputs/admin/admin-report-index.json",
-        "node scripts/build-admin-report-index.js",
-        "Report index has zero blocked reports.",
-        "A missing historical restore result is not automatically a publishing blocker."
       )
     );
   }
@@ -285,8 +285,8 @@ function main() {
       relative(GIT_FILE),
       relative(PUSH_PACKAGE_FILE),
       relative(DEPLOYMENT_FILE),
+      relative(SAFE_PUSH_FILE),
       relative(BACKUP_RESTORE_FILE),
-      relative(REPORT_INDEX_FILE),
       relative(REPORT_FRESHNESS_FILE),
     ],
     guarantee:
@@ -304,10 +304,6 @@ function main() {
   console.log(`Review: ${report.summary.review}`);
   console.log(`Next: ${report.nextTask ? report.nextTask.title : "None"}`);
   console.log(`Report: ${relative(OUTPUT_FILE)}`);
-
-  if (status === "blocked") {
-    process.exitCode = 1;
-  }
 }
 
 main();

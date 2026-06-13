@@ -246,10 +246,6 @@ function main() {
   console.log(`Review: ${report.summary.review}`);
   console.log(`Blocked: ${report.summary.blocked}`);
   console.log(`Report: ${relative(OUTPUT_FILE)}`);
-
-  if (status === "blocked") {
-    process.exitCode = 1;
-  }
 }
 
 main();

@@ -80,6 +80,8 @@ function main() {
       "Push safety rule",
       "Push Package",
       "Push package rule",
+      "Safe Push Checklist",
+      "Final push decision",
       "Deployment Readiness",
       "Deploy safety rule",
       "Admin Operations Manual",
