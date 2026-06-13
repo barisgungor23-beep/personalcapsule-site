@@ -27,6 +27,7 @@ const reports = [
   ["draft_fix_list", "Draft fix list", "draft-fix-list-report.json"],
   ["draft_edit_plan", "Draft edit plan", "draft-edit-plan-report.json"],
   ["draft_edit_guide", "Draft edit guide", "draft-edit-guide-report.json"],
+  ["draft_patch_apply_guide", "Draft patch apply guide", "draft-patch-apply-guide-report.json"],
   ["draft_comparison", "Draft comparison", "draft-comparison-report.json"],
   ["publish_readiness", "Publish readiness", "publish-readiness-report.json"],
   ["publish_dry_run", "Publish dry run", "publish-dry-run-report.json"],

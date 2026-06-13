@@ -115,6 +115,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "build_draft_patch_apply_guide",
+    label: "Build draft patch apply guide",
+    command: ["node", "scripts/build-draft-patch-apply-guide.js"],
+    kind: "audit",
+  },
+  {
     id: "build_admin_command_guide",
     label: "Build admin command guide",
     command: ["node", "scripts/build-admin-command-guide.js"],

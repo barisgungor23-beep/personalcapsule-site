@@ -27,6 +27,7 @@ const DRAFT_QUALITY_FILE = path.join(ROOT, "outputs", "admin", "draft-quality-re
 const DRAFT_FIX_LIST_FILE = path.join(ROOT, "outputs", "admin", "draft-fix-list-report.json");
 const DRAFT_EDIT_PLAN_FILE = path.join(ROOT, "outputs", "admin", "draft-edit-plan-report.json");
 const DRAFT_EDIT_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "draft-edit-guide-report.json");
+const DRAFT_PATCH_APPLY_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "draft-patch-apply-guide-report.json");
 const PUBLISH_READINESS_FILE = path.join(ROOT, "outputs", "admin", "publish-readiness-report.json");
 const PUBLISH_DRY_RUN_FILE = path.join(ROOT, "outputs", "admin", "publish-dry-run-report.json");
 const PUBLISH_ROLLBACK_FILE = path.join(ROOT, "outputs", "admin", "publish-rollback-plan.json");
@@ -335,6 +336,15 @@ function readDraftEditGuideReport() {
   if (!fs.existsSync(DRAFT_EDIT_GUIDE_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(DRAFT_EDIT_GUIDE_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readDraftPatchApplyGuideReport() {
+  if (!fs.existsSync(DRAFT_PATCH_APPLY_GUIDE_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(DRAFT_PATCH_APPLY_GUIDE_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -2505,6 +2515,79 @@ function renderDraftEditGuide(report) {
     </section>`;
 }
 
+function renderDraftPatchApplyGuide(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Draft Patch Apply Guide</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No patch apply guide yet</strong>
+            <span>Run node scripts/build-draft-patch-apply-guide.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const contract = report.patchContract || {};
+  const steps = Array.isArray(report.applySteps) ? report.applySteps : [];
+  const redFlags = Array.isArray(report.redFlags) ? report.redFlags : [];
+  const fieldRules = Array.isArray(report.fieldRules) ? report.fieldRules : [];
+  const status = summary.status === "passed" ? "good" : "bad";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Draft Patch Apply Guide</h2>
+        <span class="pill ${status}">${escapeHtml(summary.status || "unknown")}</span>
+      </div>
+      <div class="health">
+        <div class="${summary.status === "passed" ? "empty" : "issue bad"}">
+          <strong>Patch contract</strong>
+          <span>${escapeHtml(contract.rule || "Browser patch output must target draft files only.")}</span>
+        </div>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Patch mode</span><strong>${escapeHtml(summary.patchMode || "unknown")}</strong></div>
+        <div class="detail-stat"><span>Editable</span><strong>${escapeHtml(summary.editableFields || 0)}</strong></div>
+        <div class="detail-stat"><span>Controlled</span><strong>${escapeHtml(summary.controlledFields || 0)}</strong></div>
+        <div class="detail-stat"><span>High risk</span><strong>${escapeHtml(summary.highRiskFields || 0)}</strong></div>
+      </div>
+      <div class="workflow-list">
+        ${steps
+          .map(
+            (item) => `
+              <div class="workflow-step">
+                <strong>${escapeHtml(item.order)}. ${escapeHtml(item.title)}</strong>
+                <span>${escapeHtml(item.detail)}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+      <div class="mini-list">
+        <div class="needs-review">
+          <strong>Red flags</strong>
+          <span>${escapeHtml(redFlags.join(" · "))}</span>
+        </div>
+        ${fieldRules
+          .filter((item) => item.mode !== "editable" || item.publishRisk === "high")
+          .slice(0, 8)
+          .map(
+            (item) => `
+              <div class="${item.publishRisk === "high" ? "needs-review" : "passed"}">
+                <strong>${escapeHtml(item.label)} · ${escapeHtml(item.mode)} · ${escapeHtml(item.publishRisk)}</strong>
+                <span>${escapeHtml(item.patchRule)}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+    </section>`;
+}
+
 function renderPublishWorkflow() {
   const steps = [
     ["Create Draft", "Published content is copied into a private draft file."],
@@ -2642,6 +2725,7 @@ function render(model) {
   const draftFixListReport = readDraftFixListReport();
   const draftEditPlanReport = readDraftEditPlanReport();
   const draftEditGuideReport = readDraftEditGuideReport();
+  const draftPatchApplyGuideReport = readDraftPatchApplyGuideReport();
   const publishReadinessReport = readPublishReadinessReport();
   const publishDryRunReport = readPublishDryRunReport();
   const publishRollbackPlan = readPublishRollbackPlan();
@@ -3451,6 +3535,7 @@ function render(model) {
             ${renderDraftFixList(draftFixListReport)}
             ${renderDraftEditPlan(draftEditPlanReport)}
             ${renderDraftEditGuide(draftEditGuideReport)}
+            ${renderDraftPatchApplyGuide(draftPatchApplyGuideReport)}
             ${renderDraftComparison(draftComparisonReport)}
             ${renderPublishWorkflow()}
             ${renderNewArticleWorkflow(model.categories)}
