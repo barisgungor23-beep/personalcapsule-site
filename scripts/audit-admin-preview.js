@@ -46,6 +46,8 @@ function main() {
       "Command safety rule",
       "Git Status / Push Safety",
       "Push safety rule",
+      "Push Package",
+      "Push package rule",
       "Deployment Readiness",
       "Deploy safety rule",
       "Publish Readiness",

@@ -7,6 +7,7 @@ const ROOT = path.resolve(__dirname, "..");
 const ADMIN_OUTPUT_DIR = path.join(ROOT, "outputs", "admin");
 const CONTROL_FILE = path.join(ADMIN_OUTPUT_DIR, "control-report.json");
 const GIT_FILE = path.join(ADMIN_OUTPUT_DIR, "git-status-report.json");
+const PUSH_PACKAGE_FILE = path.join(ADMIN_OUTPUT_DIR, "push-package-report.json");
 const PRE_PUBLISH_FILE = path.join(ADMIN_OUTPUT_DIR, "pre-publish-checklist-report.json");
 const DEPLOYMENT_FILE = path.join(ADMIN_OUTPUT_DIR, "deployment-readiness-report.json");
 
@@ -32,10 +33,12 @@ function check(id, label, status, detail, source) {
 function main() {
   const control = readJsonIfExists(CONTROL_FILE);
   const git = readJsonIfExists(GIT_FILE);
+  const pushPackage = readJsonIfExists(PUSH_PACKAGE_FILE);
   const prePublish = readJsonIfExists(PRE_PUBLISH_FILE);
 
   const controlSummary = control && control.summary ? control.summary : {};
   const gitSummary = git && git.summary ? git.summary : {};
+  const pushPackageSummary = pushPackage && pushPackage.summary ? pushPackage.summary : {};
   const prePublishSummary = prePublish && prePublish.summary ? prePublish.summary : {};
 
   const checks = [
@@ -62,6 +65,23 @@ function main() {
         ? `${gitSummary.totalChangedFiles || 0} changed file(s), push safety: ${gitSummary.pushSafety || "unknown"}.`
         : "Git status report has not been generated yet.",
       "outputs/admin/git-status-report.json"
+    ),
+    check(
+      "push_package",
+      "Push package",
+      pushPackageSummary.status === "blocked"
+        ? "blocked"
+        : pushPackageSummary.status === "review"
+          ? "review"
+          : pushPackageSummary.status === "clean"
+            ? "passed"
+            : pushPackage
+              ? "review"
+              : "not_run",
+      pushPackage
+        ? `${pushPackageSummary.ahead || 0} commit(s) ahead, ${pushPackageSummary.behind || 0} behind.`
+        : "Push package report has not been generated yet.",
+      "outputs/admin/push-package-report.json"
     ),
     check(
       "pre_publish",
@@ -112,6 +132,8 @@ function main() {
       branch: gitSummary.branch || null,
       latestCommit: gitSummary.latestCommit || null,
       pushSafety: gitSummary.pushSafety || null,
+      pushPackageStatus: pushPackageSummary.status || null,
+      commitsAhead: pushPackageSummary.ahead || 0,
     },
     nextAction,
     checks,

@@ -163,6 +163,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "build_push_package_report",
+    label: "Build push package report",
+    command: ["node", "scripts/build-push-package-report.js"],
+    kind: "audit",
+  },
+  {
     id: "build_deployment_readiness",
     label: "Build deployment readiness",
     command: ["node", "scripts/build-deployment-readiness.js"],

@@ -9,6 +9,7 @@ const OUTPUT_FILE = path.join(ROOT, "outputs", "admin", "index.html");
 const CONTROL_REPORT_FILE = path.join(ROOT, "outputs", "admin", "control-report.json");
 const ADMIN_COMMAND_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "admin-command-guide-report.json");
 const GIT_STATUS_FILE = path.join(ROOT, "outputs", "admin", "git-status-report.json");
+const PUSH_PACKAGE_FILE = path.join(ROOT, "outputs", "admin", "push-package-report.json");
 const DEPLOYMENT_READINESS_FILE = path.join(ROOT, "outputs", "admin", "deployment-readiness-report.json");
 const DRAFT_COMPARISON_FILE = path.join(ROOT, "outputs", "admin", "draft-comparison-report.json");
 const DRAFT_QUALITY_FILE = path.join(ROOT, "outputs", "admin", "draft-quality-report.json");
@@ -159,6 +160,15 @@ function readGitStatusReport() {
   if (!fs.existsSync(GIT_STATUS_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(GIT_STATUS_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readPushPackageReport() {
+  if (!fs.existsSync(PUSH_PACKAGE_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(PUSH_PACKAGE_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -683,6 +693,77 @@ function renderGitStatusReport(report) {
             (item, index) => `
               <div class="workflow-step">
                 <strong>${index + 1}. Push safety rule</strong>
+                <span>${escapeHtml(item)}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+    </section>`;
+}
+
+function renderPushPackageReport(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Push Package</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No push package report yet</strong>
+            <span>Run node scripts/build-push-package-report.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const commits = Array.isArray(report.commits) ? report.commits : [];
+  const rules = Array.isArray(report.rules) ? report.rules : [];
+  const status = summary.status || "unknown";
+  const statusClassName = status === "clean" ? "good" : status === "blocked" ? "bad" : "warn";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Push Package</h2>
+        <span class="pill ${statusClassName}">${escapeHtml(status)}</span>
+      </div>
+      <div class="health">
+        <div class="${status === "blocked" ? "issue bad" : status === "clean" ? "empty" : "issue warn"}">
+          <strong>${escapeHtml(status === "clean" ? "No local commits waiting" : "Review push package")}</strong>
+          <span>${escapeHtml(report.nextAction || "Review local commits before pushing.")}</span>
+        </div>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Branch</span><strong>${escapeHtml(summary.branch || "unknown")}</strong></div>
+        <div class="detail-stat"><span>Upstream</span><strong>${escapeHtml(summary.upstream || "none")}</strong></div>
+        <div class="detail-stat"><span>Ahead</span><strong>${escapeHtml(summary.ahead || 0)}</strong></div>
+        <div class="detail-stat"><span>Behind</span><strong>${escapeHtml(summary.behind || 0)}</strong></div>
+      </div>
+      <div class="mini-list push-package-list">
+        ${
+          commits.length
+            ? commits
+                .slice(0, 12)
+                .map(
+                  (item) => `
+                    <div class="needs-review">
+                      <strong>${escapeHtml(item.hash)}</strong>
+                      <span>${escapeHtml(item.message)}</span>
+                    </div>`
+                )
+                .join("")
+            : `<div class="passed"><strong>No unpushed commits</strong><span>Local branch has no commit package waiting for push.</span></div>`
+        }
+      </div>
+      <div class="workflow-list">
+        ${rules
+          .map(
+            (item, index) => `
+              <div class="workflow-step">
+                <strong>${index + 1}. Push package rule</strong>
                 <span>${escapeHtml(item)}</span>
               </div>`
           )
@@ -1555,6 +1636,7 @@ function render(model) {
   const controlReport = readControlReport();
   const adminCommandGuide = readAdminCommandGuide();
   const gitStatusReport = readGitStatusReport();
+  const pushPackageReport = readPushPackageReport();
   const deploymentReadiness = readDeploymentReadiness();
   const draftComparisonReport = readDraftComparisonReport();
   const draftQualityReport = readDraftQualityReport();
@@ -2147,6 +2229,8 @@ function render(model) {
         ${renderAdminCommandGuide(adminCommandGuide)}
 
         ${renderGitStatusReport(gitStatusReport)}
+
+        ${renderPushPackageReport(pushPackageReport)}
 
         ${renderDeploymentReadiness(deploymentReadiness)}
 
