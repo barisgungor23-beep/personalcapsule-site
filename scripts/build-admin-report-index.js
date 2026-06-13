@@ -10,6 +10,7 @@ const INDEX_FILE = path.join(ADMIN_OUTPUT_DIR, "admin-report-index.json");
 const reports = [
   ["admin_read_model", "Admin read model", "admin-read-model.json"],
   ["control", "Full control report", "control-report.json"],
+  ["home_brief", "Admin home brief", "admin-home-brief-report.json"],
   ["dashboard_snapshot", "Admin dashboard snapshot", "admin-dashboard-snapshot-report.json"],
   ["system_overview", "Admin system overview", "admin-system-overview-report.json"],
   ["failure_playbook", "Admin failure playbook", "admin-failure-playbook-report.json"],

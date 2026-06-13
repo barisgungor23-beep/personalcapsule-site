@@ -13,6 +13,7 @@ const ADMIN_FAILURE_PLAYBOOK_FILE = path.join(ROOT, "outputs", "admin", "admin-f
 const ADMIN_DEPENDENCY_MAP_FILE = path.join(ROOT, "outputs", "admin", "admin-dependency-map-report.json");
 const ADMIN_REPORT_DETAIL_VIEWER_FILE = path.join(ROOT, "outputs", "admin", "admin-report-detail-viewer-report.json");
 const ADMIN_SYSTEM_OVERVIEW_FILE = path.join(ROOT, "outputs", "admin", "admin-system-overview-report.json");
+const ADMIN_HOME_BRIEF_FILE = path.join(ROOT, "outputs", "admin", "admin-home-brief-report.json");
 const ADMIN_DASHBOARD_SNAPSHOT_FILE = path.join(ROOT, "outputs", "admin", "admin-dashboard-snapshot-report.json");
 const ADMIN_COMMAND_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "admin-command-guide-report.json");
 const ADMIN_ACTION_FLOW_FILE = path.join(ROOT, "outputs", "admin", "admin-action-flow-report.json");
@@ -208,6 +209,15 @@ function readAdminSystemOverview() {
   if (!fs.existsSync(ADMIN_SYSTEM_OVERVIEW_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(ADMIN_SYSTEM_OVERVIEW_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readAdminHomeBrief() {
+  if (!fs.existsSync(ADMIN_HOME_BRIEF_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(ADMIN_HOME_BRIEF_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -581,6 +591,59 @@ function renderPublishWorkflowStatus({
             ? `${controlReport.summary.passedSteps || 0} passed, ${controlReport.summary.failedSteps || 0} failed.`
             : "Run the full control check to refresh this status."
         )}
+      </div>
+    </section>`;
+}
+
+function renderAdminHomeBrief(report) {
+  if (!report) {
+    return `
+      <section class="home-brief home-brief-review">
+        <div class="home-brief-main">
+          <span class="home-eyebrow">Admin Home Brief</span>
+          <h2>What should I do now?</h2>
+          <p>Run node scripts/run-admin-control-check.js to generate the founder-friendly home brief.</p>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const decisions = Array.isArray(report.decisions) ? report.decisions : [];
+  const rules = Array.isArray(report.safestRules) ? report.safestRules : [];
+  const briefClass =
+    summary.status === "safe" ? "home-brief-safe" : summary.status === "blocked" ? "home-brief-blocked" : "home-brief-review";
+
+  return `
+    <section class="home-brief ${briefClass}">
+      <div class="home-brief-main">
+        <span class="home-eyebrow">Admin Home Brief</span>
+        <h2>What should I do now?</h2>
+        <strong>${escapeHtml(summary.headline || "Review the admin system")}</strong>
+        <p>${escapeHtml(report.plainEnglish || "Review the local admin reports before any confirmed action.")}</p>
+        <div class="home-action">
+          <span>Primary action</span>
+          <b>${escapeHtml(report.primaryAction || "Run the full control check.")}</b>
+        </div>
+      </div>
+      <div class="home-decision-grid">
+        ${decisions
+          .map((item) => {
+            const className =
+              item.status === "blocked" ? "decision-blocked" : item.status === "review" ? "decision-review" : "decision-safe";
+            return `
+              <article class="home-decision ${className}">
+                <span>${escapeHtml(item.question)}</span>
+                <strong>${escapeHtml(item.answer)}</strong>
+                <small>${escapeHtml(item.detail)}</small>
+              </article>`;
+          })
+          .join("")}
+      </div>
+      <div class="home-rules">
+        ${rules
+          .slice(0, 4)
+          .map((item) => `<span>${escapeHtml(item)}</span>`)
+          .join("")}
       </div>
     </section>`;
 }
@@ -2565,6 +2628,7 @@ function render(model) {
   const adminDependencyMap = readAdminDependencyMap();
   const adminReportDetailViewer = readAdminReportDetailViewer();
   const adminSystemOverview = readAdminSystemOverview();
+  const adminHomeBrief = readAdminHomeBrief();
   const adminDashboardSnapshot = readAdminDashboardSnapshot();
   const adminCommandGuide = readAdminCommandGuide();
   const adminActionFlow = readAdminActionFlow();
@@ -2655,6 +2719,120 @@ function render(model) {
     }
     .metric span, .metric small { display: block; color: var(--muted); font-size: 13px; }
     .metric strong { display: block; font-size: 32px; line-height: 1.1; margin: 10px 0; }
+    .home-brief {
+      display: grid;
+      grid-template-columns: minmax(280px, .85fr) minmax(0, 1.15fr);
+      gap: 16px;
+      margin-bottom: 16px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(255,247,230,.07), rgba(0,0,0,.14));
+    }
+    .home-brief-safe { border-color: rgba(134,201,138,.32); }
+    .home-brief-review { border-color: rgba(240,207,122,.34); }
+    .home-brief-blocked { border-color: rgba(229,139,160,.38); }
+    .home-brief-main {
+      display: grid;
+      align-content: start;
+      gap: 9px;
+      padding: 4px;
+    }
+    .home-eyebrow {
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .home-brief-main h2 {
+      font-size: clamp(24px, 3vw, 38px);
+      line-height: 1;
+      margin: 0;
+      letter-spacing: -.03em;
+    }
+    .home-brief-main strong {
+      color: var(--cream);
+      font-size: 17px;
+      line-height: 1.25;
+    }
+    .home-brief-main p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .home-action {
+      display: grid;
+      gap: 4px;
+      margin-top: 6px;
+      padding: 12px;
+      border: 1px solid rgba(216,178,90,.22);
+      border-radius: 13px;
+      background: rgba(0,0,0,.14);
+    }
+    .home-action span {
+      color: var(--faint);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .home-action b {
+      color: var(--gold);
+      font-size: 14px;
+      line-height: 1.35;
+    }
+    .home-decision-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .home-decision {
+      display: grid;
+      gap: 5px;
+      min-height: 118px;
+      padding: 12px;
+      border: 1px solid rgba(255,247,230,.1);
+      border-radius: 13px;
+      background: rgba(0,0,0,.14);
+    }
+    .home-decision span {
+      color: var(--faint);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .home-decision strong {
+      font-size: 17px;
+      line-height: 1.2;
+    }
+    .home-decision small {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .home-decision.decision-safe { border-color: rgba(134,201,138,.23); }
+    .home-decision.decision-safe strong { color: var(--good); }
+    .home-decision.decision-review { border-color: rgba(240,207,122,.32); }
+    .home-decision.decision-review strong { color: var(--warn); }
+    .home-decision.decision-blocked { border-color: rgba(229,139,160,.36); }
+    .home-decision.decision-blocked strong { color: var(--bad); }
+    .home-rules {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .home-rules span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+      border: 1px solid rgba(255,247,230,.08);
+      border-radius: 11px;
+      background: rgba(0,0,0,.1);
+      padding: 10px;
+    }
     .layout { display: grid; grid-template-columns: 310px minmax(0, 1fr); gap: 16px; align-items: start; }
     .panel {
       border: 1px solid var(--line);
@@ -3139,14 +3317,14 @@ function render(model) {
     footer { color: var(--faint); padding: 20px 0 4px; font-size: 13px; }
     @media (max-width: 1100px) {
       .metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      .layout, .two-col, .tools { grid-template-columns: 1fr; }
+      .layout, .two-col, .tools, .home-brief, .home-rules { grid-template-columns: 1fr; }
       header { display: grid; }
       .syncbox { min-width: 0; }
     }
     @media (max-width: 680px) {
       .shell { padding: 16px; }
       header { padding: 18px; border-radius: 14px; }
-      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .metrics, .home-decision-grid { grid-template-columns: 1fr; }
       .metric { min-height: 104px; padding: 14px; }
       .metric strong { font-size: 26px; }
       th, td { padding: 11px; }
@@ -3167,6 +3345,8 @@ function render(model) {
         <span>${escapeHtml(model.site.url)}</span>
       </aside>
     </header>
+
+    ${renderAdminHomeBrief(adminHomeBrief)}
 
     <section class="grid metrics" aria-label="Website summary">
       ${renderMetric("HTML pages", model.summary.totalHtmlPages, "Current static pages")}

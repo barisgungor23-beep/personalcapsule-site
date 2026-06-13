@@ -217,6 +217,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "build_admin_home_brief",
+    label: "Build admin home brief",
+    command: ["node", "scripts/build-admin-home-brief.js"],
+    kind: "audit",
+  },
+  {
     id: "build_admin_report_index",
     label: "Build admin report index",
     command: ["node", "scripts/build-admin-report-index.js"],
@@ -358,6 +364,17 @@ function refreshDashboardSnapshot() {
   return result;
 }
 
+function refreshHomeBrief() {
+  const result = runStep({
+    id: "refresh_admin_home_brief",
+    label: "Refresh admin home brief with control report",
+    command: ["node", "scripts/build-admin-home-brief.js"],
+    kind: "audit",
+  });
+  printStep(result);
+  return result;
+}
+
 function main() {
   const results = [];
 
@@ -390,6 +407,15 @@ function main() {
     if (!summary.firstFailedStep) summary.firstFailedStep = snapshotResult.id;
     report.summary = summary;
     report.steps.push(snapshotResult);
+    fs.writeFileSync(REPORT_FILE, `${JSON.stringify(report, null, 2)}\n`);
+  }
+  const homeBriefResult = refreshHomeBrief();
+  if (homeBriefResult.status === "failed") {
+    summary.status = "failed";
+    summary.failedSteps += 1;
+    if (!summary.firstFailedStep) summary.firstFailedStep = homeBriefResult.id;
+    report.summary = summary;
+    report.steps.push(homeBriefResult);
     fs.writeFileSync(REPORT_FILE, `${JSON.stringify(report, null, 2)}\n`);
   }
   const refreshResult = refreshAdminPreview();
