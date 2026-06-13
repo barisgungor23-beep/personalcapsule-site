@@ -31,6 +31,7 @@ const PUBLISH_ROLLBACK_FILE = path.join(ROOT, "outputs", "admin", "publish-rollb
 const BACKUP_SNAPSHOT_FILE = path.join(ROOT, "outputs", "admin", "backup-snapshot-dry-run-report.json");
 const PRE_PUBLISH_CHECKLIST_FILE = path.join(ROOT, "outputs", "admin", "pre-publish-checklist-report.json");
 const DRAFT_PUBLISH_SIMULATION_FILE = path.join(ROOT, "outputs", "admin", "draft-publish-simulation-summary-report.json");
+const BACKUP_RESTORE_CENTER_FILE = path.join(ROOT, "outputs", "admin", "backup-restore-center-report.json");
 const RESTORE_DRY_RUN_FILE = path.join(ROOT, "outputs", "admin", "restore-backup-dry-run-report.json");
 const RESTORE_REPORT_FILE = path.join(ROOT, "outputs", "admin", "restore-backup-report.json");
 const PUBLISH_REPORT_FILE = path.join(ROOT, "outputs", "admin", "publish-report.json");
@@ -368,6 +369,15 @@ function readDraftPublishSimulationSummary() {
   if (!fs.existsSync(DRAFT_PUBLISH_SIMULATION_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(DRAFT_PUBLISH_SIMULATION_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readBackupRestoreCenter() {
+  if (!fs.existsSync(BACKUP_RESTORE_CENTER_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(BACKUP_RESTORE_CENTER_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -1649,6 +1659,103 @@ function renderBackupSnapshot(report) {
     </section>`;
 }
 
+function renderBackupRestoreCenter(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Backup / Restore Center</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>Backup and restore status is not available yet</strong>
+            <span>Run node scripts/build-backup-restore-center.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const backupState = report.backupState || {};
+  const restoreState = report.restoreState || {};
+  const safetyRules = Array.isArray(report.safetyRules) ? report.safetyRules : [];
+  const warnings = Array.isArray(report.warnings) ? report.warnings : [];
+  const blockers = Array.isArray(report.blockers) ? report.blockers : [];
+  const status = summary.status === "blocked" ? "bad" : summary.status === "backup_needed" ? "warn" : "good";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Backup / Restore Center</h2>
+        <span class="pill ${status}">${escapeHtml(summary.status || "unknown")}</span>
+      </div>
+      <div class="health">
+        <div class="${summary.status === "blocked" ? "issue bad" : summary.status === "backup_needed" ? "issue warn" : "empty"}">
+          <strong>Backup and restore status</strong>
+          <span>${escapeHtml(report.nextAction || "Review backup and restore status before publish.")}</span>
+        </div>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Planned backup</span><strong>${escapeHtml(summary.backupFilesPlanned || 0)}</strong></div>
+        <div class="detail-stat"><span>Backup copied</span><strong>${escapeHtml(summary.copiedFiles || 0)}</strong></div>
+        <div class="detail-stat"><span>Restore ops</span><strong>${escapeHtml(summary.restoreOperations || 0)}</strong></div>
+        <div class="detail-stat"><span>Missing targets</span><strong>${escapeHtml(summary.missingTargets || 0)}</strong></div>
+      </div>
+      <div class="mini-list backup-restore-center-list">
+        <div class="${backupState.backupNeeded && !summary.confirmedBackupAvailable ? "needs-review" : "passed"}">
+          <strong>Backup state</strong>
+          <span>Dry-run: ${escapeHtml(summary.backupDryRunStatus || "missing")} · Confirmed backup: ${summary.confirmedBackupAvailable ? "yes" : "no"}</span>
+          <span>${escapeHtml(backupState.confirmedBackupFolder || "No confirmed backup folder selected.")}</span>
+        </div>
+        <div class="${summary.restoreDryRunStatus === "passed" || summary.restoreDryRunStatus === "missing" ? "passed" : "needs-review"}">
+          <strong>Restore state</strong>
+          <span>Dry-run: ${escapeHtml(summary.restoreDryRunStatus || "missing")} · Confirmed restore: ${summary.restoreResultAvailable ? "yes" : "no"}</span>
+          <span>${escapeHtml(restoreState.restoreDryRunReport || "Restore dry-run can be created after a backup exists.")}</span>
+        </div>
+        ${
+          blockers.length
+            ? blockers
+                .slice(0, 4)
+                .map(
+                  (item) => `
+                    <div class="needs-review">
+                      <strong>${escapeHtml(item.scope || "blocker")}</strong>
+                      <span>${escapeHtml(item.message)}</span>
+                    </div>`
+                )
+                .join("")
+            : ""
+        }
+        ${
+          !blockers.length && warnings.length
+            ? warnings
+                .slice(0, 3)
+                .map(
+                  (item) => `
+                    <div class="needs-review">
+                      <strong>${escapeHtml(item.scope || "warning")}</strong>
+                      <span>${escapeHtml(item.message)}</span>
+                    </div>`
+                )
+                .join("")
+            : ""
+        }
+      </div>
+      <div class="workflow-list">
+        ${safetyRules
+          .map(
+            (item, index) => `
+              <div class="workflow-step">
+                <strong>${index + 1}. Backup safety rule</strong>
+                <span>${escapeHtml(item)}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+    </section>`;
+}
+
 function renderPrePublishChecklist(report) {
   if (!report) {
     return `
@@ -2392,6 +2499,7 @@ function render(model) {
   const backupSnapshotReport = readBackupSnapshotReport();
   const prePublishChecklist = readPrePublishChecklist();
   const draftPublishSimulationSummary = readDraftPublishSimulationSummary();
+  const backupRestoreCenter = readBackupRestoreCenter();
   const restoreDryRunReport = readRestoreDryRunReport();
   const restoreReport = readRestoreReport();
   const publishReport = readPublishReport();
@@ -3061,6 +3169,7 @@ function render(model) {
             ${renderPublishDryRun(publishDryRunReport)}
             ${renderPublishRollback(publishRollbackPlan)}
             ${renderBackupSnapshot(backupSnapshotReport)}
+            ${renderBackupRestoreCenter(backupRestoreCenter)}
             ${renderPrePublishChecklist(prePublishChecklist)}
             ${renderDraftPublishSimulationSummary(draftPublishSimulationSummary)}
             ${renderRestoreDryRun(restoreDryRunReport)}

@@ -169,6 +169,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "build_backup_restore_center",
+    label: "Build backup restore center",
+    command: ["node", "scripts/build-backup-restore-center.js"],
+    kind: "audit",
+  },
+  {
     id: "build_git_status_report",
     label: "Build Git status report",
     command: ["node", "scripts/build-git-status-report.js"],

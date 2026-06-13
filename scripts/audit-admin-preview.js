@@ -80,6 +80,8 @@ function main() {
       "Publish Dry Run",
       "Rollback Plan",
       "Backup Snapshot",
+      "Backup / Restore Center",
+      "Backup and restore status",
       "Pre-Publish Checklist",
       "Draft Publish Simulation",
       "Publish simulation",
