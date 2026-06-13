@@ -9,6 +9,7 @@ const OUTPUT_FILE = path.join(ROOT, "outputs", "admin", "index.html");
 const CONTROL_REPORT_FILE = path.join(ROOT, "outputs", "admin", "control-report.json");
 const ADMIN_COMMAND_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "admin-command-guide-report.json");
 const GIT_STATUS_FILE = path.join(ROOT, "outputs", "admin", "git-status-report.json");
+const DEPLOYMENT_READINESS_FILE = path.join(ROOT, "outputs", "admin", "deployment-readiness-report.json");
 const DRAFT_COMPARISON_FILE = path.join(ROOT, "outputs", "admin", "draft-comparison-report.json");
 const DRAFT_QUALITY_FILE = path.join(ROOT, "outputs", "admin", "draft-quality-report.json");
 const DRAFT_FIX_LIST_FILE = path.join(ROOT, "outputs", "admin", "draft-fix-list-report.json");
@@ -158,6 +159,15 @@ function readGitStatusReport() {
   if (!fs.existsSync(GIT_STATUS_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(GIT_STATUS_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readDeploymentReadiness() {
+  if (!fs.existsSync(DEPLOYMENT_READINESS_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(DEPLOYMENT_READINESS_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -673,6 +683,79 @@ function renderGitStatusReport(report) {
             (item, index) => `
               <div class="workflow-step">
                 <strong>${index + 1}. Push safety rule</strong>
+                <span>${escapeHtml(item)}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+    </section>`;
+}
+
+function renderDeploymentReadiness(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Deployment Readiness</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No deployment readiness report yet</strong>
+            <span>Run node scripts/build-deployment-readiness.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const checks = Array.isArray(report.checks) ? report.checks : [];
+  const rules = Array.isArray(report.deploymentRules) ? report.deploymentRules : [];
+  const status = summary.status || "unknown";
+  const statusClassName = status === "ready" ? "good" : status === "blocked" ? "bad" : "warn";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Deployment Readiness</h2>
+        <span class="pill ${statusClassName}">${escapeHtml(status)}</span>
+      </div>
+      <div class="health">
+        <div class="${status === "ready" ? "empty" : status === "blocked" ? "issue bad" : "issue warn"}">
+          <strong>${escapeHtml(status === "ready" ? "Ready after final review" : "Review before deploy")}</strong>
+          <span>${escapeHtml(report.nextAction || "Run the full control check before deploy.")}</span>
+        </div>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Passed</span><strong>${escapeHtml(summary.passed || 0)}</strong></div>
+        <div class="detail-stat"><span>Review</span><strong>${escapeHtml(summary.review || 0)}</strong></div>
+        <div class="detail-stat"><span>Blocked</span><strong>${escapeHtml(summary.blocked || 0)}</strong></div>
+        <div class="detail-stat"><span>Push safety</span><strong>${escapeHtml(summary.pushSafety || "unknown")}</strong></div>
+      </div>
+      <div class="workflow-gates">
+        ${checks
+          .map(
+            (item) => `
+              <div class="workflow-gate ${item.status === "passed" ? "passed" : item.status === "blocked" ? "failed" : "needs-review"}">
+                <div>
+                  <strong>${escapeHtml(item.label)}</strong>
+                  <span>${escapeHtml(item.detail)}</span>
+                </div>
+                <small>${escapeHtml(item.status)}</small>
+              </div>`
+          )
+          .join("")}
+      </div>
+      <div class="workflow-list">
+        <div class="workflow-step">
+          <strong>Latest deploy candidate</strong>
+          <span>${escapeHtml(summary.latestCommit || "unknown")}</span>
+        </div>
+        ${rules
+          .map(
+            (item, index) => `
+              <div class="workflow-step">
+                <strong>${index + 1}. Deploy safety rule</strong>
                 <span>${escapeHtml(item)}</span>
               </div>`
           )
@@ -1472,6 +1555,7 @@ function render(model) {
   const controlReport = readControlReport();
   const adminCommandGuide = readAdminCommandGuide();
   const gitStatusReport = readGitStatusReport();
+  const deploymentReadiness = readDeploymentReadiness();
   const draftComparisonReport = readDraftComparisonReport();
   const draftQualityReport = readDraftQualityReport();
   const draftFixListReport = readDraftFixListReport();
@@ -2063,6 +2147,8 @@ function render(model) {
         ${renderAdminCommandGuide(adminCommandGuide)}
 
         ${renderGitStatusReport(gitStatusReport)}
+
+        ${renderDeploymentReadiness(deploymentReadiness)}
 
         ${renderPublishReadiness(publishReadinessReport)}
 
