@@ -3710,27 +3710,31 @@ function renderPanelGroup(title, description, body) {
 
 function renderAdminNavigation() {
   const items = [
-    ["Founder Center", "#founder-center", "Start here"],
-    ["System", "#system-section", "Health and status"],
-    ["Reports", "#reports-section", "Inventory and freshness"],
-    ["Guides", "#guides-section", "Safe operating rules"],
-    ["Git / Deploy", "#git-deploy-section", "Push and domain checks"],
+    ["Overview", "#founder-center", "Start here"],
+    ["Health", "#system-section", "Checks and status"],
+    ["Content", "#content-section", "SEO / GEO decision"],
+    ["Articles", "#articles-section", "Blog editor"],
+    ["Pages", "#pages-section", "Public files"],
+    ["Categories", "#categories-section", "Topic groups"],
+    ["Reports", "#reports-section", "Audit reports"],
+    ["Workflow", "#guides-section", "How to operate"],
+    ["Git / Deploy", "#git-deploy-section", "Push safety"],
     ["Publish", "#publish-section", "Dry-run and backup"],
-    ["Drafts", "#drafts-section", "Draft workflow"],
-    ["Content", "#content-section", "Articles and pages"],
+    ["Drafts", "#drafts-section", "Draft tools"],
   ];
 
   return `
     <nav class="admin-nav" aria-label="Admin Navigation">
       <div class="admin-nav-head">
-        <span class="home-eyebrow">Admin Navigation</span>
-        <strong>Jump to the area you need</strong>
+        <span class="home-eyebrow">PersonalCapsule</span>
+        <strong>Website Admin</strong>
+        <small>Local control panel</small>
       </div>
       <div class="admin-nav-links">
         ${items
           .map(
-            ([label, href, hint]) => `
-              <a href="${escapeHtml(href)}">
+            ([label, href, hint], index) => `
+              <a class="nav-link${index === 0 ? " active" : ""}" href="${escapeHtml(href)}" data-admin-jump>
                 <strong>${escapeHtml(label)}</strong>
                 <span>${escapeHtml(hint)}</span>
               </a>`
@@ -3799,29 +3803,42 @@ function render(model) {
   <title>PersonalCapsule Admin Preview</title>
   <style>
     :root {
-      --ink: #0b0907;
-      --panel: #14110d;
-      --panel-2: #1b1711;
-      --line: rgba(216, 178, 90, .22);
-      --gold: #d8b25a;
-      --cream: #f4ead6;
-      --muted: rgba(244, 234, 214, .64);
-      --faint: rgba(244, 234, 214, .42);
-      --good: #86c98a;
-      --warn: #f0cf7a;
-      --bad: #e58ba0;
-      --blue: #7fb0e6;
+      --ink: #f3f4f6;
+      --panel: #ffffff;
+      --panel-2: #f8fafc;
+      --line: #d8dde6;
+      --gold: #475569;
+      --cream: #111827;
+      --muted: #667085;
+      --faint: #98a2b3;
+      --good: #15803d;
+      --warn: #a16207;
+      --bad: #be123c;
+      --blue: #2563eb;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      background: radial-gradient(circle at top left, rgba(216,178,90,.13), transparent 36%), var(--ink);
+      background: var(--ink);
       color: var(--cream);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       line-height: 1.45;
     }
     a { color: inherit; }
-    .shell { max-width: 1360px; margin: 0 auto; padding: 28px; }
+    .shell {
+      max-width: none;
+      margin: 0;
+      padding: 22px;
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+    .shell > header,
+    .shell > section,
+    .shell > footer {
+      grid-column: 2;
+    }
     header {
       display: flex;
       justify-content: space-between;
@@ -3830,16 +3847,17 @@ function render(model) {
       margin-bottom: 24px;
       padding: 24px;
       border: 1px solid var(--line);
-      background: linear-gradient(145deg, rgba(255,247,230,.055), rgba(255,247,230,.02));
+      background: var(--panel);
       border-radius: 18px;
+      box-shadow: 0 1px 2px rgba(16,24,40,.05);
     }
     .brandline { color: var(--gold); font-size: 12px; text-transform: uppercase; letter-spacing: .18em; font-weight: 700; }
     h1 { margin: 8px 0 8px; font-size: clamp(30px, 4vw, 52px); line-height: 1; letter-spacing: -.03em; }
     .lead { margin: 0; color: var(--muted); max-width: 720px; font-size: 17px; }
     .syncbox {
       min-width: 260px;
-      border: 1px solid rgba(255,247,230,.12);
-      background: rgba(0,0,0,.16);
+      border: 1px solid var(--line);
+      background: var(--panel-2);
       border-radius: 14px;
       padding: 16px;
       color: var(--muted);
@@ -3850,54 +3868,67 @@ function render(model) {
     .metrics { grid-template-columns: repeat(6, minmax(0, 1fr)); margin-bottom: 16px; }
     .metric {
       border: 1px solid var(--line);
-      background: rgba(255,247,230,.04);
+      background: var(--panel);
       border-radius: 14px;
       padding: 16px;
       min-height: 116px;
+      box-shadow: 0 1px 2px rgba(16,24,40,.04);
     }
     .metric span, .metric small { display: block; color: var(--muted); font-size: 13px; }
     .metric strong { display: block; font-size: 32px; line-height: 1.1; margin: 10px 0; }
     .admin-anchor { scroll-margin-top: 18px; }
     .admin-nav {
-      display: grid;
-      grid-template-columns: 230px minmax(0, 1fr);
-      gap: 12px;
-      align-items: stretch;
-      margin-bottom: 16px;
-      padding: 12px;
-      border: 1px solid rgba(216,178,90,.2);
+      grid-column: 1;
+      grid-row: 1 / span 20;
+      position: sticky;
+      top: 22px;
+      height: calc(100vh - 44px);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 14px;
+      border: 1px solid var(--line);
       border-radius: 18px;
-      background: rgba(0,0,0,.14);
+      background: var(--panel);
+      box-shadow: 0 10px 30px rgba(16,24,40,.06);
     }
     .admin-nav-head {
       display: grid;
       align-content: center;
       gap: 4px;
-      padding: 10px;
+      padding: 10px 8px 12px;
+      border-bottom: 1px solid var(--line);
     }
     .admin-nav-head strong {
       color: var(--cream);
-      font-size: 15px;
+      font-size: 22px;
       line-height: 1.25;
+    }
+    .admin-nav-head small {
+      color: var(--muted);
+      font-size: 13px;
     }
     .admin-nav-links {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: 1fr;
       gap: 8px;
+      overflow: auto;
+      padding-right: 2px;
     }
     .admin-nav a {
       display: grid;
       gap: 3px;
-      min-height: 62px;
+      min-height: 56px;
       padding: 10px 11px;
-      border: 1px solid rgba(255,247,230,.1);
+      border: 1px solid transparent;
       border-radius: 12px;
-      background: rgba(255,247,230,.045);
+      background: transparent;
       text-decoration: none;
     }
+    .admin-nav a.active,
     .admin-nav a:hover {
-      border-color: rgba(216,178,90,.42);
-      background: rgba(216,178,90,.08);
+      border-color: #cbd5e1;
+      background: #f1f5f9;
     }
     .admin-nav a strong {
       color: var(--gold);
@@ -3917,9 +3948,8 @@ function render(model) {
       padding: 18px;
       border: 1px solid var(--line);
       border-radius: 20px;
-      background:
-        radial-gradient(circle at top right, rgba(216,178,90,.12), transparent 38%),
-        linear-gradient(145deg, rgba(255,247,230,.085), rgba(0,0,0,.18));
+      background: var(--panel);
+      box-shadow: 0 1px 2px rgba(16,24,40,.04);
     }
     .founder-center-safe { border-color: rgba(134,201,138,.34); }
     .founder-center-review { border-color: rgba(240,207,122,.38); }
@@ -3957,9 +3987,9 @@ function render(model) {
       gap: 5px;
       min-height: 154px;
       padding: 12px;
-      border: 1px solid rgba(255,247,230,.1);
+      border: 1px solid var(--line);
       border-radius: 13px;
-      background: rgba(0,0,0,.15);
+      background: var(--panel-2);
     }
     .founder-decision span {
       color: var(--faint);
@@ -4004,7 +4034,8 @@ function render(model) {
       padding: 18px;
       border: 1px solid var(--line);
       border-radius: 18px;
-      background: linear-gradient(145deg, rgba(255,247,230,.07), rgba(0,0,0,.14));
+      background: var(--panel);
+      box-shadow: 0 1px 2px rgba(16,24,40,.04);
     }
     .home-brief-safe { border-color: rgba(134,201,138,.32); }
     .home-brief-review { border-color: rgba(240,207,122,.34); }
@@ -4043,9 +4074,9 @@ function render(model) {
       gap: 4px;
       margin-top: 6px;
       padding: 12px;
-      border: 1px solid rgba(216,178,90,.22);
+      border: 1px solid var(--line);
       border-radius: 13px;
-      background: rgba(0,0,0,.14);
+      background: var(--panel-2);
     }
     .home-action span {
       color: var(--faint);
@@ -4069,9 +4100,9 @@ function render(model) {
       gap: 5px;
       min-height: 118px;
       padding: 12px;
-      border: 1px solid rgba(255,247,230,.1);
+      border: 1px solid var(--line);
       border-radius: 13px;
-      background: rgba(0,0,0,.14);
+      background: var(--panel-2);
     }
     .home-decision span {
       color: var(--faint);
@@ -4105,24 +4136,25 @@ function render(model) {
       color: var(--muted);
       font-size: 12px;
       line-height: 1.35;
-      border: 1px solid rgba(255,247,230,.08);
+      border: 1px solid var(--line);
       border-radius: 11px;
-      background: rgba(0,0,0,.1);
+      background: var(--panel-2);
       padding: 10px;
     }
     .layout { display: grid; grid-template-columns: 310px minmax(0, 1fr); gap: 16px; align-items: start; }
     .panel {
       border: 1px solid var(--line);
-      background: rgba(255,247,230,.04);
+      background: var(--panel);
       border-radius: 16px;
       overflow: hidden;
+      box-shadow: 0 1px 2px rgba(16,24,40,.04);
     }
     .panel-group {
       display: grid;
       gap: 10px;
       padding: 10px;
-      border: 1px solid rgba(216,178,90,.14);
-      background: rgba(0,0,0,.1);
+      border: 1px solid var(--line);
+      background: var(--panel);
       border-radius: 18px;
     }
     details.panel-group:not([open]) {
@@ -4175,8 +4207,8 @@ function render(model) {
       align-items: center;
       gap: 12px;
       padding: 16px 18px;
-      border-bottom: 1px solid rgba(216,178,90,.15);
-      background: rgba(0,0,0,.12);
+      border-bottom: 1px solid var(--line);
+      background: var(--panel-2);
     }
     h2 { margin: 0; font-size: 17px; letter-spacing: -.01em; }
     .panel-head small { color: var(--faint); }
@@ -4640,10 +4672,136 @@ function render(model) {
     }
     .block-item p { margin: 0; color: var(--muted); font-size: 13px; }
     .hidden-row { display: none; }
+    .issue,
+    .side-item,
+    .detail-stat,
+    .workflow-step,
+    .workflow-gate,
+    .control-step,
+    .rule-item,
+    .block-item,
+    .mini-list div,
+    .command-line,
+    .workflow-status-hero {
+      background: var(--panel-2);
+      border-color: var(--line);
+    }
+    .empty {
+      background: #ecfdf3;
+      border-color: #bbf7d0;
+    }
+    .issue.warn,
+    .workflow-gate.needs-review,
+    .workflow-status-hero.needs-review,
+    .mini-list .needs-review {
+      background: #fffbeb;
+      border-color: #fde68a;
+    }
+    .issue.bad,
+    .workflow-gate.failed,
+    .workflow-status-hero.failed {
+      background: #fff1f2;
+      border-color: #fecdd3;
+    }
+    .workflow-gate.passed,
+    .workflow-status-hero.passed,
+    .workflow-status-hero.idle,
+    .control-step.passed,
+    .mini-list .passed {
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+    }
+    th {
+      background: #f8fafc;
+      color: #64748b;
+      border-bottom-color: var(--line);
+    }
+    td {
+      border-bottom-color: #e5e7eb;
+    }
+    tr.selected-row td {
+      background: #eef2ff;
+    }
+    input,
+    select,
+    textarea {
+      background: #fff;
+      border-color: #cbd5e1;
+      color: var(--cream);
+    }
+    input[readonly],
+    textarea[readonly],
+    select:disabled {
+      background: #f8fafc;
+      color: var(--muted);
+    }
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #94a3b8;
+      box-shadow: 0 0 0 3px rgba(148,163,184,.18);
+    }
+    .pill {
+      background: #f8fafc;
+      border-color: #d8dde6;
+      color: #64748b;
+    }
+    .pill.good,
+    .workflow-gate.passed small {
+      background: #ecfdf3;
+      border-color: #bbf7d0;
+      color: var(--good);
+    }
+    .pill.warn,
+    .workflow-gate.needs-review small {
+      background: #fffbeb;
+      border-color: #fde68a;
+      color: var(--warn);
+    }
+    .pill.bad,
+    .workflow-gate.failed small {
+      background: #fff1f2;
+      border-color: #fecdd3;
+      color: var(--bad);
+    }
+    .mini-btn {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+      color: #334155;
+    }
+    .mini-btn:hover {
+      background: #eef2ff;
+      border-color: #94a3b8;
+    }
+    .tag,
+    .field-mode,
+    .group-head b {
+      background: #f8fafc;
+      border-color: #d8dde6;
+      color: #475569;
+    }
+    .seo-preview {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+    }
+    .seo-preview strong,
+    .seo-preview span {
+      color: #1d4ed8;
+    }
     footer { color: var(--faint); padding: 20px 0 4px; font-size: 13px; }
     @media (max-width: 1100px) {
       .metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      .layout, .two-col, .tools, .home-brief, .home-rules, .founder-center, .founder-decision-strip, .founder-next-steps, .admin-nav { grid-template-columns: 1fr; }
+      .shell { grid-template-columns: 1fr; }
+      .shell > header,
+      .shell > section,
+      .shell > footer,
+      .admin-nav { grid-column: 1; }
+      .admin-nav {
+        grid-row: auto;
+        position: static;
+        height: auto;
+      }
+      .layout, .two-col, .tools, .home-brief, .home-rules, .founder-center, .founder-decision-strip, .founder-next-steps { grid-template-columns: 1fr; }
       .admin-nav-links { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       header { display: grid; }
       .syncbox { min-width: 0; }
@@ -4801,7 +4959,7 @@ function render(model) {
           `
         )}
 
-        <section class="panel">
+        <section id="categories-section" class="panel admin-anchor">
           <div class="panel-head">
             <h2>Category map</h2>
             <small>${model.categories.length} groups</small>
@@ -4822,7 +4980,7 @@ function render(model) {
 
       <div id="content-section" class="stack admin-anchor">
         ${renderContentQualityDecision(contentQualityDecision)}
-        <section class="panel">
+        <section id="articles-section" class="panel admin-anchor">
           <div class="panel-head">
             <h2>Blog articles</h2>
             <small>Read-only searchable list</small>
@@ -4940,7 +5098,7 @@ function render(model) {
             </div>
           </section>
 
-          <section class="panel">
+          <section id="pages-section" class="panel admin-anchor">
             <div class="panel-head">
               <h2>Pages</h2>
               <small>${model.pages.length} public files</small>
@@ -4987,6 +5145,7 @@ function render(model) {
     const draftPatchOutput = document.getElementById("draftPatchOutput");
     const rows = Array.from(document.querySelectorAll("[data-article-row]"));
     const commandButtons = Array.from(document.querySelectorAll("[data-copy-command]"));
+    const navLinks = Array.from(document.querySelectorAll("[data-admin-jump]"));
     let selectedArticle = null;
     let currentPatchJson = "";
     let currentPatchFilename = "personalcapsule-draft-patch.json";
@@ -5308,6 +5467,20 @@ function render(model) {
       }
       renderEditor(selectedArticle);
     }
+
+    function setActiveNav(activeLink) {
+      navLinks.forEach((link) => link.classList.toggle("active", link === activeLink));
+    }
+
+    navLinks.forEach((link) => {
+      link.addEventListener("click", () => {
+        setActiveNav(link);
+        const target = document.querySelector(link.getAttribute("href"));
+        if (target && target.tagName === "DETAILS") {
+          target.open = true;
+        }
+      });
+    });
 
     searchInput.addEventListener("input", applyFilters);
     categoryFilter.addEventListener("change", applyFilters);
