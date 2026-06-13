@@ -7,6 +7,7 @@ const ROOT = path.resolve(__dirname, "..");
 const MODEL_FILE = path.join(ROOT, "outputs", "admin", "admin-read-model.json");
 const OUTPUT_FILE = path.join(ROOT, "outputs", "admin", "index.html");
 const CONTROL_REPORT_FILE = path.join(ROOT, "outputs", "admin", "control-report.json");
+const ADMIN_SYSTEM_OVERVIEW_FILE = path.join(ROOT, "outputs", "admin", "admin-system-overview-report.json");
 const ADMIN_COMMAND_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "admin-command-guide-report.json");
 const GIT_STATUS_FILE = path.join(ROOT, "outputs", "admin", "git-status-report.json");
 const PUSH_PACKAGE_FILE = path.join(ROOT, "outputs", "admin", "push-package-report.json");
@@ -144,6 +145,15 @@ function readControlReport() {
   if (!fs.existsSync(CONTROL_REPORT_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(CONTROL_REPORT_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readAdminSystemOverview() {
+  if (!fs.existsSync(ADMIN_SYSTEM_OVERVIEW_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(ADMIN_SYSTEM_OVERVIEW_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -579,6 +589,72 @@ function renderControlCenter(report) {
               <div class="control-step ${step.status === "passed" ? "passed" : "failed"}">
                 <strong>${escapeHtml(step.label)}</strong>
                 <span>${escapeHtml(step.status)} · ${escapeHtml(step.durationMs)}ms</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+    </section>`;
+}
+
+function renderAdminSystemOverview(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Admin System Overview</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No system overview yet</strong>
+            <span>Run node scripts/build-admin-system-overview.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const cards = Array.isArray(report.statusCards) ? report.statusCards : [];
+  const focusOrder = Array.isArray(report.focusOrder) ? report.focusOrder : [];
+  const overall = summary.overallStatus || "unknown";
+  const overallClass = overall === "healthy" ? "good" : overall === "blocked" ? "bad" : "warn";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Admin System Overview</h2>
+        <span class="pill ${overallClass}">${escapeHtml(overall)}</span>
+      </div>
+      <div class="health">
+        <div class="${overall === "healthy" ? "empty" : overall === "blocked" ? "issue bad" : "issue warn"}">
+          <strong>Recommended action</strong>
+          <span>${escapeHtml(report.recommendedAction || "Run the full control check first.")}</span>
+        </div>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Articles</span><strong>${escapeHtml(summary.articles || 0)}</strong></div>
+        <div class="detail-stat"><span>Pages</span><strong>${escapeHtml(summary.htmlPages || 0)}</strong></div>
+        <div class="detail-stat"><span>Commits ahead</span><strong>${escapeHtml(summary.commitsAhead || 0)}</strong></div>
+        <div class="detail-stat"><span>SEO warnings</span><strong>${escapeHtml(summary.seoWarnings || 0)}</strong></div>
+      </div>
+      <div class="mini-list system-overview-list">
+        ${cards
+          .map(
+            (card) => `
+              <div class="${card.status === "blocked" || card.status === "review" ? "needs-review" : "passed"}">
+                <strong>${escapeHtml(card.label)} · ${escapeHtml(card.status)}</strong>
+                <span>${escapeHtml(card.detail)}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+      <div class="workflow-list">
+        ${focusOrder
+          .map(
+            (item, index) => `
+              <div class="workflow-step">
+                <strong>${index + 1}. Focus area</strong>
+                <span>${escapeHtml(item)}</span>
               </div>`
           )
           .join("")}
@@ -1768,6 +1844,7 @@ function render(model) {
   const articleJson = JSON.stringify(model.articles).replaceAll("</", "<\\/");
   const editorRulesJson = JSON.stringify(model.editorRules.article || {}).replaceAll("</", "<\\/");
   const controlReport = readControlReport();
+  const adminSystemOverview = readAdminSystemOverview();
   const adminCommandGuide = readAdminCommandGuide();
   const gitStatusReport = readGitStatusReport();
   const pushPackageReport = readPushPackageReport();
@@ -2359,6 +2436,8 @@ function render(model) {
           backupSnapshotReport,
           restoreDryRunReport,
         })}
+
+        ${renderAdminSystemOverview(adminSystemOverview)}
 
         ${renderControlCenter(controlReport)}
 

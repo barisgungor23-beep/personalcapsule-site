@@ -187,6 +187,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "build_admin_system_overview",
+    label: "Build admin system overview",
+    command: ["node", "scripts/build-admin-system-overview.js"],
+    kind: "audit",
+  },
+  {
     id: "audit_admin_read_model",
     label: "Audit admin read model",
     command: ["node", "scripts/audit-admin-read-model.js"],
