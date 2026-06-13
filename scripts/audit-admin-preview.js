@@ -45,6 +45,8 @@ function main() {
       "Recommended action",
       "Admin Report Index",
       "Report inventory",
+      "Admin Report Freshness",
+      "Freshness check",
       "Control Center",
       "Admin Quick Start",
       "Safest default",

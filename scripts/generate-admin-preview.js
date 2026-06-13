@@ -8,6 +8,7 @@ const MODEL_FILE = path.join(ROOT, "outputs", "admin", "admin-read-model.json");
 const OUTPUT_FILE = path.join(ROOT, "outputs", "admin", "index.html");
 const CONTROL_REPORT_FILE = path.join(ROOT, "outputs", "admin", "control-report.json");
 const ADMIN_REPORT_INDEX_FILE = path.join(ROOT, "outputs", "admin", "admin-report-index.json");
+const ADMIN_REPORT_FRESHNESS_FILE = path.join(ROOT, "outputs", "admin", "admin-report-freshness-report.json");
 const ADMIN_SYSTEM_OVERVIEW_FILE = path.join(ROOT, "outputs", "admin", "admin-system-overview-report.json");
 const ADMIN_COMMAND_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "admin-command-guide-report.json");
 const GIT_STATUS_FILE = path.join(ROOT, "outputs", "admin", "git-status-report.json");
@@ -155,6 +156,15 @@ function readAdminReportIndex() {
   if (!fs.existsSync(ADMIN_REPORT_INDEX_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(ADMIN_REPORT_INDEX_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readAdminReportFreshness() {
+  if (!fs.existsSync(ADMIN_REPORT_FRESHNESS_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(ADMIN_REPORT_FRESHNESS_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -723,6 +733,62 @@ function renderAdminReportIndex(report) {
               </div>`
           )
           .join("")}
+      </div>
+    </section>`;
+}
+
+function renderAdminReportFreshness(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Admin Report Freshness</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No freshness report yet</strong>
+            <span>Run node scripts/build-admin-report-freshness.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const freshness = Array.isArray(report.freshness) ? report.freshness : [];
+  const statusClassName = summary.status === "passed" && !summary.stale ? "good" : "warn";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Admin Report Freshness</h2>
+        <span class="pill ${statusClassName}">${escapeHtml(summary.status || "unknown")}</span>
+      </div>
+      <div class="health">
+        <div class="${summary.stale || summary.missing ? "issue warn" : "empty"}">
+          <strong>Freshness check</strong>
+          <span>${escapeHtml(report.nextAction || "Run the full control check to refresh reports.")}</span>
+        </div>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Fresh</span><strong>${escapeHtml(summary.fresh || 0)}</strong></div>
+        <div class="detail-stat"><span>Stale</span><strong>${escapeHtml(summary.stale || 0)}</strong></div>
+        <div class="detail-stat"><span>Missing</span><strong>${escapeHtml(summary.missing || 0)}</strong></div>
+        <div class="detail-stat"><span>Limit min</span><strong>${escapeHtml(summary.staleAfterMinutes || 0)}</strong></div>
+      </div>
+      <div class="mini-list report-freshness-list">
+        ${freshness
+          .filter((item) => item.freshness !== "fresh")
+          .slice(0, 10)
+          .map(
+            (item) => `
+              <div class="needs-review">
+                <strong>${escapeHtml(item.label)} · ${escapeHtml(item.freshness)}</strong>
+                <span>${escapeHtml(item.path)}</span>
+                <span>${escapeHtml(item.generatedAt || "not generated")}</span>
+              </div>`
+          )
+          .join("") || `<div class="passed"><strong>All active reports are fresh</strong><span>No stale report detected after the latest control check.</span></div>`}
       </div>
     </section>`;
 }
@@ -1910,6 +1976,7 @@ function render(model) {
   const editorRulesJson = JSON.stringify(model.editorRules.article || {}).replaceAll("</", "<\\/");
   const controlReport = readControlReport();
   const adminReportIndex = readAdminReportIndex();
+  const adminReportFreshness = readAdminReportFreshness();
   const adminSystemOverview = readAdminSystemOverview();
   const adminCommandGuide = readAdminCommandGuide();
   const gitStatusReport = readGitStatusReport();
@@ -2506,6 +2573,8 @@ function render(model) {
         ${renderAdminSystemOverview(adminSystemOverview)}
 
         ${renderAdminReportIndex(adminReportIndex)}
+
+        ${renderAdminReportFreshness(adminReportFreshness)}
 
         ${renderControlCenter(controlReport)}
 
