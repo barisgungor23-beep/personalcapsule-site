@@ -44,6 +44,8 @@ function main() {
       "Admin Home Brief",
       "What should I do now?",
       "Primary action",
+      "Admin Work Queue",
+      "Simple rule",
       "Publish Workflow Status",
       "Admin Dashboard Snapshot",
       "Today at a glance",

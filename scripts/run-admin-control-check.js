@@ -241,6 +241,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "build_admin_work_queue",
+    label: "Build admin work queue",
+    command: ["node", "scripts/build-admin-work-queue.js"],
+    kind: "audit",
+  },
+  {
     id: "build_admin_report_index",
     label: "Build admin report index",
     command: ["node", "scripts/build-admin-report-index.js"],
@@ -404,6 +410,17 @@ function refreshHomeBrief() {
   return result;
 }
 
+function refreshWorkQueue() {
+  const result = runStep({
+    id: "refresh_admin_work_queue",
+    label: "Refresh admin work queue with control report",
+    command: ["node", "scripts/build-admin-work-queue.js"],
+    kind: "audit",
+  });
+  printStep(result);
+  return result;
+}
+
 function main() {
   const results = [];
 
@@ -454,6 +471,15 @@ function main() {
     if (!summary.firstFailedStep) summary.firstFailedStep = homeBriefResult.id;
     report.summary = summary;
     report.steps.push(homeBriefResult);
+    fs.writeFileSync(REPORT_FILE, `${JSON.stringify(report, null, 2)}\n`);
+  }
+  const workQueueResult = refreshWorkQueue();
+  if (workQueueResult.status === "failed") {
+    summary.status = "failed";
+    summary.failedSteps += 1;
+    if (!summary.firstFailedStep) summary.firstFailedStep = workQueueResult.id;
+    report.summary = summary;
+    report.steps.push(workQueueResult);
     fs.writeFileSync(REPORT_FILE, `${JSON.stringify(report, null, 2)}\n`);
   }
   const refreshResult = refreshAdminPreview();

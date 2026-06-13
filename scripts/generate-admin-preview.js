@@ -14,6 +14,7 @@ const ADMIN_DEPENDENCY_MAP_FILE = path.join(ROOT, "outputs", "admin", "admin-dep
 const ADMIN_REPORT_DETAIL_VIEWER_FILE = path.join(ROOT, "outputs", "admin", "admin-report-detail-viewer-report.json");
 const ADMIN_SYSTEM_OVERVIEW_FILE = path.join(ROOT, "outputs", "admin", "admin-system-overview-report.json");
 const ADMIN_HOME_BRIEF_FILE = path.join(ROOT, "outputs", "admin", "admin-home-brief-report.json");
+const ADMIN_WORK_QUEUE_FILE = path.join(ROOT, "outputs", "admin", "admin-work-queue-report.json");
 const ADMIN_DASHBOARD_SNAPSHOT_FILE = path.join(ROOT, "outputs", "admin", "admin-dashboard-snapshot-report.json");
 const ADMIN_COMMAND_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "admin-command-guide-report.json");
 const ADMIN_ACTION_FLOW_FILE = path.join(ROOT, "outputs", "admin", "admin-action-flow-report.json");
@@ -221,6 +222,15 @@ function readAdminHomeBrief() {
   if (!fs.existsSync(ADMIN_HOME_BRIEF_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(ADMIN_HOME_BRIEF_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readAdminWorkQueue() {
+  if (!fs.existsSync(ADMIN_WORK_QUEUE_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(ADMIN_WORK_QUEUE_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -674,6 +684,71 @@ function renderAdminHomeBrief(report) {
           .slice(0, 4)
           .map((item) => `<span>${escapeHtml(item)}</span>`)
           .join("")}
+      </div>
+    </section>`;
+}
+
+function renderAdminWorkQueue(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Admin Work Queue</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No prioritized task list yet</strong>
+            <span>Run node scripts/build-admin-work-queue.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const tasks = Array.isArray(report.tasks) ? report.tasks : [];
+  const nextTask = report.nextTask || tasks[0] || null;
+  const statusClassName = summary.status === "blocked" ? "bad" : summary.status === "review" ? "warn" : "good";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Admin Work Queue</h2>
+        <span class="pill ${statusClassName}">${escapeHtml(summary.status || "unknown")}</span>
+      </div>
+      <div class="health">
+        <div class="${summary.status === "blocked" ? "issue bad" : summary.status === "review" ? "issue warn" : "empty"}">
+          <strong>${escapeHtml(nextTask ? nextTask.title : "No current task")}</strong>
+          <span>${escapeHtml(nextTask ? nextTask.reason : report.simpleRule || "No admin action is required right now.")}</span>
+        </div>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Tasks</span><strong>${escapeHtml(summary.tasks || 0)}</strong></div>
+        <div class="detail-stat"><span>Blocked</span><strong>${escapeHtml(summary.blocked || 0)}</strong></div>
+        <div class="detail-stat"><span>Review</span><strong>${escapeHtml(summary.review || 0)}</strong></div>
+        <div class="detail-stat"><span>Changed files</span><strong>${escapeHtml(summary.changedFiles || 0)}</strong></div>
+      </div>
+      <div class="mini-list admin-work-queue-list">
+        ${tasks
+          .map((item) => {
+            const itemClass = item.status === "blocked" ? "needs-review" : item.status === "review" ? "needs-review" : "passed";
+            return `
+              <div class="${itemClass}">
+                <strong>${escapeHtml(item.priority)}. ${escapeHtml(item.title)} · ${escapeHtml(item.phase)}</strong>
+                <span>${escapeHtml(item.reason)}</span>
+                <span>Command: ${escapeHtml(item.command)}</span>
+                <span>Done when: ${escapeHtml(item.doneWhen)}</span>
+                <span>Safety: ${escapeHtml(item.safety)}</span>
+                <span>Source: ${escapeHtml(item.source)}</span>
+              </div>`;
+          })
+          .join("")}
+      </div>
+      <div class="workflow-list">
+        <div class="workflow-step">
+          <strong>Simple rule</strong>
+          <span>${escapeHtml(report.simpleRule || "Start with the first task before taking any confirmed action.")}</span>
+        </div>
       </div>
     </section>`;
 }
@@ -2867,6 +2942,7 @@ function render(model) {
   const adminReportDetailViewer = readAdminReportDetailViewer();
   const adminSystemOverview = readAdminSystemOverview();
   const adminHomeBrief = readAdminHomeBrief();
+  const adminWorkQueue = readAdminWorkQueue();
   const adminDashboardSnapshot = readAdminDashboardSnapshot();
   const adminCommandGuide = readAdminCommandGuide();
   const adminActionFlow = readAdminActionFlow();
@@ -3588,6 +3664,7 @@ function render(model) {
     </header>
 
     ${renderAdminHomeBrief(adminHomeBrief)}
+    ${renderAdminWorkQueue(adminWorkQueue)}
 
     <section class="grid metrics" aria-label="Website summary">
       ${renderMetric("HTML pages", model.summary.totalHtmlPages, "Current static pages")}
