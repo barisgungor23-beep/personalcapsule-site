@@ -205,6 +205,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "build_admin_failure_playbook",
+    label: "Build admin failure playbook",
+    command: ["node", "scripts/build-admin-failure-playbook.js"],
+    kind: "audit",
+  },
+  {
     id: "audit_admin_read_model",
     label: "Audit admin read model",
     command: ["node", "scripts/audit-admin-read-model.js"],

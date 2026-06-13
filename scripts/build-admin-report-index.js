@@ -11,6 +11,7 @@ const reports = [
   ["admin_read_model", "Admin read model", "admin-read-model.json"],
   ["control", "Full control report", "control-report.json"],
   ["system_overview", "Admin system overview", "admin-system-overview-report.json"],
+  ["failure_playbook", "Admin failure playbook", "admin-failure-playbook-report.json"],
   ["quick_start", "Admin quick start", "admin-quick-start-report.json"],
   ["command_guide", "Admin command guide", "admin-command-guide-report.json"],
   ["operations_manual", "Admin operations manual", "admin-operations-manual-report.json"],
@@ -95,10 +96,10 @@ function main() {
     nextAction:
       blocked.length > 0
         ? `Review blocked report first: ${blocked[0].label}.`
-        : missing.length > 0
-          ? `Missing report is acceptable only if its workflow has never been used: ${missing[0].label}.`
-          : review.length > 0
-            ? `Review report status before deploy: ${review[0].label}.`
+        : review.length > 0
+          ? `Review report status before deploy: ${review[0].label}.`
+          : missing.length > 0
+            ? `Missing report is acceptable only if its workflow has never been used: ${missing[0].label}.`
             : "All tracked reports exist and have no blocked status.",
     guarantee:
       "Read-only report index. This script reads local admin reports and writes a local index only. It does not edit content, publish files, commit, push, pull, reset, or deploy.",

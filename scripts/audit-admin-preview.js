@@ -47,6 +47,8 @@ function main() {
       "Report inventory",
       "Admin Report Freshness",
       "Freshness check",
+      "Admin Failure Playbook",
+      "Failure response",
       "Control Center",
       "Admin Quick Start",
       "Safest default",

@@ -9,6 +9,7 @@ const OUTPUT_FILE = path.join(ROOT, "outputs", "admin", "index.html");
 const CONTROL_REPORT_FILE = path.join(ROOT, "outputs", "admin", "control-report.json");
 const ADMIN_REPORT_INDEX_FILE = path.join(ROOT, "outputs", "admin", "admin-report-index.json");
 const ADMIN_REPORT_FRESHNESS_FILE = path.join(ROOT, "outputs", "admin", "admin-report-freshness-report.json");
+const ADMIN_FAILURE_PLAYBOOK_FILE = path.join(ROOT, "outputs", "admin", "admin-failure-playbook-report.json");
 const ADMIN_SYSTEM_OVERVIEW_FILE = path.join(ROOT, "outputs", "admin", "admin-system-overview-report.json");
 const ADMIN_COMMAND_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "admin-command-guide-report.json");
 const GIT_STATUS_FILE = path.join(ROOT, "outputs", "admin", "git-status-report.json");
@@ -165,6 +166,15 @@ function readAdminReportFreshness() {
   if (!fs.existsSync(ADMIN_REPORT_FRESHNESS_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(ADMIN_REPORT_FRESHNESS_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readAdminFailurePlaybook() {
+  if (!fs.existsSync(ADMIN_FAILURE_PLAYBOOK_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(ADMIN_FAILURE_PLAYBOOK_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -789,6 +799,78 @@ function renderAdminReportFreshness(report) {
               </div>`
           )
           .join("") || `<div class="passed"><strong>All active reports are fresh</strong><span>No stale report detected after the latest control check.</span></div>`}
+      </div>
+    </section>`;
+}
+
+function renderAdminFailurePlaybook(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Admin Failure Playbook</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No failure playbook yet</strong>
+            <span>Run node scripts/build-admin-failure-playbook.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const actions = Array.isArray(report.actions) ? report.actions : [];
+  const recoveryOrder = Array.isArray(report.recoveryOrder) ? report.recoveryOrder : [];
+  const statusClassName = summary.status === "passed" ? "good" : summary.status === "blocked" ? "bad" : "warn";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Admin Failure Playbook</h2>
+        <span class="pill ${statusClassName}">${escapeHtml(summary.status || "unknown")}</span>
+      </div>
+      <div class="health">
+        <div class="${summary.blocked ? "issue bad" : summary.review ? "issue warn" : "empty"}">
+          <strong>Failure response</strong>
+          <span>${escapeHtml(report.nextAction || "No failure response needed.")}</span>
+        </div>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Actions</span><strong>${escapeHtml(summary.actions || 0)}</strong></div>
+        <div class="detail-stat"><span>Blocked</span><strong>${escapeHtml(summary.blocked || 0)}</strong></div>
+        <div class="detail-stat"><span>Review</span><strong>${escapeHtml(summary.review || 0)}</strong></div>
+        <div class="detail-stat"><span>First step</span><strong>${escapeHtml(summary.firstAction || "none")}</strong></div>
+      </div>
+      <div class="mini-list failure-playbook-list">
+        ${
+          actions.length
+            ? actions
+                .slice(0, 10)
+                .map(
+                  (item) => `
+                    <div class="${item.status === "blocked" ? "needs-review" : "passed"}">
+                      <strong>${escapeHtml(item.priority)}. ${escapeHtml(item.title)}</strong>
+                      <span>${escapeHtml(item.status)} · ${escapeHtml(item.scope)} · ${escapeHtml(item.source)}</span>
+                      <span>${escapeHtml(item.detail)}</span>
+                      <span>${escapeHtml(item.command || "")}</span>
+                    </div>`
+                )
+                .join("")
+            : `<div class="passed"><strong>No active failure response</strong><span>Reports do not show an urgent blocker right now.</span></div>`
+        }
+      </div>
+      <div class="workflow-list">
+        ${recoveryOrder
+          .map(
+            (item, index) => `
+              <div class="workflow-step">
+                <strong>${index + 1}. Recovery order</strong>
+                <span>${escapeHtml(item)}</span>
+              </div>`
+          )
+          .join("")}
       </div>
     </section>`;
 }
@@ -1977,6 +2059,7 @@ function render(model) {
   const controlReport = readControlReport();
   const adminReportIndex = readAdminReportIndex();
   const adminReportFreshness = readAdminReportFreshness();
+  const adminFailurePlaybook = readAdminFailurePlaybook();
   const adminSystemOverview = readAdminSystemOverview();
   const adminCommandGuide = readAdminCommandGuide();
   const gitStatusReport = readGitStatusReport();
@@ -2575,6 +2658,8 @@ function render(model) {
         ${renderAdminReportIndex(adminReportIndex)}
 
         ${renderAdminReportFreshness(adminReportFreshness)}
+
+        ${renderAdminFailurePlaybook(adminFailurePlaybook)}
 
         ${renderControlCenter(controlReport)}
 
