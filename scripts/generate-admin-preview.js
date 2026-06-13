@@ -13,6 +13,7 @@ const ADMIN_FAILURE_PLAYBOOK_FILE = path.join(ROOT, "outputs", "admin", "admin-f
 const ADMIN_DEPENDENCY_MAP_FILE = path.join(ROOT, "outputs", "admin", "admin-dependency-map-report.json");
 const ADMIN_REPORT_DETAIL_VIEWER_FILE = path.join(ROOT, "outputs", "admin", "admin-report-detail-viewer-report.json");
 const ADMIN_SYSTEM_OVERVIEW_FILE = path.join(ROOT, "outputs", "admin", "admin-system-overview-report.json");
+const ADMIN_DASHBOARD_SNAPSHOT_FILE = path.join(ROOT, "outputs", "admin", "admin-dashboard-snapshot-report.json");
 const ADMIN_COMMAND_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "admin-command-guide-report.json");
 const ADMIN_ACTION_FLOW_FILE = path.join(ROOT, "outputs", "admin", "admin-action-flow-report.json");
 const GIT_STATUS_FILE = path.join(ROOT, "outputs", "admin", "git-status-report.json");
@@ -207,6 +208,15 @@ function readAdminSystemOverview() {
   if (!fs.existsSync(ADMIN_SYSTEM_OVERVIEW_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(ADMIN_SYSTEM_OVERVIEW_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readAdminDashboardSnapshot() {
+  if (!fs.existsSync(ADMIN_DASHBOARD_SNAPSHOT_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(ADMIN_DASHBOARD_SNAPSHOT_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -735,6 +745,80 @@ function renderAdminSystemOverview(report) {
               <div class="workflow-step">
                 <strong>${index + 1}. Focus area</strong>
                 <span>${escapeHtml(item)}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+    </section>`;
+}
+
+function renderAdminDashboardSnapshot(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Admin Dashboard Snapshot</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>Today at a glance is not available yet</strong>
+            <span>Run node scripts/build-admin-dashboard-snapshot.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const cards = Array.isArray(report.cards) ? report.cards : [];
+  const commands = Array.isArray(report.usefulCommands) ? report.usefulCommands : [];
+  const statusClassName =
+    summary.status === "ready" ? "good" : summary.status === "blocked" ? "bad" : "warn";
+
+  return `
+    <section class="panel dashboard-snapshot-panel">
+      <div class="panel-head">
+        <h2>Admin Dashboard Snapshot</h2>
+        <span class="pill ${statusClassName}">${escapeHtml(summary.status || "unknown")}</span>
+      </div>
+      <div class="health">
+        <div class="${summary.status === "ready" ? "empty" : summary.status === "blocked" ? "issue bad" : "issue warn"}">
+          <strong>Today at a glance</strong>
+          <span>${escapeHtml(report.nextAction || "Run the full control check before the next website action.")}</span>
+        </div>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Articles</span><strong>${escapeHtml(summary.articles || 0)}</strong></div>
+        <div class="detail-stat"><span>Pages</span><strong>${escapeHtml(summary.pages || 0)}</strong></div>
+        <div class="detail-stat"><span>Review</span><strong>${escapeHtml(summary.review || 0)}</strong></div>
+        <div class="detail-stat"><span>Commits ahead</span><strong>${escapeHtml(summary.commitsAhead || 0)}</strong></div>
+      </div>
+      <div class="mini-list dashboard-snapshot-list">
+        ${cards
+          .slice(0, 9)
+          .map((item) => {
+            const itemClass =
+              item.statusClass === "blocked"
+                ? "needs-review"
+                : item.statusClass === "review" || item.statusClass === "unknown"
+                  ? "needs-review"
+                  : "passed";
+            return `
+              <div class="${itemClass}">
+                <strong>${escapeHtml(item.label)} · ${escapeHtml(item.status)}</strong>
+                <span>${escapeHtml(item.detail)}</span>
+                <span>${escapeHtml(item.source)}</span>
+              </div>`;
+          })
+          .join("")}
+      </div>
+      <div class="workflow-list">
+        ${commands
+          .map(
+            (item, index) => `
+              <div class="workflow-step">
+                <strong>${index + 1}. Useful command</strong>
+                <span>${escapeHtml(item.label)}: ${escapeHtml(item.command)}</span>
               </div>`
           )
           .join("")}
@@ -2481,6 +2565,7 @@ function render(model) {
   const adminDependencyMap = readAdminDependencyMap();
   const adminReportDetailViewer = readAdminReportDetailViewer();
   const adminSystemOverview = readAdminSystemOverview();
+  const adminDashboardSnapshot = readAdminDashboardSnapshot();
   const adminCommandGuide = readAdminCommandGuide();
   const adminActionFlow = readAdminActionFlow();
   const gitStatusReport = readGitStatusReport();
@@ -3122,6 +3207,7 @@ function render(model) {
               restoreDryRunReport,
             })}
 
+            ${renderAdminDashboardSnapshot(adminDashboardSnapshot)}
             ${renderAdminSystemOverview(adminSystemOverview)}
             ${renderControlCenter(controlReport)}
           `

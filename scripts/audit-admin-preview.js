@@ -42,6 +42,8 @@ function main() {
       "Publish Safety",
       "Drafts",
       "Publish Workflow Status",
+      "Admin Dashboard Snapshot",
+      "Today at a glance",
       "Content health",
       "Draft state",
       "Preview and comparison",
