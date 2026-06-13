@@ -147,14 +147,23 @@ function main() {
     guidedWorkflows.find((workflow) => workflow.id === "daily_health_check") ||
     null;
 
+  const blockedWorkflows = guidedWorkflows.filter((item) => item.status === "blocked");
+  const reviewWorkflows = guidedWorkflows.filter((item) => item.status === "review");
+  const reportStatus =
+    blockers.length > 0 || blockedWorkflows.length > 0
+      ? "blocked"
+      : warnings.length > 0 || reviewWorkflows.length > 0
+        ? "review"
+        : "passed";
+
   const report = {
     generatedAt: new Date().toISOString(),
     summary: {
-      status: blockers.length > 0 ? "blocked" : warnings.length > 0 ? "review" : "passed",
+      status: reportStatus,
       workflows: guidedWorkflows.length,
       ready: guidedWorkflows.filter((item) => item.status === "ready").length,
-      review: guidedWorkflows.filter((item) => item.status === "review").length,
-      blocked: guidedWorkflows.filter((item) => item.status === "blocked").length,
+      review: reviewWorkflows.length,
+      blocked: blockedWorkflows.length,
       idle: guidedWorkflows.filter((item) => item.status === "idle").length,
       copyableSteps: guidedWorkflows.flatMap((item) => item.steps).filter((step) => step.buttonMode === "copy_command").length,
       manualSteps: guidedWorkflows.flatMap((item) => item.steps).filter((step) => step.buttonMode !== "copy_command").length,

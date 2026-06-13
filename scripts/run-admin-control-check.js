@@ -150,12 +150,6 @@ const steps = [
     kind: "audit",
   },
   {
-    id: "build_admin_workflow_guide",
-    label: "Build admin workflow guide",
-    command: ["node", "scripts/build-admin-workflow-guide.js"],
-    kind: "audit",
-  },
-  {
     id: "build_admin_command_risk_matrix",
     label: "Build admin command risk matrix",
     command: ["node", "scripts/build-admin-command-risk-matrix.js"],
@@ -261,6 +255,12 @@ const steps = [
     id: "build_admin_operations_manual",
     label: "Build admin operations manual",
     command: ["node", "scripts/build-admin-operations-manual.js"],
+    kind: "audit",
+  },
+  {
+    id: "build_admin_workflow_guide",
+    label: "Build admin workflow guide",
+    command: ["node", "scripts/build-admin-workflow-guide.js"],
     kind: "audit",
   },
   {
@@ -496,6 +496,17 @@ function refreshFinalPushReview() {
   return result;
 }
 
+function refreshAdminWorkflowGuide() {
+  const result = runStep({
+    id: "refresh_admin_workflow_guide",
+    label: "Refresh admin workflow guide",
+    command: ["node", "scripts/build-admin-workflow-guide.js"],
+    kind: "audit",
+  });
+  printStep(result);
+  return result;
+}
+
 function refreshFounderDecisionCenter() {
   const result = runStep({
     id: "refresh_founder_decision_center",
@@ -639,6 +650,15 @@ function main() {
     if (!summary.firstFailedStep) summary.firstFailedStep = finalPushReviewResult.id;
     report.summary = summary;
     report.steps.push(finalPushReviewResult);
+    fs.writeFileSync(REPORT_FILE, `${JSON.stringify(report, null, 2)}\n`);
+  }
+  const workflowGuideResult = refreshAdminWorkflowGuide();
+  if (workflowGuideResult.status === "failed") {
+    summary.status = "failed";
+    summary.failedSteps += 1;
+    if (!summary.firstFailedStep) summary.firstFailedStep = workflowGuideResult.id;
+    report.summary = summary;
+    report.steps.push(workflowGuideResult);
     fs.writeFileSync(REPORT_FILE, `${JSON.stringify(report, null, 2)}\n`);
   }
   const snapshotResult = refreshDashboardSnapshot();
