@@ -11,6 +11,7 @@ const ADMIN_REPORT_INDEX_FILE = path.join(ROOT, "outputs", "admin", "admin-repor
 const ADMIN_REPORT_FRESHNESS_FILE = path.join(ROOT, "outputs", "admin", "admin-report-freshness-report.json");
 const ADMIN_FAILURE_PLAYBOOK_FILE = path.join(ROOT, "outputs", "admin", "admin-failure-playbook-report.json");
 const ADMIN_DEPENDENCY_MAP_FILE = path.join(ROOT, "outputs", "admin", "admin-dependency-map-report.json");
+const ADMIN_REPORT_DETAIL_VIEWER_FILE = path.join(ROOT, "outputs", "admin", "admin-report-detail-viewer-report.json");
 const ADMIN_SYSTEM_OVERVIEW_FILE = path.join(ROOT, "outputs", "admin", "admin-system-overview-report.json");
 const ADMIN_COMMAND_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "admin-command-guide-report.json");
 const GIT_STATUS_FILE = path.join(ROOT, "outputs", "admin", "git-status-report.json");
@@ -185,6 +186,15 @@ function readAdminDependencyMap() {
   if (!fs.existsSync(ADMIN_DEPENDENCY_MAP_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(ADMIN_DEPENDENCY_MAP_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readAdminReportDetailViewer() {
+  if (!fs.existsSync(ADMIN_REPORT_DETAIL_VIEWER_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(ADMIN_REPORT_DETAIL_VIEWER_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -944,6 +954,66 @@ function renderAdminDependencyMap(report) {
           <strong>Critical path</strong>
           <span>${escapeHtml(criticalPath.join(" → "))}</span>
         </div>
+      </div>
+    </section>`;
+}
+
+function renderAdminReportDetailViewer(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Admin Report Detail Viewer</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No report detail viewer yet</strong>
+            <span>Run node scripts/build-admin-report-detail-viewer.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const details = Array.isArray(report.details) ? report.details : [];
+  const statusClassName = summary.status === "passed" ? "good" : "bad";
+  const sortedDetails = [...details].sort((a, b) => {
+    const importanceRank = { high: 0, medium: 1, normal: 2 };
+    return (importanceRank[a.importance] ?? 3) - (importanceRank[b.importance] ?? 3);
+  });
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Admin Report Detail Viewer</h2>
+        <span class="pill ${statusClassName}">${escapeHtml(summary.status || "unknown")}</span>
+      </div>
+      <div class="health">
+        <div class="${summary.highImportanceReview ? "issue warn" : "empty"}">
+          <strong>Report detail viewer</strong>
+          <span>${escapeHtml(report.nextAction || "Use this viewer when a panel card needs more context.")}</span>
+        </div>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Reports</span><strong>${escapeHtml(summary.reports || 0)}</strong></div>
+        <div class="detail-stat"><span>High</span><strong>${escapeHtml(summary.highImportance || 0)}</strong></div>
+        <div class="detail-stat"><span>High review</span><strong>${escapeHtml(summary.highImportanceReview || 0)}</strong></div>
+        <div class="detail-stat"><span>Missing</span><strong>${escapeHtml(summary.missing || 0)}</strong></div>
+      </div>
+      <div class="mini-list report-detail-viewer-list">
+        ${sortedDetails
+          .slice(0, 10)
+          .map(
+            (item) => `
+              <div class="${item.exists && !["failed", "blocked"].includes(item.status) ? "passed" : "needs-review"}">
+                <strong>${escapeHtml(item.label)} · ${escapeHtml(item.status)} · ${escapeHtml(item.importance)}</strong>
+                <span>${escapeHtml(item.path)}</span>
+                <span>${escapeHtml(item.primaryDetail)}</span>
+                <span>${escapeHtml(item.whyItMatters)}</span>
+              </div>`
+          )
+          .join("")}
       </div>
     </section>`;
 }
@@ -2134,6 +2204,7 @@ function render(model) {
   const adminReportFreshness = readAdminReportFreshness();
   const adminFailurePlaybook = readAdminFailurePlaybook();
   const adminDependencyMap = readAdminDependencyMap();
+  const adminReportDetailViewer = readAdminReportDetailViewer();
   const adminSystemOverview = readAdminSystemOverview();
   const adminCommandGuide = readAdminCommandGuide();
   const gitStatusReport = readGitStatusReport();
@@ -2736,6 +2807,8 @@ function render(model) {
         ${renderAdminFailurePlaybook(adminFailurePlaybook)}
 
         ${renderAdminDependencyMap(adminDependencyMap)}
+
+        ${renderAdminReportDetailViewer(adminReportDetailViewer)}
 
         ${renderControlCenter(controlReport)}
 

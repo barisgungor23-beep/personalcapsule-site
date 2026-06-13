@@ -51,6 +51,8 @@ function main() {
       "Failure response",
       "Admin Dependency Map",
       "Dependency map",
+      "Admin Report Detail Viewer",
+      "Report detail viewer",
       "Control Center",
       "Admin Quick Start",
       "Safest default",

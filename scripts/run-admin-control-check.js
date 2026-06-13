@@ -217,6 +217,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "build_admin_report_detail_viewer",
+    label: "Build admin report detail viewer",
+    command: ["node", "scripts/build-admin-report-detail-viewer.js"],
+    kind: "audit",
+  },
+  {
     id: "audit_admin_read_model",
     label: "Audit admin read model",
     command: ["node", "scripts/audit-admin-read-model.js"],
