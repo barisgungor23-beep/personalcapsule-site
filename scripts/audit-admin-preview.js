@@ -50,6 +50,8 @@ function main() {
       "Push package rule",
       "Deployment Readiness",
       "Deploy safety rule",
+      "Admin Operations Manual",
+      "Operations principle",
       "Publish Readiness",
       "Publish Result",
       "Publish Dry Run",

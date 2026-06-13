@@ -11,6 +11,7 @@ const ADMIN_COMMAND_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "admin-comm
 const GIT_STATUS_FILE = path.join(ROOT, "outputs", "admin", "git-status-report.json");
 const PUSH_PACKAGE_FILE = path.join(ROOT, "outputs", "admin", "push-package-report.json");
 const DEPLOYMENT_READINESS_FILE = path.join(ROOT, "outputs", "admin", "deployment-readiness-report.json");
+const ADMIN_OPERATIONS_MANUAL_FILE = path.join(ROOT, "outputs", "admin", "admin-operations-manual-report.json");
 const DRAFT_COMPARISON_FILE = path.join(ROOT, "outputs", "admin", "draft-comparison-report.json");
 const DRAFT_QUALITY_FILE = path.join(ROOT, "outputs", "admin", "draft-quality-report.json");
 const DRAFT_FIX_LIST_FILE = path.join(ROOT, "outputs", "admin", "draft-fix-list-report.json");
@@ -178,6 +179,15 @@ function readDeploymentReadiness() {
   if (!fs.existsSync(DEPLOYMENT_READINESS_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(DEPLOYMENT_READINESS_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readAdminOperationsManual() {
+  if (!fs.existsSync(ADMIN_OPERATIONS_MANUAL_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(ADMIN_OPERATIONS_MANUAL_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -837,6 +847,71 @@ function renderDeploymentReadiness(report) {
             (item, index) => `
               <div class="workflow-step">
                 <strong>${index + 1}. Deploy safety rule</strong>
+                <span>${escapeHtml(item)}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+    </section>`;
+}
+
+function renderAdminOperationsManual(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Admin Operations Manual</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No operations manual yet</strong>
+            <span>Run node scripts/build-admin-operations-manual.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const workflows = Array.isArray(report.workflows) ? report.workflows : [];
+  const principles = Array.isArray(report.principles) ? report.principles : [];
+  const status = summary.status === "passed" ? "good" : "bad";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Admin Operations Manual</h2>
+        <span class="pill ${status}">${escapeHtml(summary.status || "unknown")}</span>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Workflows</span><strong>${escapeHtml(summary.workflows || 0)}</strong></div>
+        <div class="detail-stat"><span>Blockers</span><strong>${escapeHtml(summary.blockers || 0)}</strong></div>
+        <div class="detail-stat"><span>Push status</span><strong>${escapeHtml(summary.pushPackageStatus || "unknown")}</strong></div>
+        <div class="detail-stat"><span>Deploy status</span><strong>${escapeHtml(summary.deploymentStatus || "unknown")}</strong></div>
+      </div>
+      <div class="mini-list operations-manual-list">
+        ${workflows
+          .map(
+            (workflow) => `
+              <div class="${workflow.risk === "very_high" || workflow.risk === "high" ? "needs-review" : "passed"}">
+                <strong>${escapeHtml(workflow.title)}</strong>
+                <span>${escapeHtml(workflow.risk)} risk · ${escapeHtml(workflow.purpose)}</span>
+                <span>${escapeHtml(
+                  (workflow.steps || [])
+                    .slice(0, 3)
+                    .map((step) => `${step.label}: ${step.command}`)
+                    .join(" · ")
+                )}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+      <div class="workflow-list">
+        ${principles
+          .map(
+            (item, index) => `
+              <div class="workflow-step">
+                <strong>${index + 1}. Operations principle</strong>
                 <span>${escapeHtml(item)}</span>
               </div>`
           )
@@ -1638,6 +1713,7 @@ function render(model) {
   const gitStatusReport = readGitStatusReport();
   const pushPackageReport = readPushPackageReport();
   const deploymentReadiness = readDeploymentReadiness();
+  const adminOperationsManual = readAdminOperationsManual();
   const draftComparisonReport = readDraftComparisonReport();
   const draftQualityReport = readDraftQualityReport();
   const draftFixListReport = readDraftFixListReport();
@@ -2233,6 +2309,8 @@ function render(model) {
         ${renderPushPackageReport(pushPackageReport)}
 
         ${renderDeploymentReadiness(deploymentReadiness)}
+
+        ${renderAdminOperationsManual(adminOperationsManual)}
 
         ${renderPublishReadiness(publishReadinessReport)}
 
