@@ -3571,8 +3571,8 @@ function render(model) {
               <button class="mini-btn" type="button" id="buildPatchButton">Build draft patch</button>
               <button class="mini-btn" type="button" id="resetEditorButton">Reset form</button>
             </div>
-            <p class="editor-help">This Draft Edit Form v1 only edits values inside this browser preview. It does not save, publish, delete, commit or deploy anything.</p>
-            <textarea class="patch-output" id="draftPatchOutput" readonly>Local draft patch will appear here after you select an article and click Build draft patch.</textarea>
+            <p class="editor-help">This Draft Edit Form v1 only edits values inside this browser preview. Patch targets a draft file, never a published article file. It does not save, publish, delete, commit or deploy anything.</p>
+            <textarea class="patch-output" id="draftPatchOutput" readonly>Local draft patch will appear here after you select an article and click Build draft patch. Apply it only to a draft file after human review.</textarea>
           </section>
 
           <section class="panel">
@@ -3787,7 +3787,7 @@ function render(model) {
         field("qualityScore", "Quality score", article.qualityStatus + " · " + article.qualityScore, { mode: "generated" }),
         "<div class='field wide'><span class='field-head'><span>Body blocks</span><span class='field-mode " + esc(ruleFor("body").mode || "editable") + "'>" + esc(labelForMode(ruleFor("body").mode || "editable")) + "</span></span><div class='block-preview'>" + renderBlocks(article.body) + "</div><small>" + esc(ruleFor("body").why || "") + "</small></div>"
       ].join("");
-      draftPatchOutput.value = "Edit safe fields, then click Build draft patch. Body blocks remain preview-only in v1.";
+      draftPatchOutput.value = "Edit safe fields, then click Build draft patch. Patch targets a draft file, never a published article file. Body blocks remain preview-only in v1.";
     }
 
     function parsePatchValue(key, value) {
@@ -3797,6 +3797,32 @@ function render(model) {
       return value;
     }
 
+    function originalPatchValue(article, key) {
+      if (key === "keywords" && Array.isArray(article.keywords)) {
+        return article.keywords.join(", ");
+      }
+      return String(article[key] || "");
+    }
+
+    function summarizeChangedField(key, fromValue, toValue) {
+      const rule = ruleFor(key, {
+        label: key,
+        mode: "editable",
+        publishRisk: "medium",
+        why: "No editor rule is defined for this field yet.",
+      });
+      return {
+        key,
+        label: rule.label || key,
+        mode: rule.mode || "editable",
+        publishRisk: rule.publishRisk || "medium",
+        from: parsePatchValue(key, fromValue),
+        to: parsePatchValue(key, toValue),
+        reviewRequired: rule.mode !== "editable" || rule.publishRisk === "high",
+        why: rule.why || "",
+      };
+    }
+
     function buildDraftPatch() {
       if (!selectedArticle) {
         draftPatchOutput.value = "Select an article first.";
@@ -3804,28 +3830,52 @@ function render(model) {
       }
 
       const changedFields = {};
+      const changedFieldDetails = [];
       const editableFields = Array.from(editor.querySelectorAll("[data-edit-key]"));
 
       for (const control of editableFields) {
         const key = control.dataset.editKey;
         const current = control.value;
-        const originalValue = key === "keywords" && Array.isArray(selectedArticle.keywords)
-          ? selectedArticle.keywords.join(", ")
-          : String(selectedArticle[key] || "");
+        const originalValue = originalPatchValue(selectedArticle, key);
 
         if (current !== originalValue) {
           changedFields[key] = parsePatchValue(key, current);
+          changedFieldDetails.push(summarizeChangedField(key, originalValue, current));
         }
       }
 
+      const changedFieldCount = Object.keys(changedFields).length;
+      const targetDraftPath = "content/drafts/articles/" + selectedArticle.id + ".draft.json";
+
       const patch = {
-        mode: "local_draft_patch_v1",
+        mode: "local_draft_patch_v2",
         articleId: selectedArticle.id,
         title: selectedArticle.title,
-        sourcePath: "content/articles/" + selectedArticle.id + ".json",
-        safety: "This patch is not automatically saved. Apply it only to a draft file after human review.",
-        changedFieldCount: Object.keys(changedFields).length,
+        sourceArticlePath: "content/articles/" + selectedArticle.id + ".json",
+        targetDraftPath,
+        safety: {
+          status: changedFieldCount === 0 ? "no_changes" : "draft_only_review_required",
+          rule: "Do not apply this patch to content/articles. Apply it only to the target draft file after human review.",
+          browserOnly: true,
+          savesFiles: false,
+          publishesFiles: false,
+          commitsFiles: false,
+          deploysFiles: false,
+        },
+        changedFieldCount,
         changedFields,
+        changedFieldDetails,
+        nextSteps:
+          changedFieldCount === 0
+            ? [
+                "No field changed. Select an article and edit an editable field first.",
+              ]
+            : [
+                "Create a private draft first if it does not already exist.",
+                "Apply these values only inside the target draft JSON.",
+                "Run node scripts/run-admin-control-check.js.",
+                "Review draft preview, quality checks, and publish dry-run before marking ready.",
+              ],
       };
 
       draftPatchOutput.value = JSON.stringify(patch, null, 2);

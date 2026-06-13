@@ -117,6 +117,8 @@ function main() {
       "Local form only",
       "Build draft patch",
       "Local draft patch",
+      "Patch targets a draft file",
+      "never a published article file",
       "Editable",
       "Generated",
       "Read-only",
