@@ -213,7 +213,7 @@ function main() {
       commitsAhead: pushSummary.ahead || 0,
       commitsBehind: pushSummary.behind || 0,
       changedFiles: gitSummary.totalChangedFiles || 0,
-      untrackedFiles: gitSummary.untrackedFiles || 0,
+      untrackedFiles: gitSummary.untracked || 0,
       readyDrafts: prePublishSummary.readyDrafts || 0,
       domainFiles: domainSummary.domainFiles || 0,
       latestCommit: gitSummary.latestCommit || null,
