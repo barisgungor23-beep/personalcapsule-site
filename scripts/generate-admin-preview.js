@@ -7,6 +7,7 @@ const ROOT = path.resolve(__dirname, "..");
 const MODEL_FILE = path.join(ROOT, "outputs", "admin", "admin-read-model.json");
 const OUTPUT_FILE = path.join(ROOT, "outputs", "admin", "index.html");
 const CONTROL_REPORT_FILE = path.join(ROOT, "outputs", "admin", "control-report.json");
+const ADMIN_REPORT_INDEX_FILE = path.join(ROOT, "outputs", "admin", "admin-report-index.json");
 const ADMIN_SYSTEM_OVERVIEW_FILE = path.join(ROOT, "outputs", "admin", "admin-system-overview-report.json");
 const ADMIN_COMMAND_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "admin-command-guide-report.json");
 const GIT_STATUS_FILE = path.join(ROOT, "outputs", "admin", "git-status-report.json");
@@ -145,6 +146,15 @@ function readControlReport() {
   if (!fs.existsSync(CONTROL_REPORT_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(CONTROL_REPORT_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readAdminReportIndex() {
+  if (!fs.existsSync(ADMIN_REPORT_INDEX_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(ADMIN_REPORT_INDEX_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -655,6 +665,61 @@ function renderAdminSystemOverview(report) {
               <div class="workflow-step">
                 <strong>${index + 1}. Focus area</strong>
                 <span>${escapeHtml(item)}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+    </section>`;
+}
+
+function renderAdminReportIndex(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Admin Report Index</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No report index yet</strong>
+            <span>Run node scripts/build-admin-report-index.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const items = Array.isArray(report.items) ? report.items : [];
+  const statusClassName = summary.status === "passed" ? "good" : "warn";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Admin Report Index</h2>
+        <span class="pill ${statusClassName}">${escapeHtml(summary.status || "unknown")}</span>
+      </div>
+      <div class="health">
+        <div class="${summary.review || summary.missing ? "issue warn" : "empty"}">
+          <strong>Report inventory</strong>
+          <span>${escapeHtml(report.nextAction || "Review generated reports before deploy.")}</span>
+        </div>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Reports</span><strong>${escapeHtml(summary.reports || 0)}</strong></div>
+        <div class="detail-stat"><span>Existing</span><strong>${escapeHtml(summary.existing || 0)}</strong></div>
+        <div class="detail-stat"><span>Missing</span><strong>${escapeHtml(summary.missing || 0)}</strong></div>
+        <div class="detail-stat"><span>Review</span><strong>${escapeHtml(summary.review || 0)}</strong></div>
+      </div>
+      <div class="mini-list report-index-list">
+        ${items
+          .slice(0, 12)
+          .map(
+            (item) => `
+              <div class="${item.exists && !["failed", "blocked", "review", "action_needed"].includes(item.status) ? "passed" : "needs-review"}">
+                <strong>${escapeHtml(item.label)} · ${escapeHtml(item.status)}</strong>
+                <span>${escapeHtml(item.path)}</span>
+                <span>${escapeHtml(item.generatedAt || item.modifiedAt || "not generated")}</span>
               </div>`
           )
           .join("")}
@@ -1844,6 +1909,7 @@ function render(model) {
   const articleJson = JSON.stringify(model.articles).replaceAll("</", "<\\/");
   const editorRulesJson = JSON.stringify(model.editorRules.article || {}).replaceAll("</", "<\\/");
   const controlReport = readControlReport();
+  const adminReportIndex = readAdminReportIndex();
   const adminSystemOverview = readAdminSystemOverview();
   const adminCommandGuide = readAdminCommandGuide();
   const gitStatusReport = readGitStatusReport();
@@ -2438,6 +2504,8 @@ function render(model) {
         })}
 
         ${renderAdminSystemOverview(adminSystemOverview)}
+
+        ${renderAdminReportIndex(adminReportIndex)}
 
         ${renderControlCenter(controlReport)}
 

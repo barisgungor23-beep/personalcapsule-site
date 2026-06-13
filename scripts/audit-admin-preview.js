@@ -43,6 +43,8 @@ function main() {
       "Full control check",
       "Admin System Overview",
       "Recommended action",
+      "Admin Report Index",
+      "Report inventory",
       "Control Center",
       "Admin Quick Start",
       "Safest default",
