@@ -108,13 +108,8 @@ function renderArticles(articles) {
           <td><span class="pill ${statusClass(article.status)}">${escapeHtml(article.status)}</span></td>
           <td><span class="pill ${statusClass(article.qualityStatus === "good" ? "ok" : article.qualityStatus === "review" ? "short" : "missing")}">${escapeHtml(article.qualityStatus)} · ${article.qualityScore}</span></td>
           <td>${article.qualityIssueCount}</td>
-          <td>${article.seoTitleLength}</td>
-          <td><span class="pill ${statusClass(article.descriptionStatus)}">${escapeHtml(article.descriptionStatus)}</span></td>
-          <td>${article.bodyBlockCount}</td>
-          <td>${article.faqCount}</td>
-          <td>${article.relatedCount}</td>
           <td>${escapeHtml(article.dateModified || "")}</td>
-          <td><button class="mini-btn" type="button" data-detail-id="${escapeHtml(article.id)}">View</button></td>
+          <td><button class="mini-btn view-btn" type="button" data-detail-id="${escapeHtml(article.id)}">View</button></td>
         </tr>`
     )
     .join("");
@@ -3696,17 +3691,21 @@ function renderPanelGroup(title, description, body) {
     Drafts: "drafts-section",
   };
   const sectionId = sectionIds[title] ? ` id="${escapeHtml(sectionIds[title])}"` : "";
+  const openAttr = title === "System" ? " open" : "";
 
   return `
-    <section${sectionId} class="panel-group admin-anchor" aria-label="${escapeHtml(title)}">
-      <div class="group-head">
-        <strong>${escapeHtml(title)}</strong>
-        <span>${escapeHtml(description)}</span>
-      </div>
+    <details${sectionId} class="panel-group admin-anchor" aria-label="${escapeHtml(title)}"${openAttr}>
+      <summary class="group-head">
+        <span>
+          <strong>${escapeHtml(title)}</strong>
+          <small>${escapeHtml(description)}</small>
+        </span>
+        <b>Open</b>
+      </summary>
       <div class="group-stack">
         ${body}
       </div>
-    </section>`;
+    </details>`;
 }
 
 function renderAdminNavigation() {
@@ -4126,11 +4125,20 @@ function render(model) {
       background: rgba(0,0,0,.1);
       border-radius: 18px;
     }
-    .group-head {
-      display: grid;
-      gap: 3px;
-      padding: 4px 4px 0;
+    details.panel-group:not([open]) {
+      padding-bottom: 10px;
     }
+    .group-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 4px 4px 0;
+      cursor: pointer;
+      list-style: none;
+    }
+    .group-head::-webkit-details-marker { display: none; }
+    .group-head span { display: grid; gap: 3px; min-width: 0; }
     .group-head strong {
       color: var(--gold);
       font-size: 12px;
@@ -4138,14 +4146,28 @@ function render(model) {
       letter-spacing: .12em;
       line-height: 1.2;
     }
-    .group-head span {
+    .group-head small {
       color: var(--faint);
       font-size: 12px;
       line-height: 1.35;
     }
+    .group-head b {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      border: 1px solid rgba(255,247,230,.12);
+      border-radius: 999px;
+      padding: 4px 8px;
+      background: rgba(255,247,230,.04);
+      white-space: nowrap;
+    }
+    details[open] > .group-head b { color: var(--gold); }
     .group-stack {
       display: grid;
       gap: 10px;
+      margin-top: 10px;
     }
     .panel-head {
       display: flex;
@@ -4183,6 +4205,7 @@ function render(model) {
     th { color: var(--faint); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; background: rgba(0,0,0,.1); }
     td strong { display: block; font-weight: 650; }
     td small { display: block; color: var(--faint); margin-top: 3px; }
+    tr.selected-row td { background: rgba(216,178,90,.08); }
     .table-wrap { overflow-x: auto; }
     .pill {
       display: inline-flex;
@@ -4836,7 +4859,7 @@ function render(model) {
             </label>
             <div class="result-count"><span id="articleCount">${model.articles.length}</span>&nbsp;articles</div>
           </div>
-          <div class="table-wrap">
+            <div class="table-wrap">
             <table>
               <thead>
                 <tr>
@@ -4845,11 +4868,6 @@ function render(model) {
                   <th>Status</th>
                   <th>Quality</th>
                   <th>Issues</th>
-                  <th>SEO title</th>
-                  <th>Description</th>
-                  <th>Blocks</th>
-                  <th>FAQ</th>
-                  <th>Related</th>
                   <th>Modified</th>
                   <th>Detail</th>
                 </tr>
@@ -5304,6 +5322,8 @@ function render(model) {
         selectedArticle = article;
         renderDetail(article);
         renderEditor(article);
+        rows.forEach((row) => row.classList.toggle("selected-row", row.dataset.id === article.id));
+        detail.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     });
 
