@@ -26,6 +26,84 @@ const priorityByLabel = new Map([
   ["FAQ coverage", 15],
 ]);
 
+const guidanceByLabel = {
+  "Readable JSON": {
+    field: "whole file",
+    howToFix: "Fix the JSON formatting so the draft file can be read.",
+    doneWhen: "The draft file opens as valid JSON and audit-article-drafts passes.",
+  },
+  "Draft status": {
+    field: "status",
+    howToFix: "Set status to draft.",
+    doneWhen: "The draft status is exactly draft.",
+  },
+  "Category exists": {
+    field: "category",
+    howToFix: "Use an existing category ID from content/categories.",
+    doneWhen: "The category value matches an existing category JSON file.",
+  },
+  "No published duplicate": {
+    field: "id",
+    howToFix: "Choose a new article ID that does not already exist in content/articles.",
+    doneWhen: "No published article uses the same ID.",
+  },
+  "Existing source article": {
+    field: "draftOf",
+    howToFix: "Point draftOf to the existing published article ID.",
+    doneWhen: "draftOf matches a file in content/articles.",
+  },
+  "No placeholder text": {
+    field: "title, description, excerpt, body, faq, related, cta",
+    howToFix: "Replace every placeholder, draft, and replace-this phrase with final reader-facing text.",
+    doneWhen: "The draft contains no placeholder wording anywhere in public content fields.",
+  },
+  "Related links": {
+    field: "related",
+    howToFix: "Add at least two relevant internal article links.",
+    doneWhen: "The related array has at least two items.",
+  },
+  "Related link targets": {
+    field: "related[].id",
+    howToFix: "Use IDs of articles that already exist in content/articles.",
+    doneWhen: "Every related item points to an existing article ID.",
+  },
+  "New article publish intent": {
+    field: "draftPublishIntent",
+    howToFix: "Keep this as editing while writing; set it to ready only after every other fix is complete.",
+    doneWhen: "draftPublishIntent is ready and all other blockers are gone.",
+  },
+  "Meta description length": {
+    field: "description",
+    howToFix: "Write a natural 70-165 character summary of the page.",
+    doneWhen: "The description is clear, useful, and within the target length.",
+  },
+  "SEO title length": {
+    field: "seoTitle",
+    howToFix: "Keep the SEO title specific and under 65 characters.",
+    doneWhen: "The SEO title is neither missing, too short, nor too long.",
+  },
+  "Title length": {
+    field: "title",
+    howToFix: "Use a clear title between 10 and 80 characters.",
+    doneWhen: "The visible article title is clear and within the target length.",
+  },
+  "Keyword coverage": {
+    field: "keywords",
+    howToFix: "Add at least five focused keywords that match the article topic.",
+    doneWhen: "The keywords array has at least five useful terms.",
+  },
+  "Content depth": {
+    field: "body",
+    howToFix: "Add enough paragraphs, headings, lists, or examples to answer the topic fully.",
+    doneWhen: "The body has at least eight useful content blocks.",
+  },
+  "FAQ coverage": {
+    field: "faq",
+    howToFix: "Add at least one honest question and answer.",
+    doneWhen: "The FAQ array has at least one useful item.",
+  },
+};
+
 function readJsonIfExists(filePath) {
   if (!fs.existsSync(filePath)) return null;
   return JSON.parse(fs.readFileSync(filePath, "utf8"));
@@ -43,6 +121,11 @@ function buildFixItems(report) {
   const items = [];
   for (const draft of report.items || []) {
     for (const fix of draft.fixes || []) {
+      const guidance = guidanceByLabel[fix.label] || {
+        field: "unknown",
+        howToFix: fix.fix,
+        doneWhen: "Run the full control check and confirm this fix disappears.",
+      };
       items.push({
         draftId: draft.id,
         draftTitle: draft.title,
@@ -52,6 +135,10 @@ function buildFixItems(report) {
         label: fix.label,
         severity: fix.severity,
         fix: fix.fix,
+        field: guidance.field,
+        where: `${draft.draft} -> ${guidance.field}`,
+        howToFix: guidance.howToFix,
+        doneWhen: guidance.doneWhen,
         priority: priorityByLabel.get(fix.label) || 99,
       });
     }
@@ -101,7 +188,7 @@ function main() {
     fixes,
     nextAction:
       fixes.length > 0
-        ? `Start with: ${fixes[0].draftTitle} — ${fixes[0].fix}`
+        ? `Start with: ${fixes[0].draftTitle} — ${fixes[0].where}. ${fixes[0].howToFix}`
         : "No draft fixes are needed right now.",
     guarantee:
       "Read-only fix planning. This script only reads the draft quality report and writes a local fix list. It does not edit drafts, publish files, commit, push, or deploy.",

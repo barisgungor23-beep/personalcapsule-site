@@ -966,7 +966,9 @@ function renderDraftFixList(report) {
                   (item) => `
                     <div class="${item.severity === "blocker" ? "needs-review" : "passed"}">
                       <strong>${escapeHtml(item.draftTitle)} · ${escapeHtml(item.label)}</strong>
-                      <span>${escapeHtml(item.severity)} · ${escapeHtml(item.fix)}</span>
+                      <span>${escapeHtml(item.severity)} · ${escapeHtml(item.where || item.draftPath || "")}</span>
+                      <span>${escapeHtml(item.howToFix || item.fix)}</span>
+                      <span>Done when: ${escapeHtml(item.doneWhen || "Run the full control check and confirm this fix disappears.")}</span>
                     </div>`
                 )
                 .join("")
