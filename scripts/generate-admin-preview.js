@@ -1536,7 +1536,14 @@ function renderAdminActionFlow(report) {
             (item) => `
               <div class="${item.buttonMode === "manual_confirm_required" ? "needs-review" : "passed"}">
                 <strong>${escapeHtml(item.label)} · ${escapeHtml(item.phase)}</strong>
-                <span>${escapeHtml(item.command)}</span>
+                <span class="command-line">${escapeHtml(item.command)}</span>
+                <span class="command-actions">
+                  ${
+                    item.buttonMode === "copy_command"
+                      ? `<button class="mini-btn" type="button" data-copy-command="${escapeHtml(item.command)}">Copy command</button>`
+                      : `<b>Manual confirmation required</b>`
+                  }
+                </span>
                 <span>${escapeHtml(item.buttonMode)} · ${escapeHtml(item.safety)}</span>
                 <span>${escapeHtml(item.enabledWhen)}</span>
                 <span>Next: ${escapeHtml(item.nextCheck)}</span>
@@ -4074,6 +4081,31 @@ function render(model) {
       cursor: pointer;
     }
     .mini-btn:hover { border-color: rgba(216,178,90,.55); background: rgba(216,178,90,.13); }
+    .command-line {
+      display: block;
+      padding: 9px 10px;
+      border-radius: 9px;
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,247,230,.08);
+      color: var(--cream);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+    }
+    .command-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .command-actions b {
+      color: var(--warn);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
     .result-count {
       align-self: end;
       min-height: 42px;
@@ -4715,9 +4747,38 @@ function render(model) {
     const resetEditorButton = document.getElementById("resetEditorButton");
     const draftPatchOutput = document.getElementById("draftPatchOutput");
     const rows = Array.from(document.querySelectorAll("[data-article-row]"));
+    const commandButtons = Array.from(document.querySelectorAll("[data-copy-command]"));
     let selectedArticle = null;
     let currentPatchJson = "";
     let currentPatchFilename = "personalcapsule-draft-patch.json";
+
+    async function copyText(text) {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+          return true;
+        }
+      } catch (_) {
+        // Use the textarea fallback below.
+      }
+
+      const temp = document.createElement("textarea");
+      temp.value = text;
+      temp.setAttribute("readonly", "");
+      temp.style.position = "fixed";
+      temp.style.left = "-9999px";
+      document.body.appendChild(temp);
+      temp.focus();
+      temp.select();
+      let copied = false;
+      try {
+        copied = document.execCommand("copy");
+      } catch (_) {
+        copied = false;
+      }
+      temp.remove();
+      return copied;
+    }
 
     function esc(value) {
       return String(value)
@@ -4971,14 +5032,10 @@ function render(model) {
         return;
       }
 
-      try {
-        if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(currentPatchJson);
-          draftPatchOutput.value = currentPatchJson + "\\n\\nCopy status: copied to clipboard.";
-          return;
-        }
-      } catch (_) {
-        // Use the manual fallback below.
+      const copied = await copyText(currentPatchJson);
+      if (copied) {
+        draftPatchOutput.value = currentPatchJson + "\\n\\nCopy status: copied to clipboard.";
+        return;
       }
 
       draftPatchOutput.value = currentPatchJson + "\\n\\nCopy status: select all text in this box and copy manually.";
@@ -5033,6 +5090,16 @@ function render(model) {
     copyPatchButton.addEventListener("click", copyDraftPatch);
     downloadPatchButton.addEventListener("click", downloadDraftPatch);
     resetEditorButton.addEventListener("click", resetEditor);
+    commandButtons.forEach((button) => {
+      button.addEventListener("click", async () => {
+        const original = button.textContent;
+        const copied = await copyText(button.dataset.copyCommand || "");
+        button.textContent = copied ? "Copied" : "Select command manually";
+        setTimeout(() => {
+          button.textContent = original;
+        }, 1600);
+      });
+    });
   </script>
 </body>
 </html>`;
