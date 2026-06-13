@@ -2833,6 +2833,19 @@ function render(model) {
       gap: 8px;
       padding: 14px 18px 0;
     }
+    .editor-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 14px 18px 0;
+    }
+    .patch-output {
+      margin: 0 18px 18px;
+      min-height: 150px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      color: var(--muted);
+    }
     .block-preview {
       display: grid;
       gap: 8px;
@@ -3090,11 +3103,11 @@ function render(model) {
 
           <section class="panel">
             <div class="panel-head">
-              <h2>Read-only Editor</h2>
-              <small>Form preview</small>
+              <h2>Draft Edit Form v1</h2>
+              <small>Local form only</small>
             </div>
             <div class="editor-legend">
-              <span class="field-mode editable">Editable later</span>
+              <span class="field-mode editable">Editable</span>
               <span class="field-mode controlled">Controlled</span>
               <span class="field-mode generated">Generated</span>
               <span class="field-mode locked">Locked</span>
@@ -3102,10 +3115,15 @@ function render(model) {
             <div class="editor-grid" id="articleEditor">
               <label class="field wide">
                 <span class="field-head"><span>No article selected</span><span class="field-mode readonly">Read-only</span></span>
-                <textarea readonly>Select an article from the table to preview how the future editor form will read its JSON fields.</textarea>
+                <textarea readonly>Select an article from the table to preview and locally edit safe draft fields.</textarea>
               </label>
             </div>
-            <p class="editor-help">This editor preview is intentionally read-only. It does not save, publish, delete, commit or deploy anything.</p>
+            <div class="editor-actions">
+              <button class="mini-btn" type="button" id="buildPatchButton">Build draft patch</button>
+              <button class="mini-btn" type="button" id="resetEditorButton">Reset form</button>
+            </div>
+            <p class="editor-help">This Draft Edit Form v1 only edits values inside this browser preview. It does not save, publish, delete, commit or deploy anything.</p>
+            <textarea class="patch-output" id="draftPatchOutput" readonly>Local draft patch will appear here after you select an article and click Build draft patch.</textarea>
           </section>
 
           <section class="panel">
@@ -3172,7 +3190,11 @@ function render(model) {
     const articleCount = document.getElementById("articleCount");
     const detail = document.getElementById("articleDetail");
     const editor = document.getElementById("articleEditor");
+    const buildPatchButton = document.getElementById("buildPatchButton");
+    const resetEditorButton = document.getElementById("resetEditorButton");
+    const draftPatchOutput = document.getElementById("draftPatchOutput");
     const rows = Array.from(document.querySelectorAll("[data-article-row]"));
+    let selectedArticle = null;
 
     function esc(value) {
       return String(value)
@@ -3268,15 +3290,17 @@ function render(model) {
       const wide = options.wide ? " wide" : "";
       const multiline = options.multiline;
       const mode = rule.mode || options.mode || "locked";
+      const isEditable = mode === "editable";
       const modeLabel = options.modeLabel || labelForMode(mode);
       const safeLabel = esc(rule.label || label);
       const safeValue = esc(value || "");
       const head = "<span class='field-head'><span>" + safeLabel + "</span><span class='field-mode " + esc(mode) + "'>" + esc(modeLabel) + "</span></span>";
       const help = rule.why ? "<small>" + esc(rule.why) + "</small>" : "";
+      const editAttrs = isEditable ? " data-edit-key='" + esc(key) + "'" : " readonly";
       if (multiline) {
-        return "<label class='field" + wide + "'>" + head + "<textarea readonly>" + safeValue + "</textarea>" + help + "</label>";
+        return "<label class='field" + wide + "'>" + head + "<textarea" + editAttrs + ">" + safeValue + "</textarea>" + help + "</label>";
       }
-      return "<label class='field" + wide + "'>" + head + "<input readonly value=\\"" + safeValue + "\\">" + help + "</label>";
+      return "<label class='field" + wide + "'>" + head + "<input" + editAttrs + " value=\\"" + safeValue + "\\">" + help + "</label>";
     }
 
     function renderBlocks(blocks) {
@@ -3296,6 +3320,7 @@ function render(model) {
 
     function renderEditor(article) {
       const keywordText = Array.isArray(article.keywords) ? article.keywords.join(", ") : "";
+      selectedArticle = article;
       editor.innerHTML = [
         field("id", "Internal ID", article.id),
         field("status", "Status", article.status),
@@ -3313,6 +3338,56 @@ function render(model) {
         field("qualityScore", "Quality score", article.qualityStatus + " · " + article.qualityScore, { mode: "generated" }),
         "<div class='field wide'><span class='field-head'><span>Body blocks</span><span class='field-mode " + esc(ruleFor("body").mode || "editable") + "'>" + esc(labelForMode(ruleFor("body").mode || "editable")) + "</span></span><div class='block-preview'>" + renderBlocks(article.body) + "</div><small>" + esc(ruleFor("body").why || "") + "</small></div>"
       ].join("");
+      draftPatchOutput.value = "Edit safe fields, then click Build draft patch. Body blocks remain preview-only in v1.";
+    }
+
+    function parsePatchValue(key, value) {
+      if (key === "keywords") {
+        return value.split(",").map((item) => item.trim()).filter(Boolean);
+      }
+      return value;
+    }
+
+    function buildDraftPatch() {
+      if (!selectedArticle) {
+        draftPatchOutput.value = "Select an article first.";
+        return;
+      }
+
+      const changedFields = {};
+      const editableFields = Array.from(editor.querySelectorAll("[data-edit-key]"));
+
+      for (const control of editableFields) {
+        const key = control.dataset.editKey;
+        const current = control.value;
+        const originalValue = key === "keywords" && Array.isArray(selectedArticle.keywords)
+          ? selectedArticle.keywords.join(", ")
+          : String(selectedArticle[key] || "");
+
+        if (current !== originalValue) {
+          changedFields[key] = parsePatchValue(key, current);
+        }
+      }
+
+      const patch = {
+        mode: "local_draft_patch_v1",
+        articleId: selectedArticle.id,
+        title: selectedArticle.title,
+        sourcePath: "content/articles/" + selectedArticle.id + ".json",
+        safety: "This patch is not automatically saved. Apply it only to a draft file after human review.",
+        changedFieldCount: Object.keys(changedFields).length,
+        changedFields,
+      };
+
+      draftPatchOutput.value = JSON.stringify(patch, null, 2);
+    }
+
+    function resetEditor() {
+      if (!selectedArticle) {
+        draftPatchOutput.value = "Select an article first.";
+        return;
+      }
+      renderEditor(selectedArticle);
     }
 
     searchInput.addEventListener("input", applyFilters);
@@ -3325,10 +3400,14 @@ function render(model) {
       if (!button) return;
       const article = articleById.get(button.dataset.detailId);
       if (article) {
+        selectedArticle = article;
         renderDetail(article);
         renderEditor(article);
       }
     });
+
+    buildPatchButton.addEventListener("click", buildDraftPatch);
+    resetEditorButton.addEventListener("click", resetEditor);
   </script>
 </body>
 </html>`;
