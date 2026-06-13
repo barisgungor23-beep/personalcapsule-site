@@ -49,6 +49,8 @@ function main() {
       "Freshness check",
       "Admin Failure Playbook",
       "Failure response",
+      "Admin Dependency Map",
+      "Dependency map",
       "Control Center",
       "Admin Quick Start",
       "Safest default",

@@ -211,6 +211,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "build_admin_dependency_map",
+    label: "Build admin dependency map",
+    command: ["node", "scripts/build-admin-dependency-map.js"],
+    kind: "audit",
+  },
+  {
     id: "audit_admin_read_model",
     label: "Audit admin read model",
     command: ["node", "scripts/audit-admin-read-model.js"],

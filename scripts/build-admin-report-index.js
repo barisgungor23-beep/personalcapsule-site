@@ -12,6 +12,7 @@ const reports = [
   ["control", "Full control report", "control-report.json"],
   ["system_overview", "Admin system overview", "admin-system-overview-report.json"],
   ["failure_playbook", "Admin failure playbook", "admin-failure-playbook-report.json"],
+  ["dependency_map", "Admin dependency map", "admin-dependency-map-report.json"],
   ["quick_start", "Admin quick start", "admin-quick-start-report.json"],
   ["command_guide", "Admin command guide", "admin-command-guide-report.json"],
   ["operations_manual", "Admin operations manual", "admin-operations-manual-report.json"],
