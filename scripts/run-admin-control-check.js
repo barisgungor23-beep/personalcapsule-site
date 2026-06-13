@@ -121,6 +121,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "build_admin_action_flow",
+    label: "Build admin action flow",
+    command: ["node", "scripts/build-admin-action-flow.js"],
+    kind: "audit",
+  },
+  {
     id: "compare_article_drafts",
     label: "Compare article drafts",
     command: ["node", "scripts/compare-article-drafts.js"],

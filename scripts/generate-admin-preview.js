@@ -14,6 +14,7 @@ const ADMIN_DEPENDENCY_MAP_FILE = path.join(ROOT, "outputs", "admin", "admin-dep
 const ADMIN_REPORT_DETAIL_VIEWER_FILE = path.join(ROOT, "outputs", "admin", "admin-report-detail-viewer-report.json");
 const ADMIN_SYSTEM_OVERVIEW_FILE = path.join(ROOT, "outputs", "admin", "admin-system-overview-report.json");
 const ADMIN_COMMAND_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "admin-command-guide-report.json");
+const ADMIN_ACTION_FLOW_FILE = path.join(ROOT, "outputs", "admin", "admin-action-flow-report.json");
 const GIT_STATUS_FILE = path.join(ROOT, "outputs", "admin", "git-status-report.json");
 const PUSH_PACKAGE_FILE = path.join(ROOT, "outputs", "admin", "push-package-report.json");
 const DEPLOYMENT_READINESS_FILE = path.join(ROOT, "outputs", "admin", "deployment-readiness-report.json");
@@ -214,6 +215,15 @@ function readAdminCommandGuide() {
   if (!fs.existsSync(ADMIN_COMMAND_GUIDE_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(ADMIN_COMMAND_GUIDE_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readAdminActionFlow() {
+  if (!fs.existsSync(ADMIN_ACTION_FLOW_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(ADMIN_ACTION_FLOW_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -1080,6 +1090,68 @@ function renderAdminCommandGuide(report) {
             (item, index) => `
               <div class="workflow-step">
                 <strong>${index + 1}. Command safety rule</strong>
+                <span>${escapeHtml(item)}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+    </section>`;
+}
+
+function renderAdminActionFlow(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Admin Action Flow</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No action flow yet</strong>
+            <span>Run node scripts/build-admin-action-flow.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const actions = Array.isArray(report.actions) ? report.actions : [];
+  const rules = Array.isArray(report.rules) ? report.rules : [];
+  const statusClassName = summary.status === "passed" ? "good" : "bad";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Admin Action Flow</h2>
+        <span class="pill ${statusClassName}">${escapeHtml(summary.status || "unknown")}</span>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Actions</span><strong>${escapeHtml(summary.actions || 0)}</strong></div>
+        <div class="detail-stat"><span>Copy</span><strong>${escapeHtml(summary.copyCommandActions || 0)}</strong></div>
+        <div class="detail-stat"><span>Manual</span><strong>${escapeHtml(summary.manualConfirmActions || 0)}</strong></div>
+        <div class="detail-stat"><span>High risk</span><strong>${escapeHtml(summary.highRiskActions || 0)}</strong></div>
+      </div>
+      <div class="mini-list action-flow-list">
+        ${actions
+          .map(
+            (item) => `
+              <div class="${item.buttonMode === "manual_confirm_required" ? "needs-review" : "passed"}">
+                <strong>${escapeHtml(item.label)} · ${escapeHtml(item.phase)}</strong>
+                <span>${escapeHtml(item.command)}</span>
+                <span>${escapeHtml(item.buttonMode)} · ${escapeHtml(item.safety)}</span>
+                <span>${escapeHtml(item.enabledWhen)}</span>
+                <span>Next: ${escapeHtml(item.nextCheck)}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+      <div class="workflow-list">
+        ${rules
+          .map(
+            (item, index) => `
+              <div class="workflow-step">
+                <strong>${index + 1}. Action button rule</strong>
                 <span>${escapeHtml(item)}</span>
               </div>`
           )
@@ -2303,6 +2375,7 @@ function render(model) {
   const adminReportDetailViewer = readAdminReportDetailViewer();
   const adminSystemOverview = readAdminSystemOverview();
   const adminCommandGuide = readAdminCommandGuide();
+  const adminActionFlow = readAdminActionFlow();
   const gitStatusReport = readGitStatusReport();
   const pushPackageReport = readPushPackageReport();
   const deploymentReadiness = readDeploymentReadiness();
@@ -2964,6 +3037,7 @@ function render(model) {
           `
             ${renderAdminQuickStart(adminQuickStart)}
             ${renderAdminCommandGuide(adminCommandGuide)}
+            ${renderAdminActionFlow(adminActionFlow)}
             ${renderAdminOperationsManual(adminOperationsManual)}
           `
         )}

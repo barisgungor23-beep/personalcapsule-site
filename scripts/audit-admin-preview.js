@@ -65,6 +65,8 @@ function main() {
       "Focus area",
       "Admin Command Guide",
       "Command safety rule",
+      "Admin Action Flow",
+      "Action button rule",
       "Git Status / Push Safety",
       "Push safety rule",
       "Push Package",
