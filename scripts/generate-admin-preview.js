@@ -34,6 +34,7 @@ const DRAFT_FIX_LIST_FILE = path.join(ROOT, "outputs", "admin", "draft-fix-list-
 const DRAFT_EDIT_PLAN_FILE = path.join(ROOT, "outputs", "admin", "draft-edit-plan-report.json");
 const DRAFT_EDIT_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "draft-edit-guide-report.json");
 const DRAFT_PATCH_APPLY_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "draft-patch-apply-guide-report.json");
+const DRAFT_PATCH_EXPORT_CENTER_FILE = path.join(ROOT, "outputs", "admin", "draft-patch-export-center-report.json");
 const PUBLISH_READINESS_FILE = path.join(ROOT, "outputs", "admin", "publish-readiness-report.json");
 const PUBLISH_DRY_RUN_FILE = path.join(ROOT, "outputs", "admin", "publish-dry-run-report.json");
 const PUBLISH_ROLLBACK_FILE = path.join(ROOT, "outputs", "admin", "publish-rollback-plan.json");
@@ -406,6 +407,15 @@ function readDraftPatchApplyGuideReport() {
   if (!fs.existsSync(DRAFT_PATCH_APPLY_GUIDE_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(DRAFT_PATCH_APPLY_GUIDE_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readDraftPatchExportCenter() {
+  if (!fs.existsSync(DRAFT_PATCH_EXPORT_CENTER_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(DRAFT_PATCH_EXPORT_CENTER_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -3153,6 +3163,85 @@ function renderDraftPatchApplyGuide(report) {
     </section>`;
 }
 
+function renderDraftPatchExportCenter(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Draft Patch Export Center</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No patch export center yet</strong>
+            <span>Run node scripts/build-draft-patch-export-center.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const contract = report.exportContract || {};
+  const safeActions = Array.isArray(report.safeActions) ? report.safeActions : [];
+  const requiredReviewSteps = Array.isArray(report.requiredReviewSteps) ? report.requiredReviewSteps : [];
+  const redFlags = Array.isArray(report.redFlags) ? report.redFlags : [];
+  const statusClassName = summary.status === "failed" ? "bad" : summary.status === "passed" ? "good" : "warn";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Draft Patch Export Center</h2>
+        <span class="pill ${statusClassName}">${escapeHtml(summary.exportMode || "unknown")}</span>
+      </div>
+      <div class="health">
+        <div class="${summary.status === "failed" ? "issue bad" : "empty"}">
+          <strong>Patch export rule</strong>
+          <span>${escapeHtml(contract.rule || "Exported patch files are instructions for private drafts only.")}</span>
+        </div>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Format</span><strong>${escapeHtml(contract.format || "JSON")}</strong></div>
+        <div class="detail-stat"><span>Patch mode</span><strong>${escapeHtml(summary.requiredPatchMode || "unknown")}</strong></div>
+        <div class="detail-stat"><span>Active drafts</span><strong>${escapeHtml(summary.activeDrafts || 0)}</strong></div>
+        <div class="detail-stat"><span>Warnings</span><strong>${escapeHtml(summary.warnings || 0)}</strong></div>
+      </div>
+      <div class="workflow-gates">
+        ${safeActions
+          .map(
+            (item) => `
+              <div class="workflow-gate passed">
+                <div>
+                  <strong>${escapeHtml(item.label)}</strong>
+                  <span>${escapeHtml(item.detail)}</span>
+                </div>
+                <small>safe</small>
+              </div>`
+          )
+          .join("")}
+      </div>
+      <div class="workflow-list">
+        <div class="workflow-step">
+          <strong>Filename pattern</strong>
+          <span>${escapeHtml(contract.filenamePattern || "personalcapsule-draft-patch-{article-id}.json")}</span>
+        </div>
+        ${requiredReviewSteps
+          .map(
+            (item, index) => `
+              <div class="workflow-step">
+                <strong>${index + 1}. Required review</strong>
+                <span>${escapeHtml(item)}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+      <div class="mini-list">
+        ${redFlags
+          .map((item) => `<div class="needs-review"><strong>Red flag</strong><span>${escapeHtml(item)}</span></div>`)
+          .join("")}
+      </div>
+    </section>`;
+}
+
 function renderPublishWorkflow() {
   const steps = [
     ["Create Draft", "Published content is copied into a private draft file."],
@@ -3375,6 +3464,7 @@ function render(model) {
   const draftEditPlanReport = readDraftEditPlanReport();
   const draftEditGuideReport = readDraftEditGuideReport();
   const draftPatchApplyGuideReport = readDraftPatchApplyGuideReport();
+  const draftPatchExportCenter = readDraftPatchExportCenter();
   const publishReadinessReport = readPublishReadinessReport();
   const publishDryRunReport = readPublishDryRunReport();
   const publishRollbackPlan = readPublishRollbackPlan();
@@ -4337,6 +4427,7 @@ function render(model) {
             ${renderDraftEditPlan(draftEditPlanReport)}
             ${renderDraftEditGuide(draftEditGuideReport)}
             ${renderDraftPatchApplyGuide(draftPatchApplyGuideReport)}
+            ${renderDraftPatchExportCenter(draftPatchExportCenter)}
             ${renderDraftComparison(draftComparisonReport)}
             ${renderPublishWorkflow()}
             ${renderNewArticleWorkflow(model.categories)}
@@ -4456,9 +4547,11 @@ function render(model) {
             </div>
             <div class="editor-actions">
               <button class="mini-btn" type="button" id="buildPatchButton">Build draft patch</button>
+              <button class="mini-btn" type="button" id="copyPatchButton">Copy patch JSON</button>
+              <button class="mini-btn" type="button" id="downloadPatchButton">Download patch JSON</button>
               <button class="mini-btn" type="button" id="resetEditorButton">Reset form</button>
             </div>
-            <p class="editor-help">This Draft Edit Form v1 only edits values inside this browser preview. Patch targets a draft file, never a published article file. It does not save, publish, delete, commit or deploy anything.</p>
+            <p class="editor-help">This Draft Edit Form v1 only edits values inside this browser preview. Patch targets a draft file, never a published article file. It does not save, publish, delete, commit or deploy anything. Copy/download exports the patch JSON for manual review only.</p>
             <textarea class="patch-output" id="draftPatchOutput" readonly>Local draft patch will appear here after you select an article and click Build draft patch. Apply it only to a draft file after human review.</textarea>
           </section>
 
@@ -4527,10 +4620,14 @@ function render(model) {
     const detail = document.getElementById("articleDetail");
     const editor = document.getElementById("articleEditor");
     const buildPatchButton = document.getElementById("buildPatchButton");
+    const copyPatchButton = document.getElementById("copyPatchButton");
+    const downloadPatchButton = document.getElementById("downloadPatchButton");
     const resetEditorButton = document.getElementById("resetEditorButton");
     const draftPatchOutput = document.getElementById("draftPatchOutput");
     const rows = Array.from(document.querySelectorAll("[data-article-row]"));
     let selectedArticle = null;
+    let currentPatchJson = "";
+    let currentPatchFilename = "personalcapsule-draft-patch.json";
 
     function esc(value) {
       return String(value)
@@ -4675,6 +4772,8 @@ function render(model) {
         "<div class='field wide'><span class='field-head'><span>Body blocks</span><span class='field-mode " + esc(ruleFor("body").mode || "editable") + "'>" + esc(labelForMode(ruleFor("body").mode || "editable")) + "</span></span><div class='block-preview'>" + renderBlocks(article.body) + "</div><small>" + esc(ruleFor("body").why || "") + "</small></div>"
       ].join("");
       draftPatchOutput.value = "Edit safe fields, then click Build draft patch. Patch targets a draft file, never a published article file. Body blocks remain preview-only in v1.";
+      currentPatchJson = "";
+      currentPatchFilename = "personalcapsule-draft-patch-" + article.id + ".json";
     }
 
     function parsePatchValue(key, value) {
@@ -4733,9 +4832,13 @@ function render(model) {
 
       const changedFieldCount = Object.keys(changedFields).length;
       const targetDraftPath = "content/drafts/articles/" + selectedArticle.id + ".draft.json";
+      const patchFilename = "personalcapsule-draft-patch-" + selectedArticle.id + ".json";
 
       const patch = {
         mode: "local_draft_patch_v2",
+        exportMode: "browser_patch_export_v1",
+        exportedAt: new Date().toISOString(),
+        suggestedFilename: patchFilename,
         articleId: selectedArticle.id,
         title: selectedArticle.title,
         sourceArticlePath: "content/articles/" + selectedArticle.id + ".json",
@@ -4760,12 +4863,56 @@ function render(model) {
             : [
                 "Create a private draft first if it does not already exist.",
                 "Apply these values only inside the target draft JSON.",
+                "Do not edit content/articles directly.",
+                "Keep this exported JSON as a review artifact, not as a publish command.",
                 "Run node scripts/run-admin-control-check.js.",
                 "Review draft preview, quality checks, and publish dry-run before marking ready.",
               ],
       };
 
-      draftPatchOutput.value = JSON.stringify(patch, null, 2);
+      currentPatchJson = JSON.stringify(patch, null, 2);
+      currentPatchFilename = patchFilename;
+      draftPatchOutput.value = currentPatchJson;
+    }
+
+    async function copyDraftPatch() {
+      if (!currentPatchJson) {
+        draftPatchOutput.value = "Build a draft patch first, then copy it.";
+        return;
+      }
+
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(currentPatchJson);
+          draftPatchOutput.value = currentPatchJson + "\\n\\nCopy status: copied to clipboard.";
+          return;
+        }
+      } catch (_) {
+        // Use the manual fallback below.
+      }
+
+      draftPatchOutput.value = currentPatchJson + "\\n\\nCopy status: select all text in this box and copy manually.";
+      draftPatchOutput.focus();
+      draftPatchOutput.select();
+      draftPatchOutput.setSelectionRange(0, draftPatchOutput.value.length);
+    }
+
+    function downloadDraftPatch() {
+      if (!currentPatchJson) {
+        draftPatchOutput.value = "Build a draft patch first, then download it.";
+        return;
+      }
+
+      const blob = new Blob([currentPatchJson + "\\n"], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = currentPatchFilename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      draftPatchOutput.value = currentPatchJson + "\\n\\nDownload status: downloaded " + currentPatchFilename + ".";
     }
 
     function resetEditor() {
@@ -4793,6 +4940,8 @@ function render(model) {
     });
 
     buildPatchButton.addEventListener("click", buildDraftPatch);
+    copyPatchButton.addEventListener("click", copyDraftPatch);
+    downloadPatchButton.addEventListener("click", downloadDraftPatch);
     resetEditorButton.addEventListener("click", resetEditor);
   </script>
 </body>
