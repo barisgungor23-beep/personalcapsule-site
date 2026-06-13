@@ -72,6 +72,8 @@ function main() {
       "Command safety rule",
       "Admin Action Flow",
       "Action button rule",
+      "Admin Command Risk Matrix",
+      "Command risk rule",
       "Git Status / Push Safety",
       "Push safety rule",
       "Push Package",

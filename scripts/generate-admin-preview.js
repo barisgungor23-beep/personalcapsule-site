@@ -17,6 +17,7 @@ const ADMIN_HOME_BRIEF_FILE = path.join(ROOT, "outputs", "admin", "admin-home-br
 const ADMIN_DASHBOARD_SNAPSHOT_FILE = path.join(ROOT, "outputs", "admin", "admin-dashboard-snapshot-report.json");
 const ADMIN_COMMAND_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "admin-command-guide-report.json");
 const ADMIN_ACTION_FLOW_FILE = path.join(ROOT, "outputs", "admin", "admin-action-flow-report.json");
+const ADMIN_COMMAND_RISK_MATRIX_FILE = path.join(ROOT, "outputs", "admin", "admin-command-risk-matrix-report.json");
 const GIT_STATUS_FILE = path.join(ROOT, "outputs", "admin", "git-status-report.json");
 const PUSH_PACKAGE_FILE = path.join(ROOT, "outputs", "admin", "push-package-report.json");
 const DEPLOYMENT_READINESS_FILE = path.join(ROOT, "outputs", "admin", "deployment-readiness-report.json");
@@ -246,6 +247,15 @@ function readAdminActionFlow() {
   if (!fs.existsSync(ADMIN_ACTION_FLOW_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(ADMIN_ACTION_FLOW_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readAdminCommandRiskMatrix() {
+  if (!fs.existsSync(ADMIN_COMMAND_RISK_MATRIX_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(ADMIN_COMMAND_RISK_MATRIX_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -1319,6 +1329,68 @@ function renderAdminActionFlow(report) {
             (item, index) => `
               <div class="workflow-step">
                 <strong>${index + 1}. Action button rule</strong>
+                <span>${escapeHtml(item)}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+    </section>`;
+}
+
+function renderAdminCommandRiskMatrix(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Admin Command Risk Matrix</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No command risk matrix yet</strong>
+            <span>Run node scripts/build-admin-command-risk-matrix.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const matrix = Array.isArray(report.matrix) ? report.matrix : [];
+  const rules = Array.isArray(report.rules) ? report.rules : [];
+  const statusClassName = summary.status === "passed" && !summary.buttonModeMismatches ? "good" : "warn";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Admin Command Risk Matrix</h2>
+        <span class="pill ${statusClassName}">${escapeHtml(summary.status || "unknown")}</span>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Low</span><strong>${escapeHtml(summary.lowRisk || 0)}</strong></div>
+        <div class="detail-stat"><span>Medium</span><strong>${escapeHtml(summary.mediumRisk || 0)}</strong></div>
+        <div class="detail-stat"><span>High</span><strong>${escapeHtml(summary.highRisk || 0)}</strong></div>
+        <div class="detail-stat"><span>Critical</span><strong>${escapeHtml(summary.criticalRisk || 0)}</strong></div>
+      </div>
+      <div class="mini-list command-risk-matrix-list">
+        ${matrix
+          .map((item) => {
+            const needsReview = item.riskLevel === "critical" || item.riskLevel === "high" || item.buttonModeMatches === false;
+            return `
+              <div class="${needsReview ? "needs-review" : "passed"}">
+                <strong>${escapeHtml(item.label)} · ${escapeHtml(item.riskLevel)}</strong>
+                <span>${escapeHtml(item.command)}</span>
+                <span>${escapeHtml(item.panelMode)} · ${escapeHtml(item.safety)} · ${escapeHtml(item.changesFiles)}</span>
+                <span>${escapeHtml(item.guardrail)}</span>
+              </div>`;
+          })
+          .join("")}
+      </div>
+      <div class="workflow-list">
+        ${rules
+          .map(
+            (item, index) => `
+              <div class="workflow-step">
+                <strong>${index + 1}. Command risk rule</strong>
                 <span>${escapeHtml(item)}</span>
               </div>`
           )
@@ -2715,6 +2787,7 @@ function render(model) {
   const adminDashboardSnapshot = readAdminDashboardSnapshot();
   const adminCommandGuide = readAdminCommandGuide();
   const adminActionFlow = readAdminActionFlow();
+  const adminCommandRiskMatrix = readAdminCommandRiskMatrix();
   const gitStatusReport = readGitStatusReport();
   const pushPackageReport = readPushPackageReport();
   const deploymentReadiness = readDeploymentReadiness();
@@ -3496,6 +3569,7 @@ function render(model) {
             ${renderAdminQuickStart(adminQuickStart)}
             ${renderAdminCommandGuide(adminCommandGuide)}
             ${renderAdminActionFlow(adminActionFlow)}
+            ${renderAdminCommandRiskMatrix(adminCommandRiskMatrix)}
             ${renderAdminOperationsManual(adminOperationsManual)}
           `
         )}

@@ -19,6 +19,7 @@ const reports = [
   ["quick_start", "Admin quick start", "admin-quick-start-report.json"],
   ["command_guide", "Admin command guide", "admin-command-guide-report.json"],
   ["action_flow", "Admin action flow", "admin-action-flow-report.json"],
+  ["command_risk_matrix", "Admin command risk matrix", "admin-command-risk-matrix-report.json"],
   ["operations_manual", "Admin operations manual", "admin-operations-manual-report.json"],
   ["git_status", "Git status", "git-status-report.json"],
   ["push_package", "Push package", "push-package-report.json"],

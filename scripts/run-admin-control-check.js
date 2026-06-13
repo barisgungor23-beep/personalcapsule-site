@@ -133,6 +133,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "build_admin_command_risk_matrix",
+    label: "Build admin command risk matrix",
+    command: ["node", "scripts/build-admin-command-risk-matrix.js"],
+    kind: "audit",
+  },
+  {
     id: "compare_article_drafts",
     label: "Compare article drafts",
     command: ["node", "scripts/compare-article-drafts.js"],
