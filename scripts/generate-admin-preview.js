@@ -2275,6 +2275,19 @@ function renderEditorRules(rules) {
     </section>`;
 }
 
+function renderPanelGroup(title, description, body) {
+  return `
+    <section class="panel-group" aria-label="${escapeHtml(title)}">
+      <div class="group-head">
+        <strong>${escapeHtml(title)}</strong>
+        <span>${escapeHtml(description)}</span>
+      </div>
+      <div class="group-stack">
+        ${body}
+      </div>
+    </section>`;
+}
+
 function render(model) {
   const generated = new Date(model.generatedAt).toLocaleString("en-US", {
     dateStyle: "medium",
@@ -2382,6 +2395,35 @@ function render(model) {
       background: rgba(255,247,230,.04);
       border-radius: 16px;
       overflow: hidden;
+    }
+    .panel-group {
+      display: grid;
+      gap: 10px;
+      padding: 10px;
+      border: 1px solid rgba(216,178,90,.14);
+      background: rgba(0,0,0,.1);
+      border-radius: 18px;
+    }
+    .group-head {
+      display: grid;
+      gap: 3px;
+      padding: 4px 4px 0;
+    }
+    .group-head strong {
+      color: var(--gold);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      line-height: 1.2;
+    }
+    .group-head span {
+      color: var(--faint);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .group-stack {
+      display: grid;
+      gap: 10px;
     }
     .panel-head {
       display: flex;
@@ -2861,86 +2903,98 @@ function render(model) {
 
     <section class="layout">
       <aside class="stack">
-        <section class="panel">
-          <div class="panel-head">
-            <h2>Health</h2>
-            <span class="pill ${model.summary.seoWarnings === 0 ? "good" : "warn"}">${model.summary.seoWarnings === 0 ? "clean" : "review"}</span>
-          </div>
-          <div class="health">
-            ${renderHealthIssues(model)}
-          </div>
-        </section>
+        ${renderPanelGroup(
+          "System",
+          "Daily health, workflow status, and founder-level overview.",
+          `
+            <section class="panel">
+              <div class="panel-head">
+                <h2>Health</h2>
+                <span class="pill ${model.summary.seoWarnings === 0 ? "good" : "warn"}">${model.summary.seoWarnings === 0 ? "clean" : "review"}</span>
+              </div>
+              <div class="health">
+                ${renderHealthIssues(model)}
+              </div>
+            </section>
 
-        ${renderPublishWorkflowStatus({
-          model,
-          controlReport,
-          draftComparisonReport,
-          publishReadinessReport,
-          publishDryRunReport,
-          publishRollbackPlan,
-          backupSnapshotReport,
-          restoreDryRunReport,
-        })}
+            ${renderPublishWorkflowStatus({
+              model,
+              controlReport,
+              draftComparisonReport,
+              publishReadinessReport,
+              publishDryRunReport,
+              publishRollbackPlan,
+              backupSnapshotReport,
+              restoreDryRunReport,
+            })}
 
-        ${renderAdminSystemOverview(adminSystemOverview)}
+            ${renderAdminSystemOverview(adminSystemOverview)}
+            ${renderControlCenter(controlReport)}
+          `
+        )}
 
-        ${renderAdminReportIndex(adminReportIndex)}
+        ${renderPanelGroup(
+          "Reports",
+          "Report inventory, freshness, dependencies, and recovery context.",
+          `
+            ${renderAdminReportIndex(adminReportIndex)}
+            ${renderAdminReportFreshness(adminReportFreshness)}
+            ${renderAdminFailurePlaybook(adminFailurePlaybook)}
+            ${renderAdminDependencyMap(adminDependencyMap)}
+            ${renderAdminReportDetailViewer(adminReportDetailViewer)}
+          `
+        )}
 
-        ${renderAdminReportFreshness(adminReportFreshness)}
+        ${renderPanelGroup(
+          "Guides",
+          "Safe operating instructions and command references.",
+          `
+            ${renderAdminQuickStart(adminQuickStart)}
+            ${renderAdminCommandGuide(adminCommandGuide)}
+            ${renderAdminOperationsManual(adminOperationsManual)}
+          `
+        )}
 
-        ${renderAdminFailurePlaybook(adminFailurePlaybook)}
+        ${renderPanelGroup(
+          "Git / Deploy",
+          "Local Git state, push package, and Cloudflare deployment readiness.",
+          `
+            ${renderGitStatusReport(gitStatusReport)}
+            ${renderPushPackageReport(pushPackageReport)}
+            ${renderDeploymentReadiness(deploymentReadiness)}
+          `
+        )}
 
-        ${renderAdminDependencyMap(adminDependencyMap)}
+        ${renderPanelGroup(
+          "Publish Safety",
+          "Dry-run, backup, rollback, and restore checks before anything goes live.",
+          `
+            ${renderPublishReadiness(publishReadinessReport)}
+            ${renderPublishReport(publishReport)}
+            ${renderPublishDryRun(publishDryRunReport)}
+            ${renderPublishRollback(publishRollbackPlan)}
+            ${renderBackupSnapshot(backupSnapshotReport)}
+            ${renderPrePublishChecklist(prePublishChecklist)}
+            ${renderDraftPublishSimulationSummary(draftPublishSimulationSummary)}
+            ${renderRestoreDryRun(restoreDryRunReport)}
+            ${renderRestoreReport(restoreReport)}
+          `
+        )}
 
-        ${renderAdminReportDetailViewer(adminReportDetailViewer)}
-
-        ${renderControlCenter(controlReport)}
-
-        ${renderAdminQuickStart(adminQuickStart)}
-
-        ${renderAdminCommandGuide(adminCommandGuide)}
-
-        ${renderGitStatusReport(gitStatusReport)}
-
-        ${renderPushPackageReport(pushPackageReport)}
-
-        ${renderDeploymentReadiness(deploymentReadiness)}
-
-        ${renderAdminOperationsManual(adminOperationsManual)}
-
-        ${renderPublishReadiness(publishReadinessReport)}
-
-        ${renderPublishReport(publishReport)}
-
-        ${renderPublishDryRun(publishDryRunReport)}
-
-        ${renderPublishRollback(publishRollbackPlan)}
-
-        ${renderBackupSnapshot(backupSnapshotReport)}
-
-        ${renderPrePublishChecklist(prePublishChecklist)}
-
-        ${renderDraftPublishSimulationSummary(draftPublishSimulationSummary)}
-
-        ${renderRestoreDryRun(restoreDryRunReport)}
-
-        ${renderRestoreReport(restoreReport)}
-
-        ${renderDraftQuality(draftQualityReport)}
-
-        ${renderDraftFixList(draftFixListReport)}
-
-        ${renderDraftEditPlan(draftEditPlanReport)}
-
-        ${renderDraftEditGuide(draftEditGuideReport)}
-
-        ${renderDraftComparison(draftComparisonReport)}
-
-        ${renderPublishWorkflow()}
-
-        ${renderNewArticleWorkflow(model.categories)}
-
-        ${renderEditorRules(model.editorRules.article)}
+        ${renderPanelGroup(
+          "Drafts",
+          "Draft quality, edit guidance, comparison, and new article workflow.",
+          `
+            ${renderDraftQuality(draftQualityReport)}
+            ${renderDraftFixList(draftFixListReport)}
+            ${renderDraftEditPlan(draftEditPlanReport)}
+            ${renderDraftEditGuide(draftEditGuideReport)}
+            ${renderDraftComparison(draftComparisonReport)}
+            ${renderPublishWorkflow()}
+            ${renderNewArticleWorkflow(model.categories)}
+            ${renderEditorRules(model.editorRules.article)}
+          `
+        )}
 
         <section class="panel">
           <div class="panel-head">
