@@ -14,6 +14,7 @@ const reports = [
   ["home_brief", "Admin home brief", "admin-home-brief-report.json"],
   ["work_queue", "Admin work queue", "admin-work-queue-report.json"],
   ["dashboard_snapshot", "Admin dashboard snapshot", "admin-dashboard-snapshot-report.json"],
+  ["content_quality_decision", "Content quality decision", "content-quality-decision-report.json"],
   ["system_overview", "Admin system overview", "admin-system-overview-report.json"],
   ["failure_playbook", "Admin failure playbook", "admin-failure-playbook-report.json"],
   ["dependency_map", "Admin dependency map", "admin-dependency-map-report.json"],

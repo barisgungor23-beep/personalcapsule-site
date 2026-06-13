@@ -17,6 +17,7 @@ const FOUNDER_DECISION_CENTER_FILE = path.join(ROOT, "outputs", "admin", "founde
 const ADMIN_HOME_BRIEF_FILE = path.join(ROOT, "outputs", "admin", "admin-home-brief-report.json");
 const ADMIN_WORK_QUEUE_FILE = path.join(ROOT, "outputs", "admin", "admin-work-queue-report.json");
 const ADMIN_DASHBOARD_SNAPSHOT_FILE = path.join(ROOT, "outputs", "admin", "admin-dashboard-snapshot-report.json");
+const CONTENT_QUALITY_DECISION_FILE = path.join(ROOT, "outputs", "admin", "content-quality-decision-report.json");
 const ADMIN_COMMAND_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "admin-command-guide-report.json");
 const ADMIN_ACTION_FLOW_FILE = path.join(ROOT, "outputs", "admin", "admin-action-flow-report.json");
 const ADMIN_WORKFLOW_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "admin-workflow-guide-report.json");
@@ -256,6 +257,15 @@ function readAdminDashboardSnapshot() {
   if (!fs.existsSync(ADMIN_DASHBOARD_SNAPSHOT_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(ADMIN_DASHBOARD_SNAPSHOT_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readContentQualityDecision() {
+  if (!fs.existsSync(CONTENT_QUALITY_DECISION_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(CONTENT_QUALITY_DECISION_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -1133,6 +1143,109 @@ function renderAdminDashboardSnapshot(report) {
               <div class="workflow-step">
                 <strong>${index + 1}. Useful command</strong>
                 <span>${escapeHtml(item.label)}: ${escapeHtml(item.command)}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+    </section>`;
+}
+
+function renderContentQualityDecision(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>SEO / GEO Content Decision</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No content quality decision yet</strong>
+            <span>Run node scripts/build-content-quality-decision.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const geoSignals = Array.isArray(report.geoSignals) ? report.geoSignals : [];
+  const suggestedBatch = Array.isArray(report.suggestedBatch) ? report.suggestedBatch : [];
+  const doNow = Array.isArray(report.doNow) ? report.doNow : [];
+  const doNot = Array.isArray(report.doNot) ? report.doNot : [];
+  const statusClassName = summary.status === "blocked" ? "bad" : summary.status === "review" ? "warn" : "good";
+
+  return `
+    <section class="panel content-quality-decision-panel">
+      <div class="panel-head">
+        <h2>SEO / GEO Content Decision</h2>
+        <span class="pill ${statusClassName}">${escapeHtml(summary.status || "unknown")}</span>
+      </div>
+      <div class="health">
+        <div class="${summary.status === "blocked" ? "issue bad" : summary.status === "review" ? "issue warn" : "empty"}">
+          <strong>${escapeHtml(report.founderAnswer || "Review content quality before the next content move.")}</strong>
+          <span>${escapeHtml(report.plainMeaning || "This card turns article quality signals into a simple content decision.")}</span>
+        </div>
+      </div>
+      <div class="workflow-list">
+        <div class="workflow-step">
+          <strong>Recommended action</strong>
+          <span>${escapeHtml(report.recommendedAction || "Wait, observe, and edit only when a clear opportunity appears.")}</span>
+        </div>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Articles</span><strong>${escapeHtml(summary.articles || 0)}</strong></div>
+        <div class="detail-stat"><span>Good</span><strong>${escapeHtml(summary.good || 0)}</strong></div>
+        <div class="detail-stat"><span>Review</span><strong>${escapeHtml(summary.review || 0)}</strong></div>
+        <div class="detail-stat"><span>Risk</span><strong>${escapeHtml(summary.risk || 0)}</strong></div>
+        <div class="detail-stat"><span>Missing FAQ</span><strong>${escapeHtml(summary.missingFaq || 0)}</strong></div>
+        <div class="detail-stat"><span>Missing CTA</span><strong>${escapeHtml(summary.missingCta || 0)}</strong></div>
+      </div>
+      <div class="workflow-gates">
+        ${geoSignals
+          .map(
+            (item) => `
+              <div class="workflow-gate ${item.status === "good" ? "passed" : "needs-review"}">
+                <div>
+                  <strong>${escapeHtml(item.label)}</strong>
+                  <span>${escapeHtml(item.meaning)}</span>
+                </div>
+                <small>${escapeHtml(item.status)}</small>
+              </div>`
+          )
+          .join("")}
+      </div>
+      <div class="mini-list">
+        ${
+          suggestedBatch.length
+            ? suggestedBatch
+                .map(
+                  (article) => `
+                    <div class="needs-review">
+                      <strong>${escapeHtml(article.title)}</strong>
+                      <span>${escapeHtml(article.category)} · score ${escapeHtml(article.score)} · ${escapeHtml(article.issues.join(", "))}</span>
+                      <span>${escapeHtml(article.suggestedFix)}</span>
+                    </div>`
+                )
+                .join("")
+            : `<div class="passed"><strong>No urgent article fixes</strong><span>There is no suggested improvement batch right now.</span></div>`
+        }
+      </div>
+      <div class="workflow-list">
+        ${doNow
+          .map(
+            (item, index) => `
+              <div class="workflow-step">
+                <strong>${index + 1}. Do now</strong>
+                <span>${escapeHtml(item)}</span>
+              </div>`
+          )
+          .join("")}
+        ${doNot
+          .map(
+            (item, index) => `
+              <div class="workflow-step">
+                <strong>${index + 1}. Do not</strong>
+                <span>${escapeHtml(item)}</span>
               </div>`
           )
           .join("")}
@@ -3646,6 +3759,7 @@ function render(model) {
   const adminHomeBrief = readAdminHomeBrief();
   const adminWorkQueue = readAdminWorkQueue();
   const adminDashboardSnapshot = readAdminDashboardSnapshot();
+  const contentQualityDecision = readContentQualityDecision();
   const adminCommandGuide = readAdminCommandGuide();
   const adminActionFlow = readAdminActionFlow();
   const adminWorkflowGuide = readAdminWorkflowGuide();
@@ -4684,6 +4798,7 @@ function render(model) {
       </aside>
 
       <div id="content-section" class="stack admin-anchor">
+        ${renderContentQualityDecision(contentQualityDecision)}
         <section class="panel">
           <div class="panel-head">
             <h2>Blog articles</h2>

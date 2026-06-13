@@ -16,6 +16,12 @@ const steps = [
     kind: "generate",
   },
   {
+    id: "build_content_quality_decision",
+    label: "Build content quality decision",
+    command: ["node", "scripts/build-content-quality-decision.js"],
+    kind: "audit",
+  },
+  {
     id: "generate_article_previews",
     label: "Generate article previews",
     command: ["node", "scripts/generate-article-preview.js", "--all"],
