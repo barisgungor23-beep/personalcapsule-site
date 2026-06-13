@@ -73,6 +73,8 @@ function main() {
       "Rollback Plan",
       "Backup Snapshot",
       "Pre-Publish Checklist",
+      "Draft Publish Simulation",
+      "Publish simulation",
       "Restore Dry Run",
       "Restore Result",
       "Draft Quality",

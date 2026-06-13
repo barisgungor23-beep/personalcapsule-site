@@ -30,6 +30,7 @@ const reports = [
   ["publish_rollback", "Publish rollback plan", "publish-rollback-plan.json"],
   ["backup_dry_run", "Backup snapshot dry run", "backup-snapshot-dry-run-report.json"],
   ["pre_publish", "Pre-publish checklist", "pre-publish-checklist-report.json"],
+  ["draft_publish_simulation", "Draft publish simulation summary", "draft-publish-simulation-summary-report.json"],
   ["restore_dry_run", "Restore dry run", "restore-backup-dry-run-report.json"],
   ["publish_result", "Publish result", "publish-report.json"],
   ["restore_result", "Restore result", "restore-backup-report.json"],

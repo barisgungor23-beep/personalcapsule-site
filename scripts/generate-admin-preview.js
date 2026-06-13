@@ -29,6 +29,7 @@ const PUBLISH_DRY_RUN_FILE = path.join(ROOT, "outputs", "admin", "publish-dry-ru
 const PUBLISH_ROLLBACK_FILE = path.join(ROOT, "outputs", "admin", "publish-rollback-plan.json");
 const BACKUP_SNAPSHOT_FILE = path.join(ROOT, "outputs", "admin", "backup-snapshot-dry-run-report.json");
 const PRE_PUBLISH_CHECKLIST_FILE = path.join(ROOT, "outputs", "admin", "pre-publish-checklist-report.json");
+const DRAFT_PUBLISH_SIMULATION_FILE = path.join(ROOT, "outputs", "admin", "draft-publish-simulation-summary-report.json");
 const RESTORE_DRY_RUN_FILE = path.join(ROOT, "outputs", "admin", "restore-backup-dry-run-report.json");
 const RESTORE_REPORT_FILE = path.join(ROOT, "outputs", "admin", "restore-backup-report.json");
 const PUBLISH_REPORT_FILE = path.join(ROOT, "outputs", "admin", "publish-report.json");
@@ -348,6 +349,15 @@ function readPrePublishChecklist() {
   if (!fs.existsSync(PRE_PUBLISH_CHECKLIST_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(PRE_PUBLISH_CHECKLIST_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readDraftPublishSimulationSummary() {
+  if (!fs.existsSync(DRAFT_PUBLISH_SIMULATION_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(DRAFT_PUBLISH_SIMULATION_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -1635,6 +1645,79 @@ function renderPrePublishChecklist(report) {
     </section>`;
 }
 
+function renderDraftPublishSimulationSummary(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Draft Publish Simulation</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No publish simulation yet</strong>
+            <span>Run node scripts/build-draft-publish-simulation-summary.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const draftSummaries = Array.isArray(report.draftSummaries) ? report.draftSummaries : [];
+  const requiredHumanChecks = Array.isArray(report.requiredHumanChecks) ? report.requiredHumanChecks : [];
+  const status = summary.status === "ready" || summary.status === "idle" ? "good" : summary.status === "review" ? "warn" : "bad";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Draft Publish Simulation</h2>
+        <span class="pill ${status}">${escapeHtml(summary.status || "unknown")}</span>
+      </div>
+      <div class="health">
+        <div class="${summary.status === "blocked" ? "issue bad" : summary.status === "review" ? "issue warn" : "empty"}">
+          <strong>Publish simulation</strong>
+          <span>${escapeHtml(report.nextAction || "Review the simulated file impact before publishing.")}</span>
+        </div>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Sim drafts</span><strong>${escapeHtml(summary.simulatedDrafts || 0)}</strong></div>
+        <div class="detail-stat"><span>Ops</span><strong>${escapeHtml(summary.plannedOperations || 0)}</strong></div>
+        <div class="detail-stat"><span>Discovery</span><strong>${escapeHtml(summary.discoveryUpdates || 0)}</strong></div>
+        <div class="detail-stat"><span>Blocked</span><strong>${escapeHtml(summary.blockers || 0)}</strong></div>
+      </div>
+      <div class="mini-list publish-simulation-list">
+        ${
+          draftSummaries.length
+            ? draftSummaries
+                .slice(0, 8)
+                .map(
+                  (item) => `
+                    <div class="needs-review">
+                      <strong>${escapeHtml(item.title || item.id)} · ${escapeHtml(item.plannedOperations || 0)} operation(s)</strong>
+                      <span>Changed fields: ${escapeHtml((item.changedFields || []).join(", ") || "none")}</span>
+                      <span>Public impact: ${escapeHtml((item.publicImpact || []).join(", ") || "none")}</span>
+                      <span>Groups: ${escapeHtml((item.groupedOperations || []).map((group) => `${group.id} ${group.operations}`).join(" · "))}</span>
+                    </div>`
+                )
+                .join("")
+            : `<div class="passed"><strong>No active publish simulation</strong><span>No ready draft is waiting to change public website files.</span></div>`
+        }
+      </div>
+      <div class="workflow-list">
+        ${requiredHumanChecks
+          .slice(0, 5)
+          .map(
+            (item, index) => `
+              <div class="workflow-step">
+                <strong>${index + 1}. Publish review</strong>
+                <span>${escapeHtml(item)}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+    </section>`;
+}
+
 function renderPublishRollback(report) {
   if (!report) {
     return `
@@ -2222,6 +2305,7 @@ function render(model) {
   const publishRollbackPlan = readPublishRollbackPlan();
   const backupSnapshotReport = readBackupSnapshotReport();
   const prePublishChecklist = readPrePublishChecklist();
+  const draftPublishSimulationSummary = readDraftPublishSimulationSummary();
   const restoreDryRunReport = readRestoreDryRunReport();
   const restoreReport = readRestoreReport();
   const publishReport = readPublishReport();
@@ -2835,6 +2919,8 @@ function render(model) {
         ${renderBackupSnapshot(backupSnapshotReport)}
 
         ${renderPrePublishChecklist(prePublishChecklist)}
+
+        ${renderDraftPublishSimulationSummary(draftPublishSimulationSummary)}
 
         ${renderRestoreDryRun(restoreDryRunReport)}
 
