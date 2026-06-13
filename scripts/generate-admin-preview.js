@@ -7,6 +7,7 @@ const ROOT = path.resolve(__dirname, "..");
 const MODEL_FILE = path.join(ROOT, "outputs", "admin", "admin-read-model.json");
 const OUTPUT_FILE = path.join(ROOT, "outputs", "admin", "index.html");
 const CONTROL_REPORT_FILE = path.join(ROOT, "outputs", "admin", "control-report.json");
+const ADMIN_COMMAND_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "admin-command-guide-report.json");
 const DRAFT_COMPARISON_FILE = path.join(ROOT, "outputs", "admin", "draft-comparison-report.json");
 const DRAFT_QUALITY_FILE = path.join(ROOT, "outputs", "admin", "draft-quality-report.json");
 const DRAFT_FIX_LIST_FILE = path.join(ROOT, "outputs", "admin", "draft-fix-list-report.json");
@@ -137,6 +138,15 @@ function readControlReport() {
   if (!fs.existsSync(CONTROL_REPORT_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(CONTROL_REPORT_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readAdminCommandGuide() {
+  if (!fs.existsSync(ADMIN_COMMAND_GUIDE_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(ADMIN_COMMAND_GUIDE_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -509,6 +519,66 @@ function renderControlCenter(report) {
               <div class="control-step ${step.status === "passed" ? "passed" : "failed"}">
                 <strong>${escapeHtml(step.label)}</strong>
                 <span>${escapeHtml(step.status)} · ${escapeHtml(step.durationMs)}ms</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+    </section>`;
+}
+
+function renderAdminCommandGuide(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Admin Command Guide</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No command guide yet</strong>
+            <span>Run node scripts/build-admin-command-guide.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const commands = Array.isArray(report.commands) ? report.commands : [];
+  const rules = Array.isArray(report.rules) ? report.rules : [];
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Admin Command Guide</h2>
+        <span class="pill good">${escapeHtml(summary.status || "ready")}</span>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Commands</span><strong>${escapeHtml(summary.commands || 0)}</strong></div>
+        <div class="detail-stat"><span>High impact</span><strong>${escapeHtml(summary.highImpactCommands || 0)}</strong></div>
+        <div class="detail-stat"><span>Daily control</span><strong>${escapeHtml(summary.groups ? summary.groups.daily_control || 0 : 0)}</strong></div>
+        <div class="detail-stat"><span>Publish safety</span><strong>${escapeHtml(summary.groups ? summary.groups.publish_safety || 0 : 0)}</strong></div>
+      </div>
+      <div class="mini-list command-guide-list">
+        ${commands
+          .map(
+            (item) => `
+              <div class="${item.safety === "writes_live_content" ? "needs-review" : "passed"}">
+                <strong>${escapeHtml(item.label)}</strong>
+                <span>${escapeHtml(item.command)}</span>
+                <span>${escapeHtml(item.safety)} · ${escapeHtml(item.changesFiles)} · ${escapeHtml(item.group)}</span>
+                <span>${escapeHtml(item.whenToUse)}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+      <div class="workflow-list">
+        ${rules
+          .map(
+            (item, index) => `
+              <div class="workflow-step">
+                <strong>${index + 1}. Command safety rule</strong>
+                <span>${escapeHtml(item)}</span>
               </div>`
           )
           .join("")}
@@ -1237,6 +1307,7 @@ function render(model) {
   const articleJson = JSON.stringify(model.articles).replaceAll("</", "<\\/");
   const editorRulesJson = JSON.stringify(model.editorRules.article || {}).replaceAll("</", "<\\/");
   const controlReport = readControlReport();
+  const adminCommandGuide = readAdminCommandGuide();
   const draftComparisonReport = readDraftComparisonReport();
   const draftQualityReport = readDraftQualityReport();
   const draftFixListReport = readDraftFixListReport();
@@ -1823,6 +1894,8 @@ function render(model) {
         })}
 
         ${renderControlCenter(controlReport)}
+
+        ${renderAdminCommandGuide(adminCommandGuide)}
 
         ${renderPublishReadiness(publishReadinessReport)}
 
