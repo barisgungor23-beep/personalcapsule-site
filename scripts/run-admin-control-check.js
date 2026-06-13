@@ -151,6 +151,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "build_pre_publish_checklist",
+    label: "Build pre-publish checklist",
+    command: ["node", "scripts/build-pre-publish-checklist.js"],
+    kind: "audit",
+  },
+  {
     id: "audit_admin_read_model",
     label: "Audit admin read model",
     command: ["node", "scripts/audit-admin-read-model.js"],

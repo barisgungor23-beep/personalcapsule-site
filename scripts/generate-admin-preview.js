@@ -17,6 +17,7 @@ const PUBLISH_READINESS_FILE = path.join(ROOT, "outputs", "admin", "publish-read
 const PUBLISH_DRY_RUN_FILE = path.join(ROOT, "outputs", "admin", "publish-dry-run-report.json");
 const PUBLISH_ROLLBACK_FILE = path.join(ROOT, "outputs", "admin", "publish-rollback-plan.json");
 const BACKUP_SNAPSHOT_FILE = path.join(ROOT, "outputs", "admin", "backup-snapshot-dry-run-report.json");
+const PRE_PUBLISH_CHECKLIST_FILE = path.join(ROOT, "outputs", "admin", "pre-publish-checklist-report.json");
 const RESTORE_DRY_RUN_FILE = path.join(ROOT, "outputs", "admin", "restore-backup-dry-run-report.json");
 const RESTORE_REPORT_FILE = path.join(ROOT, "outputs", "admin", "restore-backup-report.json");
 const PUBLISH_REPORT_FILE = path.join(ROOT, "outputs", "admin", "publish-report.json");
@@ -228,6 +229,15 @@ function readBackupSnapshotReport() {
   if (!fs.existsSync(BACKUP_SNAPSHOT_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(BACKUP_SNAPSHOT_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readPrePublishChecklist() {
+  if (!fs.existsSync(PRE_PUBLISH_CHECKLIST_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(PRE_PUBLISH_CHECKLIST_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -738,6 +748,74 @@ function renderBackupSnapshot(report) {
                 .join("")
             : `<div class="passed"><strong>No backup files needed</strong><span>There are no ready drafts waiting for publish.</span></div>`
         }
+      </div>
+    </section>`;
+}
+
+function renderPrePublishChecklist(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Pre-Publish Checklist</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No pre-publish checklist yet</strong>
+            <span>Run node scripts/build-pre-publish-checklist.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const gates = Array.isArray(report.gates) ? report.gates : [];
+  const humanReview = Array.isArray(report.humanReview) ? report.humanReview : [];
+  const status = summary.status === "ready" || summary.status === "idle" ? "good" : summary.status === "review" ? "warn" : "bad";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Pre-Publish Checklist</h2>
+        <span class="pill ${status}">${escapeHtml(summary.status || "unknown")}</span>
+      </div>
+      <div class="health">
+        <div class="${summary.status === "blocked" ? "issue bad" : summary.status === "review" ? "issue warn" : "empty"}">
+          <strong>${escapeHtml(summary.status === "ready" ? "Ready for final human review" : summary.status === "idle" ? "No active publish work" : "Next action")}</strong>
+          <span>${escapeHtml(report.nextAction || "Run the full control check before publishing.")}</span>
+        </div>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Passed gates</span><strong>${escapeHtml(summary.passed || 0)}</strong></div>
+        <div class="detail-stat"><span>Blocked gates</span><strong>${escapeHtml(summary.blocked || 0)}</strong></div>
+        <div class="detail-stat"><span>Ready drafts</span><strong>${escapeHtml(summary.readyDrafts || 0)}</strong></div>
+        <div class="detail-stat"><span>Planned ops</span><strong>${escapeHtml(summary.plannedFileOperations || 0)}</strong></div>
+      </div>
+      <div class="workflow-gates">
+        ${gates
+          .map(
+            (item) => `
+              <div class="workflow-gate ${item.status === "passed" ? "passed" : item.status === "not_run" ? "needs-review" : "failed"}">
+                <div>
+                  <strong>${escapeHtml(item.label)}</strong>
+                  <span>${escapeHtml(item.detail)}</span>
+                </div>
+                <small>${escapeHtml(item.status)}</small>
+              </div>`
+          )
+          .join("")}
+      </div>
+      <div class="workflow-list">
+        ${humanReview
+          .map(
+            (item, index) => `
+              <div class="workflow-step">
+                <strong>${index + 1}. Human review</strong>
+                <span>${escapeHtml(item)}</span>
+              </div>`
+          )
+          .join("")}
       </div>
     </section>`;
 }
@@ -1317,6 +1395,7 @@ function render(model) {
   const publishDryRunReport = readPublishDryRunReport();
   const publishRollbackPlan = readPublishRollbackPlan();
   const backupSnapshotReport = readBackupSnapshotReport();
+  const prePublishChecklist = readPrePublishChecklist();
   const restoreDryRunReport = readRestoreDryRunReport();
   const restoreReport = readRestoreReport();
   const publishReport = readPublishReport();
@@ -1906,6 +1985,8 @@ function render(model) {
         ${renderPublishRollback(publishRollbackPlan)}
 
         ${renderBackupSnapshot(backupSnapshotReport)}
+
+        ${renderPrePublishChecklist(prePublishChecklist)}
 
         ${renderRestoreDryRun(restoreDryRunReport)}
 
