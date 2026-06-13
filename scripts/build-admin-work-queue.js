@@ -19,6 +19,7 @@ const DEPLOYMENT_FILE = path.join(ADMIN_OUTPUT_DIR, "deployment-readiness-report
 const SAFE_PUSH_FILE = path.join(ADMIN_OUTPUT_DIR, "safe-push-checklist-report.json");
 const DOMAIN_POLICY_FILE = path.join(ADMIN_OUTPUT_DIR, "domain-safety-policy-report.json");
 const PUSH_CONFIRMATION_FILE = path.join(ADMIN_OUTPUT_DIR, "push-confirmation-guide-report.json");
+const FINAL_PUSH_REVIEW_FILE = path.join(ADMIN_OUTPUT_DIR, "final-push-review-report.json");
 const BACKUP_RESTORE_FILE = path.join(ADMIN_OUTPUT_DIR, "backup-restore-center-report.json");
 const REPORT_FRESHNESS_FILE = path.join(ADMIN_OUTPUT_DIR, "admin-report-freshness-report.json");
 
@@ -63,6 +64,7 @@ function main() {
   const safePush = readJsonIfExists(SAFE_PUSH_FILE);
   const domainPolicy = readJsonIfExists(DOMAIN_POLICY_FILE);
   const pushConfirmation = readJsonIfExists(PUSH_CONFIRMATION_FILE);
+  const finalPushReview = readJsonIfExists(FINAL_PUSH_REVIEW_FILE);
   const backupRestore = readJsonIfExists(BACKUP_RESTORE_FILE);
   const freshness = readJsonIfExists(REPORT_FRESHNESS_FILE);
 
@@ -78,6 +80,7 @@ function main() {
   const safePushSummary = summaryOf(safePush);
   const domainPolicySummary = summaryOf(domainPolicy);
   const pushConfirmationSummary = summaryOf(pushConfirmation);
+  const finalPushSummary = summaryOf(finalPushReview);
   const backupSummary = summaryOf(backupRestore);
   const freshnessSummary = summaryOf(freshness);
 
@@ -216,6 +219,23 @@ function main() {
         "node scripts/build-push-confirmation-guide.js",
         "You have read and accepted every final confirmation line.",
         "This guide is the last human review step before GitHub push."
+      )
+    );
+  }
+
+  if (finalPushSummary.status && finalPushSummary.status !== "safe") {
+    tasks.push(
+      task(
+        "review_final_push_review",
+        "Review the final push decision",
+        4.9,
+        finalPushSummary.status === "blocked" ? "blocked" : "review",
+        "deploy",
+        `Final push review: ${finalPushSummary.finalAnswer || finalPushReview.founderAnswer || "Review before push."}`,
+        "outputs/admin/final-push-review-report.json",
+        "node scripts/build-final-push-review.js",
+        "Final Push Review says safe, or you intentionally decide to wait.",
+        "This is the plain-language last gate. It does not push or deploy."
       )
     );
   }

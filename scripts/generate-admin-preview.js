@@ -26,6 +26,7 @@ const DEPLOYMENT_READINESS_FILE = path.join(ROOT, "outputs", "admin", "deploymen
 const SAFE_PUSH_CHECKLIST_FILE = path.join(ROOT, "outputs", "admin", "safe-push-checklist-report.json");
 const DOMAIN_SAFETY_POLICY_FILE = path.join(ROOT, "outputs", "admin", "domain-safety-policy-report.json");
 const PUSH_CONFIRMATION_GUIDE_FILE = path.join(ROOT, "outputs", "admin", "push-confirmation-guide-report.json");
+const FINAL_PUSH_REVIEW_FILE = path.join(ROOT, "outputs", "admin", "final-push-review-report.json");
 const ADMIN_OPERATIONS_MANUAL_FILE = path.join(ROOT, "outputs", "admin", "admin-operations-manual-report.json");
 const ADMIN_QUICK_START_FILE = path.join(ROOT, "outputs", "admin", "admin-quick-start-report.json");
 const DRAFT_COMPARISON_FILE = path.join(ROOT, "outputs", "admin", "draft-comparison-report.json");
@@ -335,6 +336,15 @@ function readPushConfirmationGuide() {
   if (!fs.existsSync(PUSH_CONFIRMATION_GUIDE_FILE)) return null;
   try {
     return JSON.parse(fs.readFileSync(PUSH_CONFIRMATION_GUIDE_FILE, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function readFinalPushReview() {
+  if (!fs.existsSync(FINAL_PUSH_REVIEW_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(FINAL_PUSH_REVIEW_FILE, "utf8"));
   } catch {
     return null;
   }
@@ -2048,6 +2058,84 @@ function renderPushConfirmationGuide(report) {
     </section>`;
 }
 
+function renderFinalPushReview(report) {
+  if (!report) {
+    return `
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Final Push Review</h2>
+          <span class="pill warn">not run</span>
+        </div>
+        <div class="health">
+          <div class="issue warn">
+            <strong>No final push review yet</strong>
+            <span>Run node scripts/build-final-push-review.js or the full control check.</span>
+          </div>
+        </div>
+      </section>`;
+  }
+
+  const summary = report.summary || {};
+  const decisions = Array.isArray(report.decisions) ? report.decisions : [];
+  const finalReviewLines = Array.isArray(report.finalReviewLines) ? report.finalReviewLines : [];
+  const status = summary.status || "unknown";
+  const statusClassName = status === "blocked" ? "bad" : status === "review" ? "warn" : "good";
+
+  return `
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Final Push Review</h2>
+        <span class="pill ${statusClassName}">${escapeHtml(status)}</span>
+      </div>
+      <div class="health">
+        <div class="${status === "blocked" ? "issue bad" : status === "review" ? "issue warn" : "empty"}">
+          <strong>${escapeHtml(report.founderAnswer || "Review before push")}</strong>
+          <span>${escapeHtml(report.plainMeaning || "This card summarizes the last push decision in simple language.")}</span>
+        </div>
+      </div>
+      <div class="workflow-list">
+        <div class="workflow-step">
+          <strong>Recommended action</strong>
+          <span>${escapeHtml(report.recommendedAction || "Review Git and deployment reports before pushing.")}</span>
+        </div>
+      </div>
+      <div class="control-summary">
+        <div class="detail-stat"><span>Safe</span><strong>${escapeHtml(summary.safe || 0)}</strong></div>
+        <div class="detail-stat"><span>Review</span><strong>${escapeHtml(summary.review || 0)}</strong></div>
+        <div class="detail-stat"><span>Blocked</span><strong>${escapeHtml(summary.blocked || 0)}</strong></div>
+        <div class="detail-stat"><span>Commits ahead</span><strong>${escapeHtml(summary.commitsAhead || 0)}</strong></div>
+        <div class="detail-stat"><span>Changed files</span><strong>${escapeHtml(summary.changedFiles || 0)}</strong></div>
+        <div class="detail-stat"><span>Ready drafts</span><strong>${escapeHtml(summary.readyDrafts || 0)}</strong></div>
+      </div>
+      <div class="workflow-gates">
+        ${decisions
+          .map(
+            (item) => `
+              <div class="workflow-gate ${item.status === "safe" ? "passed" : item.status === "blocked" ? "failed" : "needs-review"}">
+                <div>
+                  <strong>${escapeHtml(item.label)}</strong>
+                  <span>${escapeHtml(item.answer)}</span>
+                  <span>${escapeHtml(item.plainMeaning)}</span>
+                </div>
+                <small>${escapeHtml(item.status)}</small>
+              </div>`
+          )
+          .join("")}
+      </div>
+      <div class="workflow-list">
+        ${finalReviewLines
+          .map(
+            (item, index) => `
+              <div class="workflow-step">
+                <strong>${index + 1}. Before push</strong>
+                <span>${escapeHtml(item)}</span>
+              </div>`
+          )
+          .join("")}
+      </div>
+    </section>`;
+}
+
 function renderAdminOperationsManual(report) {
   if (!report) {
     return `
@@ -3456,6 +3544,7 @@ function render(model) {
   const safePushChecklist = readSafePushChecklist();
   const domainSafetyPolicy = readDomainSafetyPolicy();
   const pushConfirmationGuide = readPushConfirmationGuide();
+  const finalPushReview = readFinalPushReview();
   const adminOperationsManual = readAdminOperationsManual();
   const adminQuickStart = readAdminQuickStart();
   const draftComparisonReport = readDraftComparisonReport();
@@ -4396,6 +4485,7 @@ function render(model) {
             ${renderSafePushChecklist(safePushChecklist)}
             ${renderDomainSafetyPolicy(domainSafetyPolicy)}
             ${renderPushConfirmationGuide(pushConfirmationGuide)}
+            ${renderFinalPushReview(finalPushReview)}
             ${renderDeploymentReadiness(deploymentReadiness)}
           `
         )}

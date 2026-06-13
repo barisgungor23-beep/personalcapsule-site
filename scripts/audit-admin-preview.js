@@ -93,6 +93,8 @@ function main() {
       "CNAME / domain safety",
       "Push Confirmation Guide",
       "Final human confirmation",
+      "Final Push Review",
+      "Before push",
       "Deployment Readiness",
       "Deploy safety rule",
       "Admin Operations Manual",

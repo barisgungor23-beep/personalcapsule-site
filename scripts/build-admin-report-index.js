@@ -29,6 +29,7 @@ const reports = [
   ["safe_push_checklist", "Safe push checklist", "safe-push-checklist-report.json"],
   ["domain_safety_policy", "Domain safety policy", "domain-safety-policy-report.json"],
   ["push_confirmation_guide", "Push confirmation guide", "push-confirmation-guide-report.json"],
+  ["final_push_review", "Final push review", "final-push-review-report.json"],
   ["draft_quality", "Draft quality", "draft-quality-report.json"],
   ["draft_fix_list", "Draft fix list", "draft-fix-list-report.json"],
   ["draft_edit_plan", "Draft edit plan", "draft-edit-plan-report.json"],

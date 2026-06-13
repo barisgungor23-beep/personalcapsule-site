@@ -246,6 +246,12 @@ const steps = [
     kind: "audit",
   },
   {
+    id: "build_final_push_review",
+    label: "Build final push review",
+    command: ["node", "scripts/build-final-push-review.js"],
+    kind: "audit",
+  },
+  {
     id: "build_admin_operations_manual",
     label: "Build admin operations manual",
     command: ["node", "scripts/build-admin-operations-manual.js"],
@@ -473,6 +479,17 @@ function refreshPushConfirmationGuide() {
   return result;
 }
 
+function refreshFinalPushReview() {
+  const result = runStep({
+    id: "refresh_final_push_review",
+    label: "Refresh final push review",
+    command: ["node", "scripts/build-final-push-review.js"],
+    kind: "audit",
+  });
+  printStep(result);
+  return result;
+}
+
 function refreshFounderDecisionCenter() {
   const result = runStep({
     id: "refresh_founder_decision_center",
@@ -607,6 +624,15 @@ function main() {
     if (!summary.firstFailedStep) summary.firstFailedStep = pushConfirmationResult.id;
     report.summary = summary;
     report.steps.push(pushConfirmationResult);
+    fs.writeFileSync(REPORT_FILE, `${JSON.stringify(report, null, 2)}\n`);
+  }
+  const finalPushReviewResult = refreshFinalPushReview();
+  if (finalPushReviewResult.status === "failed") {
+    summary.status = "failed";
+    summary.failedSteps += 1;
+    if (!summary.firstFailedStep) summary.firstFailedStep = finalPushReviewResult.id;
+    report.summary = summary;
+    report.steps.push(finalPushReviewResult);
     fs.writeFileSync(REPORT_FILE, `${JSON.stringify(report, null, 2)}\n`);
   }
   const snapshotResult = refreshDashboardSnapshot();

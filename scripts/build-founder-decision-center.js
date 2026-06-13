@@ -13,6 +13,7 @@ const WORK_QUEUE_FILE = path.join(ADMIN_OUTPUT_DIR, "admin-work-queue-report.jso
 const CONTROL_FILE = path.join(ADMIN_OUTPUT_DIR, "control-report.json");
 const PRE_PUBLISH_FILE = path.join(ADMIN_OUTPUT_DIR, "pre-publish-checklist-report.json");
 const PUSH_CONFIRMATION_FILE = path.join(ADMIN_OUTPUT_DIR, "push-confirmation-guide-report.json");
+const FINAL_PUSH_REVIEW_FILE = path.join(ADMIN_OUTPUT_DIR, "final-push-review-report.json");
 const DOMAIN_POLICY_FILE = path.join(ADMIN_OUTPUT_DIR, "domain-safety-policy-report.json");
 const GIT_FILE = path.join(ADMIN_OUTPUT_DIR, "git-status-report.json");
 
@@ -58,6 +59,7 @@ function main() {
   const control = readJsonIfExists(CONTROL_FILE);
   const prePublish = readJsonIfExists(PRE_PUBLISH_FILE);
   const pushConfirmation = readJsonIfExists(PUSH_CONFIRMATION_FILE);
+  const finalPushReview = readJsonIfExists(FINAL_PUSH_REVIEW_FILE);
   const domainPolicy = readJsonIfExists(DOMAIN_POLICY_FILE);
   const git = readJsonIfExists(GIT_FILE);
 
@@ -67,6 +69,7 @@ function main() {
   const controlSummary = summaryOf(control);
   const prePublishSummary = summaryOf(prePublish);
   const pushSummary = summaryOf(pushConfirmation);
+  const finalPushSummary = summaryOf(finalPushReview);
   const domainSummary = summaryOf(domainPolicy);
   const gitSummary = summaryOf(git);
 
@@ -110,10 +113,30 @@ function main() {
     decision(
       "push_deploy",
       "Push / deploy",
-      pushHasBlocker ? "Do not push" : pushSummary.status === "review" ? "Human review needed" : "Ready after confirmation",
-      pushHasBlocker ? "blocked" : pushSummary.status === "review" ? "review" : "safe",
-      pushConfirmation ? pushConfirmation.nextAction || "Review push confirmation." : "Push confirmation report is missing.",
-      "outputs/admin/push-confirmation-guide-report.json",
+      finalPushSummary.status === "blocked"
+        ? "Do not push"
+        : finalPushSummary.status === "review"
+          ? "Human review needed"
+          : pushHasBlocker
+            ? "Do not push"
+            : pushSummary.status === "review"
+              ? "Human review needed"
+              : "Ready after confirmation",
+      finalPushSummary.status === "blocked"
+        ? "blocked"
+        : finalPushSummary.status === "review"
+          ? "review"
+          : pushHasBlocker
+            ? "blocked"
+            : pushSummary.status === "review"
+              ? "review"
+              : "safe",
+      finalPushReview
+        ? finalPushReview.recommendedAction || finalPushReview.founderAnswer || "Review final push decision."
+        : pushConfirmation
+          ? pushConfirmation.nextAction || "Review push confirmation."
+          : "Push confirmation report is missing.",
+      "outputs/admin/final-push-review-report.json",
       "Push means sending local commits to GitHub. Cloudflare may deploy the live website after that."
     ),
     decision(
@@ -184,9 +207,9 @@ function main() {
     nextStep(
       "push",
       "Push only after final confirmation",
-      pushHasBlocker ? "blocked" : "review",
-      "Read the push confirmation guide before sending commits to GitHub.",
-      "outputs/admin/push-confirmation-guide-report.json"
+      finalPushSummary.status === "blocked" || pushHasBlocker ? "blocked" : "review",
+      "Read the final push review before sending commits to GitHub.",
+      "outputs/admin/final-push-review-report.json"
     ),
   ];
 
@@ -222,6 +245,7 @@ function main() {
       relative(CONTROL_FILE),
       relative(PRE_PUBLISH_FILE),
       relative(PUSH_CONFIRMATION_FILE),
+      relative(FINAL_PUSH_REVIEW_FILE),
       relative(DOMAIN_POLICY_FILE),
       relative(GIT_FILE),
     ],
