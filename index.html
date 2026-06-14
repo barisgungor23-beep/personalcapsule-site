@@ -395,13 +395,15 @@
   <div class="wrap">
     <div class="promo-shell reveal">
       <div class="promo-main">
-        <div class="eyebrow">Limited launch offer</div>
-        <h2>Unlock Premium for 50% off.</h2>
-        <p class="promo-copy">Use a limited App Store offer code to get lifetime Premium at 50% off. Available for the first 500 redemptions or until the campaign ends.</p>
-        <div class="promo-countdown" aria-label="Offer countdown">
-          <div><strong id="promo-days">7</strong><span>Days</span></div>
-          <div><strong id="promo-hours">00</strong><span>Hours</span></div>
-          <div><strong id="promo-minutes">00</strong><span>Minutes</span></div>
+        <div class="eyebrow">Website special</div>
+        <h2>Unlock lifetime Premium for 50% off.</h2>
+        <p class="promo-copy">Use the App Store offer code shared on this website to get lifetime Premium at 50% off. No timer, no pressure — just a simple thank-you for visiting PersonalCapsule directly.</p>
+        <div class="promo-offer-card" aria-label="Website special offer">
+          <div>
+            <span>Website code</span>
+            <strong>50% off lifetime Premium</strong>
+          </div>
+          <p>Reveal the code, copy it, then redeem it inside PersonalCapsule settings.</p>
         </div>
         <div class="promo-actions">
           <button class="promo-btn" id="claim-promo-code" type="button">Claim 50% Off Code</button>
@@ -412,7 +414,7 @@
           <strong id="promo-code">PERSONALCAPSULEAPP</strong>
           <button class="copy-code" id="copy-promo-code" type="button">Copy</button>
         </div>
-        <p class="promo-note">Limited to 500 App Store redemptions. The offer may end earlier if all redemptions are used.</p>
+        <p class="promo-note">Offer code redemption is handled by the App Store and may depend on availability in your country.</p>
       </div>
       <div class="promo-side">
         <div class="promo-benefits">
@@ -565,9 +567,8 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 // trigger hero reveals immediately
 addEventListener('load',()=>{document.querySelectorAll('.hero .reveal').forEach((el,i)=>el.classList.add('in'))});
 setTimeout(()=>document.querySelectorAll('.hero .reveal').forEach(el=>el.classList.add('in')),60);
-// promo code reveal, copy and countdown
+// promo code reveal and copy
 const promoCode='PERSONALCAPSULEAPP';
-const promoEnd=new Date('2026-06-12T23:59:59+03:00').getTime();
 const claimBtn=document.getElementById('claim-promo-code');
 const promoBox=document.getElementById('promo-code-box');
 const copyBtn=document.getElementById('copy-promo-code');
@@ -584,17 +585,6 @@ copyBtn?.addEventListener('click',async()=>{
     copyBtn.textContent='Select code';
   }
 });
-function updatePromoCountdown(){
-  const left=Math.max(0,promoEnd-Date.now());
-  const days=Math.floor(left/86400000);
-  const hours=Math.floor((left%86400000)/3600000);
-  const minutes=Math.floor((left%3600000)/60000);
-  document.getElementById('promo-days').textContent=String(days);
-  document.getElementById('promo-hours').textContent=String(hours).padStart(2,'0');
-  document.getElementById('promo-minutes').textContent=String(minutes).padStart(2,'0');
-}
-updatePromoCountdown();
-setInterval(updatePromoCountdown,60000);
 </script>
 </body>
 </html>
