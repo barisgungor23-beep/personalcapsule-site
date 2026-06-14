@@ -20,7 +20,7 @@
   "eyebrow": "Digital Time Capsules",
   "readTime": "4 min read",
   "datePublished": "2026-06-05",
-  "dateModified": "2026-06-06",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -222,7 +222,28 @@
       "text": "Whatever you decide to put in a digital time capsule, the test is simple: would future you be glad this was saved? If yes, it belongs in."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "What should I put in a digital time capsule?",
+      "answer": "Put letters, photos, memories, goals, decisions, predictions, milestones, and notes about your current life into a digital time capsule."
+    },
+    {
+      "question": "What are meaningful digital time capsule ideas?",
+      "answer": "Meaningful digital time capsule ideas include a letter to your future self, a current photo, a goal snapshot, a big decision, and a list of hopes."
+    },
+    {
+      "question": "Should time capsule contents be emotional or practical?",
+      "answer": "Time capsule contents can be both emotional and practical. The best entries usually explain what happened and why it matters."
+    },
+    {
+      "question": "Can I include memory keeping ideas in a future self capsule?",
+      "answer": "Yes. Memory keeping ideas such as photos, milestones, voice notes, and relationship memories work well inside a future self capsule."
+    },
+    {
+      "question": "How does PersonalCapsule help organize time capsule contents?",
+      "answer": "PersonalCapsule organizes time capsule contents into capsule types such as letters, moments, goals, and decisions so each memory has context."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "PersonalCapsule lets you combine letters, photos, and voice notes in a single sealed capsule and reopen it whenever you choose. It's free to start on the App Store.",

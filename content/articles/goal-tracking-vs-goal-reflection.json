@@ -20,7 +20,7 @@
   "eyebrow": "Reflection & Personal Growth",
   "readTime": "6 min read",
   "datePublished": "2026-06-04",
-  "dateModified": "2026-06-06",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "type": "paragraph",
-      "text": "Many people believe happiness begins after achieving a goal: \"I&#x27;ll be happy when I get promoted,\" \"I&#x27;ll be happy when I launch my app,\" \"I&#x27;ll be happy when I reach my target income.\""
+      "text": "Many people believe happiness begins after achieving a goal: \"I'll be happy when I get promoted,\" \"I'll be happy when I launch my app,\" \"I'll be happy when I reach my target income.\""
     },
     {
       "type": "paragraph",
@@ -210,7 +210,28 @@
       "text": "Years from now, you may not remember every completed task or milestone. But you will remember the goals that changed how you think, how you live, and who you became. That is the true purpose of reflection."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "What is the difference between goal tracking and goal reflection?",
+      "answer": "Goal tracking measures progress, while goal reflection helps you understand why a goal matters, what changed, and what you learned along the way."
+    },
+    {
+      "question": "Is goal reflection better than goal tracking?",
+      "answer": "Goal reflection is not a replacement for tracking, but it can make goals more meaningful by connecting progress to personal growth."
+    },
+    {
+      "question": "What should I write in a goal reflection journal?",
+      "answer": "In a goal reflection journal, write why the goal matters, what you expected, what challenged you, what helped, and how your view changed."
+    },
+    {
+      "question": "How often should I reflect on my goals?",
+      "answer": "You can reflect on your goals monthly, at milestones, or when a goal ends, especially if you want to understand the bigger picture."
+    },
+    {
+      "question": "Can PersonalCapsule help with personal growth reflection?",
+      "answer": "Yes. PersonalCapsule can save goal capsules and reopen them later so you can compare your original motivation with what actually happened."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "Write a letter to your future self today and reopen it when the time is right.",

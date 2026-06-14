@@ -20,7 +20,7 @@
   "eyebrow": "Decision Journaling",
   "readTime": "4 min read",
   "datePublished": "2026-06-05",
-  "dateModified": "2026-06-06",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -119,7 +119,28 @@
       "text": "Career and life choices sit at the intersection of decision journaling and future-self letters. A nice approach is to pair them: record the decision, then add a short note to your future self about what you're hoping for. When it reopens, you get both the reasoning and the feeling.Because these entries are deeply personal, it helps to keep them somewhere private — on your own device, not on a shared feed.Used at life's bigger crossroads, decision journaling for career and life choices gives you a clear, honest record of how you navigated them — and makes the next crossroads a little less daunting."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "How can decision journaling help with career choices?",
+      "answer": "Decision journaling helps with career choices by recording your options, fears, priorities, and expected outcomes before hindsight changes the story."
+    },
+    {
+      "question": "What should I write before a big life choice?",
+      "answer": "Before a big life choice, write what you are choosing, why it matters, what you hope will happen, what you fear, and what would make the decision feel right later."
+    },
+    {
+      "question": "Is a life decision journal only for major decisions?",
+      "answer": "No. A life decision journal can be useful for both major choices and smaller recurring decisions that reveal patterns over time."
+    },
+    {
+      "question": "When should I review a career decision journal entry?",
+      "answer": "Review a career decision journal entry after enough time has passed for real outcomes to appear, such as a few months or one year later."
+    },
+    {
+      "question": "Can PersonalCapsule be used for reflective decision making?",
+      "answer": "Yes. PersonalCapsule can store decision capsules privately and reopen them later so you can reflect on the choice with more distance."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "PersonalCapsule is a private place to record life's bigger decisions and reopen them when you can finally see how they turned out. Download it free on the App Store.",

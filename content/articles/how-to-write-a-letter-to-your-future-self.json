@@ -20,7 +20,7 @@
   "eyebrow": "Future Self Letters",
   "readTime": "6 min read",
   "datePublished": "2026-06-04",
-  "dateModified": "2026-06-06",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -100,7 +100,7 @@
     {
       "type": "list",
       "items": [
-        "How much you&#x27;ve changed",
+        "How much you've changed",
         "What goals you achieved",
         "Which beliefs remained the same",
         "What surprised you most"
@@ -158,7 +158,7 @@
     },
     {
       "type": "paragraph",
-      "text": "Many people avoid writing about fears. However, this section often becomes the most interesting part later. Consider writing about what worries you, what challenges you&#x27;re facing, and what you&#x27;re uncertain about. Your future self may discover that many of these fears never became reality."
+      "text": "Many people avoid writing about fears. However, this section often becomes the most interesting part later. Consider writing about what worries you, what challenges you're facing, and what you're uncertain about. Your future self may discover that many of these fears never became reality."
     },
     {
       "type": "heading",
@@ -167,7 +167,7 @@
     },
     {
       "type": "paragraph",
-      "text": "If you&#x27;re facing a major life decision, document it. Write what options you&#x27;re considering, why you&#x27;re leaning toward a certain choice, and what outcome you&#x27;re hoping for. Years later, you&#x27;ll be able to see how events actually unfolded."
+      "text": "If you're facing a major life decision, document it. Write what options you're considering, why you're leaning toward a certain choice, and what outcome you're hoping for. Years later, you'll be able to see how events actually unfolded."
     },
     {
       "type": "heading",
@@ -195,7 +195,7 @@
     },
     {
       "type": "quote",
-      "text": "Dear Future Me, today is June 2026. I&#x27;m writing this after a long day of work. Lately I&#x27;ve been thinking a lot about where my life is heading and whether I&#x27;m making the right decisions. Right now I&#x27;m focused on building projects that matter to me. I hope you&#x27;ve stayed consistent and continued working toward your goals. Did we achieve what we hoped for? Are we happier now? What turned out differently than expected? Most importantly, what advice would you give me today? See you soon. — Your Past Self"
+      "text": "Dear Future Me, today is June 2026. I'm writing this after a long day of work. Lately I've been thinking a lot about where my life is heading and whether I'm making the right decisions. Right now I'm focused on building projects that matter to me. I hope you've stayed consistent and continued working toward your goals. Did we achieve what we hoped for? Are we happier now? What turned out differently than expected? Most importantly, what advice would you give me today? See you soon. — Your Past Self"
     },
     {
       "type": "heading",
@@ -204,7 +204,7 @@
     },
     {
       "type": "paragraph",
-      "text": "If you&#x27;re not sure where to start, use these prompts:"
+      "text": "If you're not sure where to start, use these prompts:"
     },
     {
       "type": "list",
@@ -293,7 +293,28 @@
       "text": "Years from now, you may forget many details about your current life. A future self letter ensures that your future self never loses sight of where the journey began."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "How do I write a letter to my future self?",
+      "answer": "Write a letter to your future self by describing your current life, hopes, fears, goals, relationships, and what you want your future self to remember."
+    },
+    {
+      "question": "What should I include in a future self letter?",
+      "answer": "Include what matters right now, what you are working toward, what feels uncertain, and any advice or questions you want to revisit later."
+    },
+    {
+      "question": "How long should a letter to your future self be?",
+      "answer": "A letter to your future self can be a few paragraphs or several pages. The best length is the one that lets you be honest."
+    },
+    {
+      "question": "When should I open a future self letter?",
+      "answer": "Open a future self letter after enough time has passed for change to be visible, such as one month, one year, or five years."
+    },
+    {
+      "question": "How does PersonalCapsule help write to your future self?",
+      "answer": "PersonalCapsule gives your future self letter a private place, lets you set a reopen date, and helps you return to it when the time is right."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "Write a letter to your future self today and reopen it when the time is right.",

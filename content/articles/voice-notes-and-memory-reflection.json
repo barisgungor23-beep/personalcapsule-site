@@ -20,7 +20,7 @@
   "eyebrow": "Memory Keeping",
   "readTime": "4 min read",
   "datePublished": "2026-06-05",
-  "dateModified": "2026-06-06",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -109,7 +109,28 @@
       "text": "Because a voice note is so personal — it's literally your voice — it's worth keeping it somewhere private. An app that keeps your recordings on your device, and doesn't collect them, lets you speak as freely as you would alone.Bringing together voice notes and memory reflection gives your record a human texture: not just what happened, but how it actually sounded and felt."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "How can voice notes help memory reflection?",
+      "answer": "Voice notes help memory reflection by capturing tone, emotion, pauses, and details that may feel different from typed writing."
+    },
+    {
+      "question": "Is voice journaling useful for personal memories?",
+      "answer": "Voice journaling can be useful for personal memories when speaking feels more natural than writing or when you want to preserve how a moment sounded."
+    },
+    {
+      "question": "What should I record in an audio memory?",
+      "answer": "In an audio memory, record what happened, why it mattered, how you felt, and what you want your future self to understand."
+    },
+    {
+      "question": "Are voice notes better than written journal entries?",
+      "answer": "Voice notes are not always better, but they can capture emotional nuance that written journal entries sometimes miss."
+    },
+    {
+      "question": "How does PersonalCapsule support voice note reflection?",
+      "answer": "PersonalCapsule lets premium users add voice notes to capsules, so a memory can include both spoken emotion and written context."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "PersonalCapsule lets you save private voice notes alongside your letters and memories, and reopen them when the time is right. Download it free on the App Store.",

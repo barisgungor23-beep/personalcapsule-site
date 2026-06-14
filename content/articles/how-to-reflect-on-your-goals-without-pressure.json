@@ -20,7 +20,7 @@
   "eyebrow": "Reflection & Personal Growth",
   "readTime": "4 min read",
   "datePublished": "2026-06-05",
-  "dateModified": "2026-06-06",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -109,7 +109,28 @@
       "text": "The aim of learning how to reflect on your goals without pressure isn't to stop caring about goals. It's to make reviewing them something you'll actually do, because it feels like understanding yourself rather than scolding yourself."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "How can I reflect on my goals without pressure?",
+      "answer": "Reflect on your goals without pressure by asking what you learned, what changed, and what still matters instead of judging yourself only by results."
+    },
+    {
+      "question": "What are gentle goal reflection questions?",
+      "answer": "Gentle goal reflection questions include: Why did this goal matter, what helped, what felt hard, and what would I do differently next time?"
+    },
+    {
+      "question": "How often should I review goals gently?",
+      "answer": "You can review goals gently at the end of each month, after a milestone, or whenever you feel ready to understand the experience."
+    },
+    {
+      "question": "Can low pressure goals still be serious?",
+      "answer": "Yes. Low pressure goals can still be serious; the difference is that you focus on learning and consistency rather than shame."
+    },
+    {
+      "question": "How can PersonalCapsule support goal reflection?",
+      "answer": "PersonalCapsule lets you save goal capsules and return to them later, which helps you reflect without needing constant tracking."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "PersonalCapsule lets you set a goal with a reopen date and revisit it calmly later — privately, on your own device. Download it free on the App Store.",

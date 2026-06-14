@@ -7,7 +7,7 @@
   "seoTitle": "Why Record Life Decisions? — PersonalCapsule",
   "slug": "why-recording-life-decisions-can-change-your-future",
   "url": "https://personalcapsule.app/blog/why-recording-life-decisions-can-change-your-future",
-  "description": "Decision journaling helps you beat hindsight bias, see your decision patterns and learn from past choices. Here&#x27;s what to record and how.",
+  "description": "Decision journaling helps you beat hindsight bias, see your decision patterns and learn from past choices. Here's what to record and how.",
   "keywords": [
     "decision journal",
     "decision journaling",
@@ -16,11 +16,11 @@
     "hindsight bias",
     "PersonalCapsule"
   ],
-  "excerpt": "Decision journaling helps you beat hindsight bias, see your decision patterns and learn from past choices. Here&#x27;s what to record and how.",
+  "excerpt": "Decision journaling helps you beat hindsight bias, see your decision patterns and learn from past choices. Here's what to record and how.",
   "eyebrow": "Decision Journaling",
   "readTime": "6 min read",
   "datePublished": "2026-06-04",
-  "dateModified": "2026-06-06",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -177,7 +177,7 @@
     },
     {
       "type": "paragraph",
-      "text": "Personal growth rarely happens by accident. Growth comes from reflection. When you revisit old decisions, you gain insight into how your priorities changed, what assumptions were correct, what lessons you learned, and how much progress you&#x27;ve made. Over time, these records become a map of your personal development."
+      "text": "Personal growth rarely happens by accident. Growth comes from reflection. When you revisit old decisions, you gain insight into how your priorities changed, what assumptions were correct, what lessons you learned, and how much progress you've made. Over time, these records become a map of your personal development."
     },
     {
       "type": "heading",
@@ -206,7 +206,28 @@
       "text": "Years from now, your most valuable lessons may not come from what happened. They may come from understanding why you made the choices that led you there."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "Why should I record life decisions?",
+      "answer": "Recording life decisions helps you understand your reasoning, fears, hopes, and assumptions before the outcome changes how you remember the choice."
+    },
+    {
+      "question": "What should I write in a decision journal?",
+      "answer": "In a decision journal, write the choice, options, context, emotional state, expected outcome, and when you want to review the decision."
+    },
+    {
+      "question": "Can a decision making journal improve future reflection?",
+      "answer": "A decision making journal can improve future reflection by giving you a clear record of what you believed before you knew what happened."
+    },
+    {
+      "question": "How is decision journaling connected to hindsight bias?",
+      "answer": "Decision journaling creates a record before the result, which helps reduce the way hindsight bias rewrites your memory later."
+    },
+    {
+      "question": "How does PersonalCapsule support recording life decisions?",
+      "answer": "PersonalCapsule lets you create decision capsules with your current reasoning and reopen them later to compare expectation with reality."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "Write a letter to your future self today and reopen it when the time is right.",

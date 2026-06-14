@@ -20,7 +20,7 @@
   "eyebrow": "Decision Journaling",
   "readTime": "4 min read",
   "datePublished": "2026-06-05",
-  "dateModified": "2026-06-05",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -86,7 +86,28 @@
       "text": "How you talk to yourself during a review matters. \"That was stupid\" closes reflection down; \"I can see why I thought that, and here's what I'd weigh differently\" keeps it open. The goal is to learn, not to deliver a verdict on yourself.Turn the review into something usefulFinish by writing one sentence: what would you do differently next time? That single takeaway is what carries forward.Done gently, learning how to review past decisions turns your own history into a teacher — without the self-criticism that makes most people avoid looking back at all."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "How do I review past decisions without being hard on myself?",
+      "answer": "Review past decisions by asking what you knew at the time, what assumptions you made, and what you learned, instead of judging only by the outcome."
+    },
+    {
+      "question": "Why is reviewing decisions useful?",
+      "answer": "Reviewing decisions is useful because it helps you notice patterns in reasoning, risk, fear, confidence, and expectations."
+    },
+    {
+      "question": "What should I compare during a decision review?",
+      "answer": "Compare what you expected, what actually happened, what information changed, and whether your original reasoning still makes sense."
+    },
+    {
+      "question": "Can decision journaling reduce hindsight bias?",
+      "answer": "Decision journaling can reduce hindsight bias by preserving your original thoughts before the outcome makes everything feel obvious."
+    },
+    {
+      "question": "How does PersonalCapsule help with decision review?",
+      "answer": "PersonalCapsule lets you seal a decision entry and reopen it later, so your review starts with what you actually thought at the time."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "PersonalCapsule keeps your past decisions and reasoning in one private place, ready to reopen and learn from. It's free to start on the App Store.",

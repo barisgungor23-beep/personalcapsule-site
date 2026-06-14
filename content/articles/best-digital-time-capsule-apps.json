@@ -20,7 +20,7 @@
   "eyebrow": "Digital Time Capsules",
   "readTime": "4 min read",
   "datePublished": "2026-06-05",
-  "dateModified": "2026-06-06",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -136,7 +136,28 @@
       "text": "The best digital time capsule app is simply the one whose priorities match yours — especially around privacy and whether you want it social or just for you."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "What should the best digital time capsule apps include?",
+      "answer": "The best digital time capsule apps should make it easy to write private letters, save memories, choose future reopen dates, and revisit entries without social pressure."
+    },
+    {
+      "question": "Is a digital time capsule app different from a journal app?",
+      "answer": "Yes. A journal app is often for regular writing, while a digital time capsule app is built around saving something now and opening it later."
+    },
+    {
+      "question": "What is a good time capsule app for iPhone?",
+      "answer": "A good time capsule app for iPhone should feel simple, private, and focused on future reflection rather than feeds, followers, or complicated tracking."
+    },
+    {
+      "question": "Can a future self app also be a memory keeping app?",
+      "answer": "Yes. A future self app can also support memory keeping when it lets you save letters, moments, decisions, goals, photos, or other meaningful context."
+    },
+    {
+      "question": "Why consider PersonalCapsule as a digital time capsule app?",
+      "answer": "PersonalCapsule is designed for private future self letters, memory capsules, goals, and decisions, with no account required and optional iCloud sync."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "If a private, on-device approach sounds right, you can try PersonalCapsule free on the App Store and seal your first capsule in a couple of minutes — no account needed.",

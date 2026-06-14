@@ -20,7 +20,7 @@
   "eyebrow": "Decision Journaling",
   "readTime": "4 min read",
   "datePublished": "2026-06-05",
-  "dateModified": "2026-06-06",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -140,7 +140,28 @@
       "text": "Copy the five-part template and fill it in for a decision you're facing this week. Add a photo or voice note if it helps capture your state of mind. Because your entries stay private on your device, you can be completely honest about your real reasoning.Used a few times, decision journal examples like these turn into a personal record of how you think — and a quiet way to get better at it."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "What should a decision journal example include?",
+      "answer": "A decision journal example should include the decision, context, options, fears, hopes, confidence level, expected outcome, and a future review note."
+    },
+    {
+      "question": "How detailed should a decision journal entry be?",
+      "answer": "A decision journal entry can be short. The goal is to capture your reasoning clearly enough that your future self can understand why the choice made sense at the time."
+    },
+    {
+      "question": "Can I use a decision journal template for everyday choices?",
+      "answer": "Yes. A decision journal template can be useful for everyday choices when the decision might teach you something about your habits or patterns later."
+    },
+    {
+      "question": "Why are decision journal examples useful?",
+      "answer": "Decision journal examples are useful because they show what to write before you know the outcome, which makes later reflection more honest."
+    },
+    {
+      "question": "How does PersonalCapsule support decision journaling?",
+      "answer": "PersonalCapsule lets you save decision capsules with your reasoning, emotion, and future reopen date so you can compare your expectations with what actually happened."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "PersonalCapsule lets you record a decision and your reasoning, then reopen it once you know the outcome. It's a free, private download on the App Store.",

@@ -20,7 +20,7 @@
   "eyebrow": "Digital Time Capsules",
   "readTime": "5 min read",
   "datePublished": "2026-06-04",
-  "dateModified": "2026-06-06",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -201,7 +201,28 @@
       "text": "Years from now, the thoughts you save today may become some of your most valuable memories."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "What is a digital time capsule?",
+      "answer": "A digital time capsule is a private digital message, memory, letter, or reflection that you save now and reopen at a future date."
+    },
+    {
+      "question": "How does a digital time capsule work?",
+      "answer": "A digital time capsule works by storing your current thoughts, memories, or media with a chosen reopen date so you can revisit them later."
+    },
+    {
+      "question": "What can I put in an online time capsule?",
+      "answer": "You can put a future self letter, photos, goals, decisions, personal memories, predictions, or reflections in an online or digital time capsule."
+    },
+    {
+      "question": "Is a time capsule app useful for future reflection?",
+      "answer": "A time capsule app can be useful for future reflection because it preserves your original thoughts before time changes your memory."
+    },
+    {
+      "question": "What makes PersonalCapsule a digital time capsule app?",
+      "answer": "PersonalCapsule lets you create private capsules for letters, moments, goals, and decisions, then reopen them when the time is right."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "Write a letter to your future self today and reopen it when the time is right.",

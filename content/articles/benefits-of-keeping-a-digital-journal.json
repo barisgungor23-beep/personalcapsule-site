@@ -20,7 +20,7 @@
   "eyebrow": "Reflection & Personal Growth",
   "readTime": "4 min read",
   "datePublished": "2026-06-05",
-  "dateModified": "2026-06-05",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -95,7 +95,28 @@
       "text": "If those benefits sound useful, the simplest way to start is to write one short entry today and not worry about doing it perfectly."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "What are the main benefits of keeping a digital journal?",
+      "answer": "The main benefits of keeping a digital journal are easier reflection, searchable memories, private writing space, flexible media, and the ability to revisit older thoughts over time."
+    },
+    {
+      "question": "Is digital journaling better than paper journaling?",
+      "answer": "Digital journaling is not always better, but it is more convenient for people who want reminders, privacy controls, photos, voice notes, and access from their iPhone."
+    },
+    {
+      "question": "Can a digital journal help with personal reflection?",
+      "answer": "Yes. A digital journal can help you notice patterns in goals, emotions, decisions, and memories when you return to older entries later."
+    },
+    {
+      "question": "What should I look for in a private journal app?",
+      "answer": "Look for a private journal app that does not require an account, keeps personal content under your control, and makes reflection feel simple rather than overwhelming."
+    },
+    {
+      "question": "How is PersonalCapsule different from a normal digital journal?",
+      "answer": "PersonalCapsule focuses on sealed future reflection. Instead of only writing daily entries, you can save thoughts for a future date and reopen them when the time is right."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "PersonalCapsule offers a private, on-device way to journal with text, photos, and voice notes — and to seal entries for your future self. It's free to start on the App Store.",

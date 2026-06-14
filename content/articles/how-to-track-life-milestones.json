@@ -20,7 +20,7 @@
   "eyebrow": "Memory Keeping",
   "readTime": "4 min read",
   "datePublished": "2026-06-05",
-  "dateModified": "2026-06-05",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -114,7 +114,28 @@
       "text": "For a milestone you especially want to remember, write a note to your future self about it and set it to reopen on an anniversary. The milestone then comes back to you on its own, years later.Learning how to track life milestones is really about giving your future self a clear map of the moments that mattered — recorded while they were still fresh."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "How do I track life milestones meaningfully?",
+      "answer": "Track life milestones by recording the date, what changed, why it mattered, who was involved, and what you hope to remember later."
+    },
+    {
+      "question": "What counts as a personal milestone?",
+      "answer": "A personal milestone can be a birthday, move, new job, relationship moment, goal progress, difficult ending, or quiet moment that changed you."
+    },
+    {
+      "question": "Is a milestone tracker only for achievements?",
+      "answer": "No. A milestone tracker can include lessons, transitions, emotional moments, and memories, not just achievements."
+    },
+    {
+      "question": "How often should I record life milestones?",
+      "answer": "Record life milestones whenever something feels worth remembering, even if it seems small in the moment."
+    },
+    {
+      "question": "Can PersonalCapsule be used for recording milestones?",
+      "answer": "Yes. PersonalCapsule can save personal milestones as capsules, with context you can reopen when the memory has more distance."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "PersonalCapsule gives you a private place to record milestones with text, photos, and voice notes, and to reopen them on meaningful dates. Download it free on the App Store.",

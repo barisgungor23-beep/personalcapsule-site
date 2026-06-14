@@ -20,7 +20,7 @@
   "eyebrow": "Future Self Letters",
   "readTime": "4 min read",
   "datePublished": "2026-06-05",
-  "dateModified": "2026-06-06",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -151,7 +151,28 @@
       "text": "When you're ready, seal it and pick a date to reopen. Because PersonalCapsule doesn't collect your capsule text, photos, or voice notes, you can be completely candid about what to say to your future self — it's just for you."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "What should I say to my future self?",
+      "answer": "Tell your future self what life feels like now, what you hope for, what you are afraid of, and what you want them to remember."
+    },
+    {
+      "question": "What are good things to write to your future self?",
+      "answer": "Good things to write to your future self include current goals, relationship notes, questions, lessons, predictions, and honest encouragement."
+    },
+    {
+      "question": "How do I start a future self message?",
+      "answer": "Start a future self message with where you are in life right now and why you wanted to write before this moment changed."
+    },
+    {
+      "question": "Can time capsule letter ideas help when I feel stuck?",
+      "answer": "Yes. Time capsule letter ideas can give you a simple starting point when you want to write but do not know what to say first."
+    },
+    {
+      "question": "How does PersonalCapsule help save a message to your future self?",
+      "answer": "PersonalCapsule lets you save a message to your future self as a private capsule and choose when it should reopen."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "PersonalCapsule gives you a private, calm space to write that first honest message and reopen it when the time is right. It's a free download on the App Store.",

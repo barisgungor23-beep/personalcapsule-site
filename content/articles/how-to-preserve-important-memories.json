@@ -20,7 +20,7 @@
   "eyebrow": "Memory Keeping",
   "readTime": "4 min read",
   "datePublished": "2026-06-05",
-  "dateModified": "2026-06-06",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -109,7 +109,28 @@
       "text": "You'll capture memories more truthfully when you know they're just for you. An approach that keeps your content on your device — not on a public feed or a company's servers — makes it easier to be candid.Learning how to preserve important memories isn't about documenting everything. It's about catching a few meaningful moments, in a little detail, before they slip away."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "How can I preserve important memories before they fade?",
+      "answer": "You can preserve important memories by writing what happened, why it mattered, who was there, and how it felt while the details are still fresh."
+    },
+    {
+      "question": "What is the best way to keep memories alive digitally?",
+      "answer": "The best way to keep memories alive digitally is to combine a short written reflection with photos, dates, and context you can revisit later."
+    },
+    {
+      "question": "Which memories are worth saving?",
+      "answer": "Memories worth saving often include milestones, quiet meaningful moments, personal breakthroughs, family stories, choices, and moments you do not want to lose."
+    },
+    {
+      "question": "Is memory keeping only for big events?",
+      "answer": "No. Memory keeping can be just as meaningful for small ordinary moments because those are often the details people forget first."
+    },
+    {
+      "question": "How does PersonalCapsule help preserve memories?",
+      "answer": "PersonalCapsule helps preserve memories by turning them into private capsules that can be reopened later with the original context intact."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "PersonalCapsule lets you save memories as private capsules — text, photos, and voice notes — and reopen them whenever you choose. It's free to start on the App Store.",

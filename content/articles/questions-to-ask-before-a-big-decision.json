@@ -20,7 +20,7 @@
   "eyebrow": "Decision Journaling",
   "readTime": "4 min read",
   "datePublished": "2026-06-05",
-  "dateModified": "2026-06-06",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -152,7 +152,28 @@
       "text": "Here's the useful part: write your answers down before you decide, and seal them with a date to reopen. When you revisit later, you'll see your real reasoning — not the version hindsight rewrites. That makes the next big decision a little easier.Working through these questions to ask before a big decision won't guarantee the right call, but it will help you make the call thoughtfully and remember why you made it."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "What questions should I ask before a big decision?",
+      "answer": "Before a big decision, ask what you want, what you fear, what tradeoffs exist, what information is missing, and how you will judge the choice later."
+    },
+    {
+      "question": "How can decision making questions reduce regret?",
+      "answer": "Decision making questions can reduce regret by helping you understand your reasoning before emotions, pressure, or hindsight change the story."
+    },
+    {
+      "question": "What should a decision checklist include?",
+      "answer": "A decision checklist should include options, risks, values, timing, expected outcomes, confidence level, and a future review date."
+    },
+    {
+      "question": "Should I journal before making a big decision?",
+      "answer": "Journaling before a big decision can help you slow down and capture what you know, feel, and expect before choosing."
+    },
+    {
+      "question": "How can PersonalCapsule help with big decision questions?",
+      "answer": "PersonalCapsule lets you save big decision questions and answers as a sealed decision capsule, then reopen it later for reflection."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "PersonalCapsule lets you capture your reasoning before a big decision and reopen it once the outcome is clear. Download it free on the App Store.",

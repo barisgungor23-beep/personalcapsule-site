@@ -20,7 +20,7 @@
   "eyebrow": "Memory Keeping",
   "readTime": "4 min read",
   "datePublished": "2026-06-05",
-  "dateModified": "2026-06-06",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -111,7 +111,28 @@
       "text": "can be deeply personal, so it helps to keep them somewhere private — on your own device rather than a public feed. That way you can include the honest, unposed images that age the best.Understanding how photos make time capsules more meaningful comes down to this: pair a real, ordinary image with a few honest words, and you give your future self a moment they can almost step back into."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "Why do photos make time capsules more meaningful?",
+      "answer": "Photos make time capsules more meaningful because they preserve visual details that words alone may not capture later."
+    },
+    {
+      "question": "What photos should I add to a digital time capsule?",
+      "answer": "Add photos that show the place, person, object, or moment connected to the memory, not only polished pictures."
+    },
+    {
+      "question": "Can photo memory keeping help preserve emotions?",
+      "answer": "Photo memory keeping can help preserve emotions when the photo is paired with a note about why the moment mattered."
+    },
+    {
+      "question": "Should every time capsule include photos?",
+      "answer": "No. Some time capsules are stronger as letters, but photos are helpful when the visual context adds meaning."
+    },
+    {
+      "question": "How does PersonalCapsule use photos in time capsules?",
+      "answer": "PersonalCapsule lets premium users add photos to capsules so a memory can include both the image and the reflection around it."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "PersonalCapsule lets you add photos to your sealed capsules alongside notes and voice recordings — private, on-device, and yours to reopen later. It's free to start on the App Store.",

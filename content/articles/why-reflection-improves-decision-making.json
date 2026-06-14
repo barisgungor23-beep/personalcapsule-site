@@ -20,7 +20,7 @@
   "eyebrow": "Reflection & Personal Growth",
   "readTime": "4 min read",
   "datePublished": "2026-06-05",
-  "dateModified": "2026-06-06",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -105,7 +105,28 @@
       "text": "Reflection won't make you always right, and it isn't a formula for perfect choices. What it does is turn each decision into something you can learn from instead of forget. That's the real reason reflection improves decision making — it keeps your own experience available to you."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "Why does reflection improve decision making?",
+      "answer": "Reflection improves decision making by helping you understand previous choices, notice patterns, and separate useful lessons from emotional reactions."
+    },
+    {
+      "question": "How can I use reflection for better decisions?",
+      "answer": "Use reflection for better decisions by reviewing what you expected, what happened, what changed, and what you would repeat or avoid next time."
+    },
+    {
+      "question": "Is decision reflection the same as regret?",
+      "answer": "No. Decision reflection is about learning from choices, while regret often focuses only on wishing the past were different."
+    },
+    {
+      "question": "What is reflective thinking in decision making?",
+      "answer": "Reflective thinking in decision making means pausing to examine your assumptions, values, emotions, and evidence before or after a choice."
+    },
+    {
+      "question": "How does PersonalCapsule help with decision reflection?",
+      "answer": "PersonalCapsule helps with decision reflection by saving decision entries for future review, when you can look back with more context."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "PersonalCapsule lets you record a decision and your reasoning, then reopen it later to see how your thinking held up. It's a free, private download on the App Store.",

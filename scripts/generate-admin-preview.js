@@ -3691,7 +3691,7 @@ function renderPanelGroup(title, description, body) {
     Drafts: "drafts-section",
   };
   const sectionId = sectionIds[title] ? ` id="${escapeHtml(sectionIds[title])}"` : "";
-  const openAttr = title === "System" ? " open" : "";
+  const openAttr = " open";
 
   return `
     <details${sectionId} class="panel-group admin-anchor" aria-label="${escapeHtml(title)}"${openAttr}>
@@ -3710,17 +3710,17 @@ function renderPanelGroup(title, description, body) {
 
 function renderAdminNavigation() {
   const items = [
-    ["Overview", "#founder-center", "Start here"],
-    ["Health", "#system-section", "Checks and status"],
-    ["Content", "#content-section", "SEO / GEO decision"],
-    ["Articles", "#articles-section", "Blog editor"],
-    ["Pages", "#pages-section", "Public files"],
-    ["Categories", "#categories-section", "Topic groups"],
-    ["Reports", "#reports-section", "Audit reports"],
-    ["Workflow", "#guides-section", "How to operate"],
-    ["Git / Deploy", "#git-deploy-section", "Push safety"],
-    ["Publish", "#publish-section", "Dry-run and backup"],
-    ["Drafts", "#drafts-section", "Draft tools"],
+    ["Overview", "overview", "Start here"],
+    ["Health", "health", "Checks and status"],
+    ["Content", "content", "SEO / GEO decision"],
+    ["Articles", "articles", "Blog editor"],
+    ["Pages", "pages", "Public files"],
+    ["Categories", "categories", "Topic groups"],
+    ["Reports", "reports", "Audit reports"],
+    ["Workflow", "workflow", "How to operate"],
+    ["Git / Deploy", "git-deploy", "Push safety"],
+    ["Publish", "publish", "Dry-run and backup"],
+    ["Drafts", "drafts", "Draft tools"],
   ];
 
   return `
@@ -3733,8 +3733,8 @@ function renderAdminNavigation() {
       <div class="admin-nav-links">
         ${items
           .map(
-            ([label, href, hint], index) => `
-              <a class="nav-link${index === 0 ? " active" : ""}" href="${escapeHtml(href)}" data-admin-jump>
+            ([label, screen, hint], index) => `
+              <a class="nav-link${index === 0 ? " active" : ""}" href="#${escapeHtml(screen)}" data-admin-jump data-screen-target="${escapeHtml(screen)}">
                 <strong>${escapeHtml(label)}</strong>
                 <span>${escapeHtml(hint)}</span>
               </a>`
@@ -3877,6 +3877,37 @@ function render(model) {
     .metric span, .metric small { display: block; color: var(--muted); font-size: 13px; }
     .metric strong { display: block; font-size: 32px; line-height: 1.1; margin: 10px 0; }
     .admin-anchor { scroll-margin-top: 18px; }
+    .admin-screen {
+      grid-column: 2;
+      display: none;
+      gap: 16px;
+      min-width: 0;
+    }
+    .admin-screen.active-screen {
+      display: grid;
+    }
+    .screen-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+      box-shadow: 0 1px 2px rgba(16,24,40,.04);
+    }
+    .screen-head h2 {
+      margin: 4px 0 5px;
+      font-size: 26px;
+      letter-spacing: -.03em;
+    }
+    .screen-head p {
+      margin: 0;
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 14px;
+    }
     .admin-nav {
       grid-column: 1;
       grid-row: 1 / span 20;
@@ -4833,154 +4864,85 @@ function render(model) {
 
     ${renderAdminNavigation()}
 
-    <section id="founder-center" class="admin-anchor">
-      ${renderFounderDecisionCenter(founderDecisionCenter)}
-      ${renderAdminHomeBrief(adminHomeBrief)}
-      ${renderAdminWorkQueue(adminWorkQueue)}
+    <section id="overview" class="admin-screen active-screen" data-admin-screen="overview">
+      <div class="screen-head">
+        <div>
+          <span class="home-eyebrow">Overview</span>
+          <h2>Website control overview</h2>
+          <p>Use this first screen for the safest current status: what changed, what needs attention, and whether the site is ready for the next action.</p>
+        </div>
+        <span class="pill good">Default screen</span>
+      </div>
+      <div id="founder-center" class="admin-anchor">
+        ${renderFounderDecisionCenter(founderDecisionCenter)}
+        ${renderAdminHomeBrief(adminHomeBrief)}
+        ${renderAdminWorkQueue(adminWorkQueue)}
+      </div>
+      <section class="grid metrics" aria-label="Website summary">
+        ${renderMetric("HTML pages", model.summary.totalHtmlPages, "Current static pages")}
+        ${renderMetric("Blog articles", model.summary.totalBlogArticles, "Structured content files")}
+        ${renderMetric("Categories", model.summary.totalBlogCategories, "Managed blog groups")}
+        ${renderMetric("Drafts", model.summary.articleStatuses.draft, "Not public")}
+        ${renderMetric("Archived", model.summary.articleStatuses.archived, "Hidden from publishing")}
+        ${renderMetric("Warnings", model.summary.seoWarnings, "Before publish checks")}
+        ${renderMetric("Good", model.summary.articleQuality.good, "Ready quality")}
+        ${renderMetric("Review", model.summary.articleQuality.review, "Needs attention")}
+        ${renderMetric("Risk", model.summary.articleQuality.risk, "Should not publish")}
+      </section>
     </section>
 
-    <section class="grid metrics" aria-label="Website summary">
-      ${renderMetric("HTML pages", model.summary.totalHtmlPages, "Current static pages")}
-      ${renderMetric("Blog articles", model.summary.totalBlogArticles, "Structured content files")}
-      ${renderMetric("Categories", model.summary.totalBlogCategories, "Managed blog groups")}
-      ${renderMetric("Drafts", model.summary.articleStatuses.draft, "Not public")}
-      ${renderMetric("Archived", model.summary.articleStatuses.archived, "Hidden from publishing")}
-      ${renderMetric("Warnings", model.summary.seoWarnings, "Before publish checks")}
-      ${renderMetric("Good", model.summary.articleQuality.good, "Ready quality")}
-      ${renderMetric("Review", model.summary.articleQuality.review, "Needs attention")}
-      ${renderMetric("Risk", model.summary.articleQuality.risk, "Should not publish")}
+    <section id="health" class="admin-screen" data-admin-screen="health">
+      <div class="screen-head">
+        <div>
+          <span class="home-eyebrow">Health</span>
+          <h2>Checks and status</h2>
+          <p>This screen shows content health, workflow status, generated reports, and the latest local control check.</p>
+        </div>
+      </div>
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Health</h2>
+          <span class="pill ${model.summary.seoWarnings === 0 ? "good" : "warn"}">${model.summary.seoWarnings === 0 ? "clean" : "review"}</span>
+        </div>
+        <div class="health">
+          ${renderHealthIssues(model)}
+        </div>
+      </section>
+      ${renderPublishWorkflowStatus({
+        model,
+        controlReport,
+        draftComparisonReport,
+        publishReadinessReport,
+        publishDryRunReport,
+        publishRollbackPlan,
+        backupSnapshotReport,
+        restoreDryRunReport,
+      })}
+      ${renderAdminDashboardSnapshot(adminDashboardSnapshot)}
+      ${renderAdminSystemOverview(adminSystemOverview)}
+      ${renderControlCenter(controlReport)}
     </section>
 
-    <section class="layout">
-      <aside class="stack">
-        ${renderPanelGroup(
-          "System",
-          "Daily health, workflow status, and founder-level overview.",
-          `
-            <section class="panel">
-              <div class="panel-head">
-                <h2>Health</h2>
-                <span class="pill ${model.summary.seoWarnings === 0 ? "good" : "warn"}">${model.summary.seoWarnings === 0 ? "clean" : "review"}</span>
-              </div>
-              <div class="health">
-                ${renderHealthIssues(model)}
-              </div>
-            </section>
+    <section id="content" class="admin-screen" data-admin-screen="content">
+      <div class="screen-head">
+        <div>
+          <span class="home-eyebrow">Content</span>
+          <h2>SEO / GEO decision</h2>
+          <p>This screen turns article quality signals into a simple decision: wait, improve, publish, or review first.</p>
+        </div>
+      </div>
+      ${renderContentQualityDecision(contentQualityDecision)}
+    </section>
 
-            ${renderPublishWorkflowStatus({
-              model,
-              controlReport,
-              draftComparisonReport,
-              publishReadinessReport,
-              publishDryRunReport,
-              publishRollbackPlan,
-              backupSnapshotReport,
-              restoreDryRunReport,
-            })}
-
-            ${renderAdminDashboardSnapshot(adminDashboardSnapshot)}
-            ${renderAdminSystemOverview(adminSystemOverview)}
-            ${renderControlCenter(controlReport)}
-          `
-        )}
-
-        ${renderPanelGroup(
-          "Reports",
-          "Report inventory, freshness, dependencies, and recovery context.",
-          `
-            ${renderAdminReportIndex(adminReportIndex)}
-            ${renderAdminReportFreshness(adminReportFreshness)}
-            ${renderAdminFailurePlaybook(adminFailurePlaybook)}
-            ${renderAdminDependencyMap(adminDependencyMap)}
-            ${renderAdminReportDetailViewer(adminReportDetailViewer)}
-          `
-        )}
-
-        ${renderPanelGroup(
-          "Guides",
-          "Safe operating instructions and command references.",
-          `
-            ${renderAdminQuickStart(adminQuickStart)}
-            ${renderAdminCommandGuide(adminCommandGuide)}
-            ${renderAdminActionFlow(adminActionFlow)}
-            ${renderAdminWorkflowGuide(adminWorkflowGuide)}
-            ${renderAdminCommandRiskMatrix(adminCommandRiskMatrix)}
-            ${renderAdminOperationsManual(adminOperationsManual)}
-          `
-        )}
-
-        ${renderPanelGroup(
-          "Git / Deploy",
-          "Local Git state, push package, and Cloudflare deployment readiness.",
-          `
-            ${renderGitStatusReport(gitStatusReport)}
-            ${renderPushPackageReport(pushPackageReport)}
-            ${renderSafePushChecklist(safePushChecklist)}
-            ${renderDomainSafetyPolicy(domainSafetyPolicy)}
-            ${renderPushConfirmationGuide(pushConfirmationGuide)}
-            ${renderFinalPushReview(finalPushReview)}
-            ${renderDeploymentReadiness(deploymentReadiness)}
-          `
-        )}
-
-        ${renderPanelGroup(
-          "Publish Safety",
-          "Dry-run, backup, rollback, and restore checks before anything goes live.",
-          `
-            ${renderPublishReadiness(publishReadinessReport)}
-            ${renderPublishReport(publishReport)}
-            ${renderPublishDryRun(publishDryRunReport)}
-            ${renderPublishRollback(publishRollbackPlan)}
-            ${renderBackupSnapshot(backupSnapshotReport)}
-            ${renderBackupRestoreCenter(backupRestoreCenter)}
-            ${renderPublishWizard(publishWizard)}
-            ${renderPrePublishChecklist(prePublishChecklist)}
-            ${renderDraftPublishSimulationSummary(draftPublishSimulationSummary)}
-            ${renderRestoreDryRun(restoreDryRunReport)}
-            ${renderRestoreReport(restoreReport)}
-          `
-        )}
-
-        ${renderPanelGroup(
-          "Drafts",
-          "Draft quality, edit guidance, comparison, and new article workflow.",
-          `
-            ${renderDraftQuality(draftQualityReport)}
-            ${renderDraftFixList(draftFixListReport)}
-            ${renderDraftEditPlan(draftEditPlanReport)}
-            ${renderDraftEditGuide(draftEditGuideReport)}
-            ${renderDraftPatchApplyGuide(draftPatchApplyGuideReport)}
-            ${renderDraftPatchExportCenter(draftPatchExportCenter)}
-            ${renderDraftComparison(draftComparisonReport)}
-            ${renderPublishWorkflow()}
-            ${renderNewArticleWorkflow(model.categories)}
-            ${renderExistingArticleEditWorkflow(model.articles)}
-            ${renderEditorRules(model.editorRules.article)}
-          `
-        )}
-
-        <section id="categories-section" class="panel admin-anchor">
-          <div class="panel-head">
-            <h2>Category map</h2>
-            <small>${model.categories.length} groups</small>
-          </div>
-          <div class="side-list">
-            ${model.categories
-              .map(
-                (category) => `
-                  <div class="side-item">
-                    <strong>${escapeHtml(category.name)}</strong>
-                    <span>${category.articleCount} articles · ${category.keywordCount} keywords</span>
-                  </div>`
-              )
-              .join("")}
-          </div>
-        </section>
-      </aside>
-
-      <div id="content-section" class="stack admin-anchor">
-        ${renderContentQualityDecision(contentQualityDecision)}
-        <section id="articles-section" class="panel admin-anchor">
+    <section id="articles" class="admin-screen" data-admin-screen="articles">
+      <div class="screen-head">
+        <div>
+          <span class="home-eyebrow">Articles</span>
+          <h2>Blog editor</h2>
+          <p>Search articles, inspect SEO fields, and prepare local draft patch exports before the full CMS editor exists.</p>
+        </div>
+      </div>
+      <section id="articles-section" class="panel admin-anchor">
           <div class="panel-head">
             <h2>Blog articles</h2>
             <small>Read-only searchable list</small>
@@ -5073,53 +5035,207 @@ function render(model) {
             <p class="editor-help">This Draft Edit Form v1 only edits values inside this browser preview. Patch targets a draft file, never a published article file. It does not save, publish, delete, commit or deploy anything. Copy/download exports the patch JSON for manual review only.</p>
             <textarea class="patch-output" id="draftPatchOutput" readonly>Local draft patch will appear here after you select an article and click Build draft patch. Apply it only to a draft file after human review.</textarea>
           </section>
-
-          <section class="panel">
-            <div class="panel-head">
-              <h2>Categories</h2>
-              <small>Sitemap and llms status</small>
-            </div>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Category</th>
-                    <th>Status</th>
-                    <th>Articles</th>
-                    <th>Keywords</th>
-                    <th>SEO</th>
-                    <th>Meta</th>
-                    <th>Sitemap</th>
-                    <th>llms</th>
-                  </tr>
-                </thead>
-                <tbody>${renderCategories(model.categories)}</tbody>
-              </table>
-            </div>
-          </section>
-
-          <section id="pages-section" class="panel admin-anchor">
-            <div class="panel-head">
-              <h2>Pages</h2>
-              <small>${model.pages.length} public files</small>
-            </div>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Page</th>
-                    <th>Type</th>
-                    <th>Route</th>
-                    <th>Canonical</th>
-                    <th>Meta</th>
-                  </tr>
-                </thead>
-                <tbody>${renderPages(model.pages)}</tbody>
-              </table>
-            </div>
-          </section>
         </section>
+    </section>
+
+    <section id="pages" class="admin-screen" data-admin-screen="pages">
+      <div class="screen-head">
+        <div>
+          <span class="home-eyebrow">Pages</span>
+          <h2>Public files</h2>
+          <p>Review every static page that can be crawled, indexed, or opened by users.</p>
+        </div>
       </div>
+      <section class="panel admin-anchor">
+        <div class="panel-head">
+          <h2>Pages</h2>
+          <small>${model.pages.length} public files</small>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Page</th>
+                <th>Type</th>
+                <th>Route</th>
+                <th>Canonical</th>
+                <th>Meta</th>
+              </tr>
+            </thead>
+            <tbody>${renderPages(model.pages)}</tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <section id="categories" class="admin-screen" data-admin-screen="categories">
+      <div class="screen-head">
+        <div>
+          <span class="home-eyebrow">Categories</span>
+          <h2>Topic groups</h2>
+          <p>Review blog categories, keyword coverage, sitemap inclusion, and llms.txt inclusion in one focused screen.</p>
+        </div>
+      </div>
+      <section id="categories-section" class="panel admin-anchor">
+        <div class="panel-head">
+          <h2>Category map</h2>
+          <small>${model.categories.length} groups</small>
+        </div>
+        <div class="side-list">
+          ${model.categories
+            .map(
+              (category) => `
+                <div class="side-item">
+                  <strong>${escapeHtml(category.name)}</strong>
+                  <span>${category.articleCount} articles · ${category.keywordCount} keywords</span>
+                </div>`
+            )
+            .join("")}
+        </div>
+      </section>
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Categories</h2>
+          <small>Sitemap and llms status</small>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Articles</th>
+                <th>Keywords</th>
+                <th>SEO</th>
+                <th>Meta</th>
+                <th>Sitemap</th>
+                <th>llms</th>
+              </tr>
+            </thead>
+            <tbody>${renderCategories(model.categories)}</tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <section id="reports" class="admin-screen" data-admin-screen="reports">
+      <div class="screen-head">
+        <div>
+          <span class="home-eyebrow">Reports</span>
+          <h2>Audit reports</h2>
+          <p>Use this screen when you need report inventory, freshness, dependencies, and failure recovery context.</p>
+        </div>
+      </div>
+      ${renderPanelGroup(
+        "Reports",
+        "Report inventory, freshness, dependencies, and recovery context.",
+        `
+          ${renderAdminReportIndex(adminReportIndex)}
+          ${renderAdminReportFreshness(adminReportFreshness)}
+          ${renderAdminFailurePlaybook(adminFailurePlaybook)}
+          ${renderAdminDependencyMap(adminDependencyMap)}
+          ${renderAdminReportDetailViewer(adminReportDetailViewer)}
+        `
+      )}
+    </section>
+
+    <section id="workflow" class="admin-screen" data-admin-screen="workflow">
+      <div class="screen-head">
+        <div>
+          <span class="home-eyebrow">Workflow</span>
+          <h2>How to operate</h2>
+          <p>Use this screen for safe operating instructions, command references, and command risk levels.</p>
+        </div>
+      </div>
+      ${renderPanelGroup(
+        "Guides",
+        "Safe operating instructions and command references.",
+        `
+          ${renderAdminQuickStart(adminQuickStart)}
+          ${renderAdminCommandGuide(adminCommandGuide)}
+          ${renderAdminActionFlow(adminActionFlow)}
+          ${renderAdminWorkflowGuide(adminWorkflowGuide)}
+          ${renderAdminCommandRiskMatrix(adminCommandRiskMatrix)}
+          ${renderAdminOperationsManual(adminOperationsManual)}
+        `
+      )}
+    </section>
+
+    <section id="git-deploy" class="admin-screen" data-admin-screen="git-deploy">
+      <div class="screen-head">
+        <div>
+          <span class="home-eyebrow">Git / Deploy</span>
+          <h2>Push safety</h2>
+          <p>Review local Git state, push package, Cloudflare deployment readiness, and domain safety before live changes.</p>
+        </div>
+      </div>
+      ${renderPanelGroup(
+        "Git / Deploy",
+        "Local Git state, push package, and Cloudflare deployment readiness.",
+        `
+          ${renderGitStatusReport(gitStatusReport)}
+          ${renderPushPackageReport(pushPackageReport)}
+          ${renderSafePushChecklist(safePushChecklist)}
+          ${renderDomainSafetyPolicy(domainSafetyPolicy)}
+          ${renderPushConfirmationGuide(pushConfirmationGuide)}
+          ${renderFinalPushReview(finalPushReview)}
+          ${renderDeploymentReadiness(deploymentReadiness)}
+        `
+      )}
+    </section>
+
+    <section id="publish" class="admin-screen" data-admin-screen="publish">
+      <div class="screen-head">
+        <div>
+          <span class="home-eyebrow">Publish</span>
+          <h2>Dry-run and backup</h2>
+          <p>Use this screen before anything goes live: readiness, dry-run, backup, rollback, restore, and publish simulation.</p>
+        </div>
+      </div>
+      ${renderPanelGroup(
+        "Publish Safety",
+        "Dry-run, backup, rollback, and restore checks before anything goes live.",
+        `
+          ${renderPublishReadiness(publishReadinessReport)}
+          ${renderPublishReport(publishReport)}
+          ${renderPublishDryRun(publishDryRunReport)}
+          ${renderPublishRollback(publishRollbackPlan)}
+          ${renderBackupSnapshot(backupSnapshotReport)}
+          ${renderBackupRestoreCenter(backupRestoreCenter)}
+          ${renderPublishWizard(publishWizard)}
+          ${renderPrePublishChecklist(prePublishChecklist)}
+          ${renderDraftPublishSimulationSummary(draftPublishSimulationSummary)}
+          ${renderRestoreDryRun(restoreDryRunReport)}
+          ${renderRestoreReport(restoreReport)}
+        `
+      )}
+    </section>
+
+    <section id="drafts" class="admin-screen" data-admin-screen="drafts">
+      <div class="screen-head">
+        <div>
+          <span class="home-eyebrow">Drafts</span>
+          <h2>Draft tools</h2>
+          <p>Create draft plans, review draft quality, export patches, and prepare existing or new articles without touching live content.</p>
+        </div>
+      </div>
+      ${renderPanelGroup(
+        "Drafts",
+        "Draft quality, edit guidance, comparison, and new article workflow.",
+        `
+          ${renderDraftQuality(draftQualityReport)}
+          ${renderDraftFixList(draftFixListReport)}
+          ${renderDraftEditPlan(draftEditPlanReport)}
+          ${renderDraftEditGuide(draftEditGuideReport)}
+          ${renderDraftPatchApplyGuide(draftPatchApplyGuideReport)}
+          ${renderDraftPatchExportCenter(draftPatchExportCenter)}
+          ${renderDraftComparison(draftComparisonReport)}
+          ${renderPublishWorkflow()}
+          ${renderNewArticleWorkflow(model.categories)}
+          ${renderExistingArticleEditWorkflow(model.articles)}
+          ${renderEditorRules(model.editorRules.article)}
+        `
+      )}
     </section>
 
     <footer>
@@ -5146,6 +5262,7 @@ function render(model) {
     const rows = Array.from(document.querySelectorAll("[data-article-row]"));
     const commandButtons = Array.from(document.querySelectorAll("[data-copy-command]"));
     const navLinks = Array.from(document.querySelectorAll("[data-admin-jump]"));
+    const adminScreens = Array.from(document.querySelectorAll("[data-admin-screen]"));
     let selectedArticle = null;
     let currentPatchJson = "";
     let currentPatchFilename = "personalcapsule-draft-patch.json";
@@ -5472,15 +5589,37 @@ function render(model) {
       navLinks.forEach((link) => link.classList.toggle("active", link === activeLink));
     }
 
+    function showAdminScreen(screenId, options = {}) {
+      const knownScreens = new Set(adminScreens.map((screen) => screen.dataset.adminScreen));
+      const targetScreen = knownScreens.has(screenId) ? screenId : "overview";
+      const activeLink = navLinks.find((link) => link.dataset.screenTarget === targetScreen) || navLinks[0];
+
+      adminScreens.forEach((screen) => {
+        screen.classList.toggle("active-screen", screen.dataset.adminScreen === targetScreen);
+      });
+
+      if (activeLink) {
+        setActiveNav(activeLink);
+      }
+
+      if (options.updateHash !== false) {
+        history.replaceState(null, "", "#" + targetScreen);
+      }
+
+      if (options.scroll !== false) {
+        window.scrollTo({ top: 0, behavior: options.smooth ? "smooth" : "auto" });
+      }
+    }
+
     navLinks.forEach((link) => {
-      link.addEventListener("click", () => {
-        setActiveNav(link);
-        const target = document.querySelector(link.getAttribute("href"));
-        if (target && target.tagName === "DETAILS") {
-          target.open = true;
-        }
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        showAdminScreen(link.dataset.screenTarget, { smooth: true });
       });
     });
+
+    const initialScreen = location.hash ? location.hash.slice(1) : "overview";
+    showAdminScreen(initialScreen, { updateHash: false, scroll: false });
 
     searchInput.addEventListener("input", applyFilters);
     categoryFilter.addEventListener("change", applyFilters);

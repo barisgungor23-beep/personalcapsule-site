@@ -20,7 +20,7 @@
   "eyebrow": "Reflection & Personal Growth",
   "readTime": "4 min read",
   "datePublished": "2026-06-05",
-  "dateModified": "2026-06-06",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -132,7 +132,28 @@
       "text": "The best of these personal growth reflection techniques is simply the one that's easy enough that you'll still be doing it next month."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "What are simple personal growth reflection techniques?",
+      "answer": "Simple personal growth reflection techniques include monthly reviews, future self letters, decision reviews, goal reflections, and writing lessons learned."
+    },
+    {
+      "question": "How do I reflect without overthinking?",
+      "answer": "Reflect without overthinking by answering a few specific questions, writing honestly, and stopping before the process becomes pressure."
+    },
+    {
+      "question": "Is reflective journaling useful for personal growth?",
+      "answer": "Reflective journaling can be useful for personal growth because it helps you notice patterns in choices, emotions, habits, and goals."
+    },
+    {
+      "question": "How often should I practice self reflection techniques?",
+      "answer": "You can practice self reflection techniques weekly, monthly, or around meaningful moments. Consistency matters more than frequency."
+    },
+    {
+      "question": "How does PersonalCapsule support reflection methods?",
+      "answer": "PersonalCapsule supports reflection methods by letting you save thoughts now and revisit them later with more context and distance."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "PersonalCapsule gives you a calm, private space for quick check-ins, voice notes, and write-now-read-later reflections. Download it free on the App Store.",

@@ -20,7 +20,7 @@
   "eyebrow": "Memory Keeping",
   "readTime": "4 min read",
   "datePublished": "2026-06-05",
-  "dateModified": "2026-06-06",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -127,7 +127,28 @@
       "text": "Start small: capture one memory a week, not your entire life. A light, consistent habit will preserve far more over time than an ambitious system you drop.This digital memory keeping guide comes down to one idea: catch the moments that matter, keep them in one private place, and make them easy to revisit."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "What is digital memory keeping?",
+      "answer": "Digital memory keeping is the practice of saving meaningful memories, photos, notes, milestones, and reflections in a digital format you can revisit later."
+    },
+    {
+      "question": "How can beginners start digital memory keeping?",
+      "answer": "Beginners can start digital memory keeping by saving one important moment each week with a short note about what happened and why it mattered."
+    },
+    {
+      "question": "What kinds of digital memories are worth saving?",
+      "answer": "Digital memories worth saving include milestones, relationships, personal wins, hard lessons, photos, voice notes, decisions, and ordinary moments that may matter later."
+    },
+    {
+      "question": "Is a memory keeping app better than a photo album?",
+      "answer": "A memory keeping app can add context that a photo album may miss, such as feelings, decisions, goals, and the meaning behind the memory."
+    },
+    {
+      "question": "How does PersonalCapsule help with digital memory keeping?",
+      "answer": "PersonalCapsule helps you save memories as private capsules and reopen them in the future, so the memory includes both the moment and your later perspective."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "PersonalCapsule is a simple, private home for your memories — text, photos, and voice notes you can keep and reopen on your own terms. It's free to start on the App Store.",

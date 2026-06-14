@@ -20,7 +20,7 @@
   "eyebrow": "Reflection & Personal Growth",
   "readTime": "4 min read",
   "datePublished": "2026-06-05",
-  "dateModified": "2026-06-06",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -147,7 +147,28 @@
       "text": "Used consistently, monthly reflection questions like these give you a steady, low-effort way to notice how your life is actually moving — one month at a time."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "What are good monthly reflection questions?",
+      "answer": "Good monthly reflection questions ask what changed, what you learned, what felt meaningful, what drained you, and what you want to carry forward."
+    },
+    {
+      "question": "How can monthly reflection support personal growth?",
+      "answer": "Monthly reflection supports personal growth by helping you notice patterns, progress, and repeated challenges before they disappear into memory."
+    },
+    {
+      "question": "How many monthly review questions should I answer?",
+      "answer": "You can answer 5 to 10 monthly review questions for a focused check-in, or more if you want a deeper end of month journal entry."
+    },
+    {
+      "question": "What should I write in an end of month journal?",
+      "answer": "In an end of month journal, write what happened, what mattered, what you learned, what you want to improve, and what you are grateful for."
+    },
+    {
+      "question": "Can PersonalCapsule be used for monthly reflection?",
+      "answer": "Yes. PersonalCapsule can store monthly reflection capsules so you can reopen them later and see how your life and priorities changed."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "PersonalCapsule is a calm place to keep your monthly reflections private, and to seal a few for your future self. Download it free on the App Store.",

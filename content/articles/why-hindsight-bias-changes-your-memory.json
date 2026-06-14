@@ -20,7 +20,7 @@
   "eyebrow": "Decision Journaling",
   "readTime": "4 min read",
   "datePublished": "2026-06-05",
-  "dateModified": "2026-06-06",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -85,7 +85,28 @@
       "text": "Next time you face a meaningful choice, jot down what you expect and how confident you actually feel. Seal it with a date to reopen once the result is in. When you reread it, you may be surprised by how uncertain you really were.Understanding why hindsight bias changes your memory is the first step; keeping an honest record before the outcome is how you protect yourself from it."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "What is hindsight bias?",
+      "answer": "Hindsight bias is the tendency to believe an outcome was more obvious after it happened than it actually was before it happened."
+    },
+    {
+      "question": "How does hindsight bias change your memory?",
+      "answer": "Hindsight bias can change your memory by making your past reasoning seem clearer, more certain, or more predictable than it really was."
+    },
+    {
+      "question": "Why does hindsight bias matter for decisions?",
+      "answer": "Hindsight bias matters for decisions because it can make you judge old choices unfairly based only on what happened later."
+    },
+    {
+      "question": "Can decision journaling help with hindsight bias?",
+      "answer": "Decision journaling can help with hindsight bias by preserving what you knew, felt, and expected before the outcome was known."
+    },
+    {
+      "question": "How does PersonalCapsule help preserve decision memory?",
+      "answer": "PersonalCapsule lets you save decision capsules before the outcome, so your later review can start from your original perspective."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "PersonalCapsule lets you record your reasoning before you know the outcome, so your real thinking stays intact. Download it free on the App Store.",

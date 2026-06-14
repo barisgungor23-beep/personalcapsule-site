@@ -20,7 +20,7 @@
   "eyebrow": "Digital Time Capsules",
   "readTime": "4 min read",
   "datePublished": "2026-06-05",
-  "dateModified": "2026-06-06",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -147,7 +147,28 @@
       "text": "Learning to create a private time capsule on iPhone really comes down to one decision: choosing a tool that keeps your most personal words where they belong — with you."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "How do I create a private time capsule on iPhone?",
+      "answer": "To create a private time capsule on iPhone, choose what you want to save, write the context, set a future reopen date, and keep it somewhere you trust."
+    },
+    {
+      "question": "What should a private time capsule app protect?",
+      "answer": "A private time capsule app should protect personal letters, memories, decisions, goals, photos, and reflections from unnecessary accounts or public sharing."
+    },
+    {
+      "question": "Can an iPhone time capsule app work without an account?",
+      "answer": "Yes. PersonalCapsule is designed without required accounts, so your private journal and capsules can stay focused on your device and optional iCloud sync."
+    },
+    {
+      "question": "What can I put in a digital time capsule on iOS?",
+      "answer": "You can put a future self letter, goal, decision, memory, photo, or personal note into a digital time capsule on iOS."
+    },
+    {
+      "question": "Why use PersonalCapsule for a private journal on iPhone?",
+      "answer": "PersonalCapsule is built for private future reflection on iPhone, with sealed capsules, reminders, and no social feed."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "PersonalCapsule is a private, on-device time capsule built for iPhone, with no account required and optional iCloud sync. Download it free on the App Store and seal your first capsule today.",

@@ -20,7 +20,7 @@
   "eyebrow": "Digital Time Capsules",
   "readTime": "4 min read",
   "datePublished": "2026-06-05",
-  "dateModified": "2026-06-06",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -147,7 +147,28 @@
       "text": "If you mostly want delayed reflection rather than daily logging, the digital time capsule side is where to start — and you can always add a journaling habit alongside it."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "What is the difference between a digital time capsule and traditional journaling?",
+      "answer": "Traditional journaling is often ongoing writing, while a digital time capsule is created now and intentionally reopened later for delayed reflection."
+    },
+    {
+      "question": "Is a time capsule better than a journal?",
+      "answer": "A time capsule is not better for every person, but it can be better when you want distance, anticipation, and a future moment of reflection."
+    },
+    {
+      "question": "Can I use both journaling and time capsules?",
+      "answer": "Yes. You can use journaling for regular thoughts and digital time capsules for moments, decisions, or letters you want to revisit at a specific future date."
+    },
+    {
+      "question": "Why does delayed reflection feel different?",
+      "answer": "Delayed reflection feels different because you return to your old thoughts after life has moved forward, which can make patterns and growth easier to notice."
+    },
+    {
+      "question": "How does PersonalCapsule support delayed reflection?",
+      "answer": "PersonalCapsule lets you seal letters, decisions, goals, and moments until a future date, which makes reflection feel intentional rather than immediate."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "PersonalCapsule focuses on the future-reflection side: seal a letter, decision, or goal today and reopen it when the time is right. It's a free, private download on the App Store.",

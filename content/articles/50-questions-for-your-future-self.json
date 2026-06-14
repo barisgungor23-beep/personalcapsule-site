@@ -20,7 +20,7 @@
   "eyebrow": "Future Self Letters",
   "readTime": "7 min read",
   "datePublished": "2026-06-04",
-  "dateModified": "2026-06-06",
+  "dateModified": "2026-06-14",
   "schemaAbout": [],
   "body": [
     {
@@ -167,7 +167,7 @@
     },
     {
       "type": "paragraph",
-      "text": "You don&#x27;t need to answer all 50 questions at once. Choose:"
+      "text": "You don't need to answer all 50 questions at once. Choose:"
     },
     {
       "type": "list",
@@ -180,7 +180,7 @@
     },
     {
       "type": "paragraph",
-      "text": "The most important thing is honesty. Your future self won&#x27;t judge you. These questions are meant to capture your real thoughts, concerns, hopes, and ambitions."
+      "text": "The most important thing is honesty. Your future self won't judge you. These questions are meant to capture your real thoughts, concerns, hopes, and ambitions."
     },
     {
       "type": "heading",
@@ -209,7 +209,28 @@
       "text": "By asking thoughtful questions today, you create a bridge between your present and future self. Years from now, you may discover that the answers matter less than the questions themselves, because the questions reveal who you were, what you valued, and what you hoped your future would become."
     }
   ],
-  "faq": [],
+  "faq": [
+    {
+      "question": "What are good questions for your future self?",
+      "answer": "Good questions for your future self ask about goals, relationships, decisions, fears, hopes, habits, and what you want to remember about this season of life."
+    },
+    {
+      "question": "How many future self prompts should I answer at once?",
+      "answer": "You can answer 5 to 10 future self prompts for a short reflection, or use all 50 questions when you want a deeper time capsule letter."
+    },
+    {
+      "question": "Can future self questions become a time capsule letter?",
+      "answer": "Yes. Future self questions work well as the structure for a time capsule letter because they capture what you think, feel, and value today."
+    },
+    {
+      "question": "Should a future self journal be private?",
+      "answer": "A future self journal is usually more useful when it feels private, because honest answers are easier to write when you are not performing for anyone else."
+    },
+    {
+      "question": "How does PersonalCapsule help with future self prompts?",
+      "answer": "PersonalCapsule lets you turn future self prompts into sealed capsules, choose a reopen date, and read your answers later with more perspective."
+    }
+  ],
   "cta": {
     "heading": "Start your first capsule",
     "text": "Write a letter to your future self today and reopen it when the time is right.",
