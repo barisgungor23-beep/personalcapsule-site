@@ -1,0 +1,29 @@
+{
+  "id": "comparisons-alternatives",
+  "type": "blog_category",
+  "status": "published",
+  "name": "Comparisons & Alternatives",
+  "slug": "comparisons-alternatives",
+  "url": "https://personalcapsule.app/blog/category/comparisons-alternatives",
+  "seoTitle": "Future Self App Comparisons & Alternatives | PersonalCapsule",
+  "description": "Compare future self letter apps, FutureMe alternatives, digital time capsule apps, and private iPhone reflection tools.",
+  "keywords": [
+    "FutureMe alternative",
+    "PersonalCapsule vs FutureMe",
+    "future self letter app",
+    "apps like FutureMe",
+    "digital time capsule app"
+  ],
+  "eyebrow": "Comparisons & Alternatives",
+  "heading": "Future Self App Comparisons",
+  "heroText": "Honest comparisons for choosing a future self letter app, digital time capsule journal, or private iPhone reflection tool.",
+  "intro": "Neutral guides for comparing PersonalCapsule with FutureMe, email-based future letter tools, and private digital time capsule apps.",
+  "schemaAbout": [
+    "FutureMe alternatives",
+    "future self letter apps",
+    "digital time capsule apps",
+    "private iPhone journal apps"
+  ],
+  "llmsInclude": true,
+  "sitemapInclude": true
+}

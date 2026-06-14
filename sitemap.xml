@@ -357,4 +357,46 @@
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
+
+  <url>
+    <loc>https://personalcapsule.app/blog/category/comparisons-alternatives</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
+  <url>
+    <loc>https://personalcapsule.app/blog/category/privacy-trust</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
+  <url>
+    <loc>https://personalcapsule.app/blog/best-futureme-alternatives-iphone</loc>
+    <lastmod>2026-06-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://personalcapsule.app/blog/how-to-make-open-when-letters-digitally</loc>
+    <lastmod>2026-06-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://personalcapsule.app/blog/is-personalcapsule-private</loc>
+    <lastmod>2026-06-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://personalcapsule.app/blog/personalcapsule-vs-futureme</loc>
+    <lastmod>2026-06-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>

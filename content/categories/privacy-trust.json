@@ -1,0 +1,29 @@
+{
+  "id": "privacy-trust",
+  "type": "blog_category",
+  "status": "published",
+  "name": "Privacy & Trust",
+  "slug": "privacy-trust",
+  "url": "https://personalcapsule.app/blog/category/privacy-trust",
+  "seoTitle": "Private Future Self Letter App Guides | PersonalCapsule",
+  "description": "Learn how PersonalCapsule handles private future self letters, on-device storage, optional iCloud sync, accounts and trust questions.",
+  "keywords": [
+    "private future self letter app",
+    "future self letter app without account",
+    "private time capsule app",
+    "private digital time capsule journal",
+    "iCloud sync journal"
+  ],
+  "eyebrow": "Privacy & Trust",
+  "heading": "Privacy & Trust",
+  "heroText": "Clear explanations of how PersonalCapsule treats private capsule content, iCloud sync, accounts, photos, voice notes and future letters.",
+  "intro": "Privacy-focused guides for people who want to understand where their future self letters, memories and digital time capsules live.",
+  "schemaAbout": [
+    "private future self letters",
+    "on-device storage",
+    "optional iCloud sync",
+    "private time capsule app"
+  ],
+  "llmsInclude": true,
+  "sitemapInclude": true
+}

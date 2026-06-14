@@ -134,6 +134,8 @@ function renderModelSummary(categories, articles) {
     .map(
       (group) => `## ${categoryTitle(group.category.id, categories)} Articles
 
+Category page: ${group.category.url || `${SITE.siteUrl}/blog/category/${group.category.slug}`}
+
 ${group.articles.map((article) => `- ${article.title}: ${article.url}`).join("\n")}`
     )
     .join("\n\n");
@@ -142,8 +144,9 @@ ${group.articles.map((article) => `- ${article.title}: ${article.url}`).join("\n
 function renderLlms(categories, articles) {
   const current = fs.readFileSync(path.join(ROOT, "llms.txt"), "utf8").trim();
   const section = renderModelSummary(categories, articles) || renderOpenWhenSection(articles);
-  const withoutOpenWhen = current.replace(/\n## Open When Letters Articles[\s\S]*$/i, "").trim();
-  return `${withoutOpenWhen}
+  const dynamicStart = current.search(/\n## [^\n]+ Articles\n/i);
+  const base = dynamicStart >= 0 ? current.slice(0, dynamicStart).trim() : current;
+  return `${base}
 
 ${section}
 `;

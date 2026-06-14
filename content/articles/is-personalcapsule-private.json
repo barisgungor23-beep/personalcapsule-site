@@ -1,0 +1,225 @@
+{
+  "id": "is-personalcapsule-private",
+  "type": "blog_article",
+  "status": "published",
+  "category": "privacy-trust",
+  "title": "Is PersonalCapsule Private?",
+  "seoTitle": "Is PersonalCapsule Private? How Your Future Letters Are Stored",
+  "slug": "is-personalcapsule-private",
+  "url": "https://personalcapsule.app/blog/is-personalcapsule-private",
+  "description": "Learn how PersonalCapsule handles privacy, on-device storage, iCloud sync, accounts, future letters, photos, voice notes, and exports.",
+  "keywords": [
+    "private future self letter app",
+    "future self letter app without account",
+    "private time capsule app",
+    "private digital time capsule journal",
+    "PersonalCapsule privacy"
+  ],
+  "excerpt": "Learn how PersonalCapsule handles privacy, on-device storage, optional iCloud sync, accounts, future letters, photos and voice notes.",
+  "eyebrow": "Privacy & Trust",
+  "readTime": "5 min read",
+  "datePublished": "2026-06-14",
+  "dateModified": "2026-06-14",
+  "schemaAbout": [
+    "private future self letter app",
+    "on-device storage",
+    "optional iCloud sync",
+    "private time capsule app"
+  ],
+  "body": [
+    {
+      "type": "paragraph",
+      "text": "Yes. PersonalCapsule is designed as a private digital time capsule journal for iPhone. It does not require an account, and its core app experience is built around keeping your future self letters, memories, decisions, goals, photos, and voice notes under your control."
+    },
+    {
+      "type": "paragraph",
+      "text": "PersonalCapsule’s public site describes the app as privacy-first, iPhone-based, no-account-required, with on-device storage and optional iCloud sync."
+    },
+    {
+      "type": "paragraph",
+      "text": "For official wording, read the Privacy Policy and About page.",
+      "links": [
+        {
+          "text": "Privacy Policy",
+          "href": "../privacy"
+        },
+        {
+          "text": "About page",
+          "href": "../about/"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Short answer"
+    },
+    {
+      "type": "list",
+      "items": [
+        "You do not need to create an account.",
+        "Your capsule content stays on your device.",
+        "iCloud sync is optional.",
+        "There is no public letter feed.",
+        "The app is built for personal reflection, not social sharing.",
+        "Your future letters are not sent to a public timeline."
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Why privacy matters for future self letters"
+    },
+    {
+      "type": "paragraph",
+      "text": "A future self letter is often more personal than a normal journal entry. You might write about something you are afraid of, a decision you are not ready to share, a relationship that feels uncertain, a private goal, or a hard day."
+    },
+    {
+      "type": "paragraph",
+      "text": "That kind of writing only works when the space feels private. If you are worried about who can read it, where it is stored, or whether it will appear publicly, you will probably write less honestly."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Does PersonalCapsule require an account?"
+    },
+    {
+      "type": "paragraph",
+      "text": "No. PersonalCapsule does not require sign-up, email, or a user account."
+    },
+    {
+      "type": "paragraph",
+      "text": "This matters because account-based products often need identity, login systems, server storage, and recovery flows. PersonalCapsule keeps the experience simpler: open the app, write your capsule, choose a future date, and seal it."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Where are my capsules stored?"
+    },
+    {
+      "type": "paragraph",
+      "text": "PersonalCapsule is designed around on-device storage. That means your private capsule content is kept on your iPhone."
+    },
+    {
+      "type": "paragraph",
+      "text": "If you choose to use iCloud sync, your capsules can sync through your personal iCloud. This is useful if you want Apple’s sync and backup layer, but it is not the same as creating a PersonalCapsule server account."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Is iCloud required?"
+    },
+    {
+      "type": "paragraph",
+      "text": "No. iCloud is optional. You can use PersonalCapsule as a private iPhone app without needing to think about a separate account. If you want syncing or backup behavior through your Apple ecosystem, optional iCloud sync gives you that path."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Does PersonalCapsule have public letters?"
+    },
+    {
+      "type": "paragraph",
+      "text": "No. PersonalCapsule is not built around public letters or a social feed. It is meant for private writing: your future self letters, your memories, your decisions, your goals, and your gift capsules."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "What about photos and voice notes?"
+    },
+    {
+      "type": "paragraph",
+      "text": "PersonalCapsule supports more than plain text. You can use capsules for photos and voice notes as well as written reflections."
+    },
+    {
+      "type": "paragraph",
+      "text": "That makes privacy more important. A photo, audio memory, or emotional note can be more sensitive than a simple reminder. PersonalCapsule’s privacy-first positioning is designed for that kind of personal content."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Is PersonalCapsule secure forever?"
+    },
+    {
+      "type": "paragraph",
+      "text": "No app should promise absolute security forever."
+    },
+    {
+      "type": "paragraph",
+      "text": "A more honest answer is this: PersonalCapsule is designed to reduce unnecessary exposure by avoiding accounts, public feeds, and server-based letter storage for your capsule content. You should still protect your iPhone, use a strong device passcode, keep your Apple ID secure, and make sensible backup choices."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Who is PersonalCapsule best for?"
+    },
+    {
+      "type": "list",
+      "items": [
+        "People who want private letters to their future self.",
+        "People saving emotional reflections and private memories.",
+        "People recording important life decisions.",
+        "People tracking goals and promises.",
+        "People who want future-opening digital time capsules without account creation."
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Final answer"
+    },
+    {
+      "type": "paragraph",
+      "text": "PersonalCapsule is private by design. It is not a public writing platform, not a social journal, and not an email-based future letter service."
+    },
+    {
+      "type": "paragraph",
+      "text": "It is a private digital time capsule journal for iPhone where you can write now, seal the moment, and reopen it later."
+    }
+  ],
+  "faq": [
+    {
+      "question": "Is PersonalCapsule private?",
+      "answer": "Yes. PersonalCapsule is designed as a private iPhone app for future self letters and digital time capsules. It does not require an account and focuses on on-device storage with optional iCloud sync."
+    },
+    {
+      "question": "Does PersonalCapsule collect my future letters?",
+      "answer": "PersonalCapsule is positioned around keeping capsule content on your device rather than building the experience around a server account. For full legal wording, users should read the Privacy Policy."
+    },
+    {
+      "question": "Do I need an account to use PersonalCapsule?",
+      "answer": "No. PersonalCapsule does not require account creation."
+    },
+    {
+      "question": "Does PersonalCapsule use iCloud?",
+      "answer": "iCloud sync is optional. You can use it if you want Apple’s sync layer, but PersonalCapsule does not require a separate app account."
+    },
+    {
+      "question": "Can other people read my capsules?",
+      "answer": "PersonalCapsule does not have a public letter feed. Your capsules are meant to be private to you."
+    },
+    {
+      "question": "Is PersonalCapsule safer than email-based future letter tools?",
+      "answer": "It depends on what you mean by safer. If you prefer not to store your future letters inside an email-delivery service, PersonalCapsule’s on-device, no-account model gives you more local control."
+    }
+  ],
+  "cta": {
+    "heading": "Write privately on iPhone",
+    "text": "Create private future self letters and digital time capsules with no account required.",
+    "appStoreTracking": "website"
+  },
+  "related": [
+    {
+      "label": "PersonalCapsule vs FutureMe",
+      "href": "personalcapsule-vs-futureme"
+    },
+    {
+      "label": "How to create a private time capsule on iPhone",
+      "href": "how-to-create-a-private-time-capsule-on-iphone"
+    },
+    {
+      "label": "What is a digital time capsule?",
+      "href": "what-is-a-digital-time-capsule"
+    }
+  ]
+}

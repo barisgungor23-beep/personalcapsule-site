@@ -51,52 +51,16 @@ The app is built by Umut Baris Gungor, an indie iOS developer based in Turkey. P
 
 The Open When Capsule page explains open when letters, open when letter ideas, printable PDF keepsakes, and digital Gift Capsules. It includes a browser-based printable letter designer; letter text is generated locally in the user's browser and is not uploaded to PersonalCapsule servers. Gift Capsules are also available inside the PersonalCapsule iPhone app.
 
-## Future Self Letters Articles
+## Comparisons & Alternatives Articles
 
-- 50 Questions for Your Future Self: Reflection Prompts: https://personalcapsule.app/blog/50-questions-for-your-future-self
-- Future Self Journal Ideas: 15 Simple Ways to Start: https://personalcapsule.app/blog/future-self-journal-ideas
-- Future Self Letter Prompts for Big Life Changes: https://personalcapsule.app/blog/future-self-letter-prompts-for-big-life-changes
-- How to Write a Letter to Your Future Self (Examples & Prompts): https://personalcapsule.app/blog/how-to-write-a-letter-to-your-future-self
-- How to Write a Letter to Yourself in 5 Years: https://personalcapsule.app/blog/how-to-write-a-letter-to-yourself-in-5-years
-- Letter to Your Future Self: Real Examples to Inspire Yours: https://personalcapsule.app/blog/letter-to-your-future-self-examples
-- What to Say to Your Future Self (When You Don't Know Where to Start): https://personalcapsule.app/blog/what-to-say-to-your-future-self
+Category page: https://personalcapsule.app/blog/category/comparisons-alternatives
 
-## Digital Time Capsules Articles
-
-- Best Digital Time Capsule Apps: What to Look For: https://personalcapsule.app/blog/best-digital-time-capsule-apps
-- Digital Time Capsule Ideas for Adults: https://personalcapsule.app/blog/digital-time-capsule-ideas-for-adults
-- Digital Time Capsule vs Traditional Journaling: https://personalcapsule.app/blog/digital-time-capsule-vs-traditional-journaling
-- How to Create a Private Time Capsule on iPhone: https://personalcapsule.app/blog/how-to-create-a-private-time-capsule-on-iphone
-- What Is a Digital Time Capsule? A Complete Guide: https://personalcapsule.app/blog/what-is-a-digital-time-capsule
-- What to Put in a Digital Time Capsule: 30 Ideas: https://personalcapsule.app/blog/what-to-put-in-a-digital-time-capsule
-
-## Reflection & Personal Growth Articles
-
-- Benefits of Keeping a Digital Journal: https://personalcapsule.app/blog/benefits-of-keeping-a-digital-journal
-- Goal Tracking vs Goal Reflection: The Bigger Picture: https://personalcapsule.app/blog/goal-tracking-vs-goal-reflection
-- How to Reflect on Your Goals Without Pressure: https://personalcapsule.app/blog/how-to-reflect-on-your-goals-without-pressure
-- Monthly Reflection Questions for Personal Growth: https://personalcapsule.app/blog/monthly-reflection-questions-for-personal-growth
-- Personal Growth Reflection Techniques That Are Easy to Keep: https://personalcapsule.app/blog/personal-growth-reflection-techniques
-- Why Reflection Improves Decision Making: https://personalcapsule.app/blog/why-reflection-improves-decision-making
+- Best FutureMe Alternatives for iPhone: https://personalcapsule.app/blog/best-futureme-alternatives-iphone
+- PersonalCapsule vs FutureMe: Which Future Self Letter App Should You Use?: https://personalcapsule.app/blog/personalcapsule-vs-futureme
 
 ## Decision Journaling Articles
 
-- Decision Journal Examples: What Entries Actually Look Like: https://personalcapsule.app/blog/decision-journal-examples
-- Decision Journaling for Career and Life Choices: https://personalcapsule.app/blog/decision-journaling-for-career-and-life-choices
-- How to Review Past Decisions (Without Beating Yourself Up): https://personalcapsule.app/blog/how-to-review-past-decisions
-- Questions to Ask Before a Big Decision: https://personalcapsule.app/blog/questions-to-ask-before-a-big-decision
-- Why Hindsight Bias Changes Your Memory: https://personalcapsule.app/blog/why-hindsight-bias-changes-your-memory
-- Why Recording Life Decisions Can Change Your Future: https://personalcapsule.app/blog/why-recording-life-decisions-can-change-your-future
-
-## Memory Keeping Articles
-
-- Digital Memory Keeping Guide for Beginners: https://personalcapsule.app/blog/digital-memory-keeping-guide
-- How Photos Make Time Capsules More Meaningful: https://personalcapsule.app/blog/how-photos-make-time-capsules-more-meaningful
-- How to Preserve Important Memories (Before They Fade): https://personalcapsule.app/blog/how-to-preserve-important-memories
-- How to Track Life Milestones: https://personalcapsule.app/blog/how-to-track-life-milestones
-- Voice Notes and Memory Reflection: https://personalcapsule.app/blog/voice-notes-and-memory-reflection
-
-## Decision Journaling Articles
+Category page: https://personalcapsule.app/blog/category/decision-journaling
 
 - Decision Journal Examples: What Entries Actually Look Like: https://personalcapsule.app/blog/decision-journal-examples
 - Decision Journaling for Career and Life Choices: https://personalcapsule.app/blog/decision-journaling-for-career-and-life-choices
@@ -107,6 +71,8 @@ The Open When Capsule page explains open when letters, open when letter ideas, p
 
 ## Digital Time Capsules Articles
 
+Category page: https://personalcapsule.app/blog/category/digital-time-capsules
+
 - Best Digital Time Capsule Apps: What to Look For: https://personalcapsule.app/blog/best-digital-time-capsule-apps
 - Digital Time Capsule Ideas for Adults: https://personalcapsule.app/blog/digital-time-capsule-ideas-for-adults
 - Digital Time Capsule vs Traditional Journaling: https://personalcapsule.app/blog/digital-time-capsule-vs-traditional-journaling
@@ -115,6 +81,8 @@ The Open When Capsule page explains open when letters, open when letter ideas, p
 - What to Put in a Digital Time Capsule: 30 Ideas: https://personalcapsule.app/blog/what-to-put-in-a-digital-time-capsule
 
 ## Future Self Letters Articles
+
+Category page: https://personalcapsule.app/blog/category/future-self-letters
 
 - 50 Questions for Your Future Self: Reflection Prompts: https://personalcapsule.app/blog/50-questions-for-your-future-self
 - Future Self Journal Ideas: 15 Simple Ways to Start: https://personalcapsule.app/blog/future-self-journal-ideas
@@ -126,41 +94,7 @@ The Open When Capsule page explains open when letters, open when letter ideas, p
 
 ## Memory Keeping Articles
 
-- Digital Memory Keeping Guide for Beginners: https://personalcapsule.app/blog/digital-memory-keeping-guide
-- How Photos Make Time Capsules More Meaningful: https://personalcapsule.app/blog/how-photos-make-time-capsules-more-meaningful
-- How to Preserve Important Memories (Before They Fade): https://personalcapsule.app/blog/how-to-preserve-important-memories
-- How to Track Life Milestones: https://personalcapsule.app/blog/how-to-track-life-milestones
-- Voice Notes and Memory Reflection: https://personalcapsule.app/blog/voice-notes-and-memory-reflection
-
-## Decision Journaling Articles
-
-- Decision Journal Examples: What Entries Actually Look Like: https://personalcapsule.app/blog/decision-journal-examples
-- Decision Journaling for Career and Life Choices: https://personalcapsule.app/blog/decision-journaling-for-career-and-life-choices
-- How to Review Past Decisions (Without Beating Yourself Up): https://personalcapsule.app/blog/how-to-review-past-decisions
-- Questions to Ask Before a Big Decision: https://personalcapsule.app/blog/questions-to-ask-before-a-big-decision
-- Why Hindsight Bias Changes Your Memory: https://personalcapsule.app/blog/why-hindsight-bias-changes-your-memory
-- Why Recording Life Decisions Can Change Your Future: https://personalcapsule.app/blog/why-recording-life-decisions-can-change-your-future
-
-## Digital Time Capsules Articles
-
-- Best Digital Time Capsule Apps: What to Look For: https://personalcapsule.app/blog/best-digital-time-capsule-apps
-- Digital Time Capsule Ideas for Adults: https://personalcapsule.app/blog/digital-time-capsule-ideas-for-adults
-- Digital Time Capsule vs Traditional Journaling: https://personalcapsule.app/blog/digital-time-capsule-vs-traditional-journaling
-- How to Create a Private Time Capsule on iPhone: https://personalcapsule.app/blog/how-to-create-a-private-time-capsule-on-iphone
-- What Is a Digital Time Capsule? A Complete Guide: https://personalcapsule.app/blog/what-is-a-digital-time-capsule
-- What to Put in a Digital Time Capsule: 30 Ideas: https://personalcapsule.app/blog/what-to-put-in-a-digital-time-capsule
-
-## Future Self Letters Articles
-
-- 50 Questions for Your Future Self: Reflection Prompts: https://personalcapsule.app/blog/50-questions-for-your-future-self
-- Future Self Journal Ideas: 15 Simple Ways to Start: https://personalcapsule.app/blog/future-self-journal-ideas
-- Future Self Letter Prompts for Big Life Changes: https://personalcapsule.app/blog/future-self-letter-prompts-for-big-life-changes
-- How to Write a Letter to Your Future Self (Examples & Prompts): https://personalcapsule.app/blog/how-to-write-a-letter-to-your-future-self
-- How to Write a Letter to Yourself in 5 Years: https://personalcapsule.app/blog/how-to-write-a-letter-to-yourself-in-5-years
-- Letter to Your Future Self: Real Examples to Inspire Yours: https://personalcapsule.app/blog/letter-to-your-future-self-examples
-- What to Say to Your Future Self (When You Don't Know Where to Start): https://personalcapsule.app/blog/what-to-say-to-your-future-self
-
-## Memory Keeping Articles
+Category page: https://personalcapsule.app/blog/category/memory-keeping
 
 - Digital Memory Keeping Guide for Beginners: https://personalcapsule.app/blog/digital-memory-keeping-guide
 - How Photos Make Time Capsules More Meaningful: https://personalcapsule.app/blog/how-photos-make-time-capsules-more-meaningful
@@ -170,6 +104,9 @@ The Open When Capsule page explains open when letters, open when letter ideas, p
 
 ## Open When Letters Articles
 
+Category page: https://personalcapsule.app/blog/category/open-when-letters
+
+- How to Make Open When Letters Digitally: https://personalcapsule.app/blog/how-to-make-open-when-letters-digitally
 - Open When Letter Examples You Can Personalize: https://personalcapsule.app/blog/open-when-letter-examples
 - 25 Open When Letter Ideas for Someone You Love: https://personalcapsule.app/blog/open-when-letter-ideas
 - Open When Letters for Best Friend: Meaningful Ideas: https://personalcapsule.app/blog/open-when-letters-for-best-friend
@@ -179,7 +116,15 @@ The Open When Capsule page explains open when letters, open when letter ideas, p
 - Open When You Miss Me: A Letter Idea for Long Distance Love: https://personalcapsule.app/blog/open-when-you-miss-me-letter
 - Printable Open When Letters vs Digital Gift Capsules: https://personalcapsule.app/blog/printable-open-when-letters-vs-digital-gift-capsules
 
+## Privacy & Trust Articles
+
+Category page: https://personalcapsule.app/blog/category/privacy-trust
+
+- Is PersonalCapsule Private?: https://personalcapsule.app/blog/is-personalcapsule-private
+
 ## Reflection & Personal Growth Articles
+
+Category page: https://personalcapsule.app/blog/category/reflection-personal-growth
 
 - Benefits of Keeping a Digital Journal: https://personalcapsule.app/blog/benefits-of-keeping-a-digital-journal
 - Goal Tracking vs Goal Reflection: The Bigger Picture: https://personalcapsule.app/blog/goal-tracking-vs-goal-reflection
