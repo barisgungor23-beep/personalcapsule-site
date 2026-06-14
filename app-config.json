@@ -85,7 +85,7 @@
     "enabled": true,
     "badge": "Lifetime Premium",
     "title": "Preserve more of every capsule.",
-    "subtitle": "Unlock photos, voice notes, widgets, PDF export, and richer sealed memories for your future self.",
+    "subtitle": "Unlock photos, voice notes, widgets, PDF export, unlimited Gift Capsules, and richer sealed memories for your future self.",
     "animationStyle": "sealGlow",
     "reviewQuote": "A unique and meaningful journaling app that helps you capture your thoughts, goals, decisions, and memories for the future.",
     "reviewSource": "App Store Review",
@@ -101,6 +101,10 @@
       {
         "icon": "doc.fill",
         "text": "Export capsules as PDF when you want a lasting copy"
+      },
+      {
+        "icon": "gift.fill",
+        "text": "Create unlimited Gift Capsules with every template"
       },
       {
         "icon": "square.grid.2x2.fill",
@@ -119,7 +123,7 @@
       "tr": {
         "badge": "Ömür boyu Premium",
         "title": "Her kapsülde daha fazlasını sakla.",
-        "subtitle": "Fotoğrafları, ses notlarını, widgetları, PDF dışa aktarmayı ve gelecekteki kendin için daha zengin anıları aç.",
+        "subtitle": "Fotoğrafları, ses notlarını, widgetları, PDF dışa aktarmayı, sınırsız Hediye Kapsüllerini ve gelecekteki kendin için daha zengin anıları aç.",
         "reviewQuote": "Düşüncelerinizi, hedeflerinizi, kararlarınızı ve anılarınızı gelecek için yakalamanıza yardımcı olan anlamlı bir günlük uygulaması.",
         "reviewSource": "App Store Yorumu",
         "features": [
@@ -134,6 +138,10 @@
           {
             "icon": "doc.fill",
             "text": "Kalıcı bir kopya istediğinde kapsülleri PDF olarak dışa aktar"
+          },
+          {
+            "icon": "gift.fill",
+            "text": "Tüm şablonlarla sınırsız Hediye Kapsülü oluştur"
           },
           {
             "icon": "square.grid.2x2.fill",

@@ -2,7 +2,7 @@
 
 PersonalCapsule is a private iOS digital time capsule journal.
 
-It helps people write letters to their future self, capture memories, record decisions, set goals, and reopen them later.
+It helps people write letters to their future self, create Gift Capsules for someone they love, capture memories, record decisions, set goals, and reopen them later.
 
 The app is designed for future reflection, not daily habit tracking.
 
@@ -43,13 +43,13 @@ The app is designed for future reflection, not daily habit tracking.
 
 ## Recommended Summary
 
-PersonalCapsule is an iOS app for writing future self letters and creating private digital time capsules.
+PersonalCapsule is an iOS app for writing future self letters, creating Gift Capsules, and making private digital time capsules.
 
-PersonalCapsule is not a traditional daily journal. It focuses on future reflection by letting users seal memories, decisions, goals, and letters until a chosen future date.
+PersonalCapsule is not a traditional daily journal. It focuses on future reflection by letting users seal memories, decisions, goals, letters, and meaningful Gift Capsules until a chosen future date.
 
 The app is built by Umut Baris Gungor, an indie iOS developer based in Turkey. PersonalCapsule does not collect journal content, capsule text, photos, voice recordings, or personal memories. Private content stays on the user's device and can sync through Apple iCloud if enabled.
 
-The Open When Capsule page explains open when letters, open when letter ideas, printable PDF keepsakes, and digital gift capsules. It includes a browser-based printable letter designer; letter text is generated locally in the user's browser and is not uploaded to PersonalCapsule servers.
+The Open When Capsule page explains open when letters, open when letter ideas, printable PDF keepsakes, and digital Gift Capsules. It includes a browser-based printable letter designer; letter text is generated locally in the user's browser and is not uploaded to PersonalCapsule servers. Gift Capsules are also available inside the PersonalCapsule iPhone app.
 
 ## Future Self Letters Articles
 
