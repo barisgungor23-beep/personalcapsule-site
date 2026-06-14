@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>About PersonalCapsule - Private Digital Time Capsule Journal</title>
-<meta name="description" content="Learn what PersonalCapsule is, who built it, and how its privacy-first digital time capsule journal and Gift Capsules work.">
+<meta name="description" content="Learn what PersonalCapsule is, who built it, how its privacy-first digital time capsule journal works, and what free and premium include.">
 <meta name="author" content="Umut Baris Gungor">
 <meta name="theme-color" content="#0b0907">
 <link rel="icon" type="image/png" sizes="32x32" href="https://personalcapsule.app/favicon-32x32.png">
@@ -14,14 +14,14 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="PersonalCapsule">
 <meta property="og:title" content="About PersonalCapsule">
-<meta property="og:description" content="A private iOS digital time capsule journal for future self letters, memories, decisions, goals and gift capsules.">
+<meta property="og:description" content="A private iOS digital time capsule journal for future self letters, memories, decisions, goals, Gift Capsules and Open When letters.">
 <meta property="og:url" content="https://personalcapsule.app/about/">
 <meta property="og:image" content="https://personalcapsule.app/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="About PersonalCapsule">
-<meta name="twitter:description" content="A private iOS digital time capsule journal for future self letters, memories, decisions, goals and gift capsules.">
+<meta name="twitter:description" content="A private iOS digital time capsule journal for future self letters, memories, decisions, goals, Gift Capsules and Open When letters.">
 <meta name="twitter:image" content="https://personalcapsule.app/og-image.png">
 <script type="application/ld+json">
 {
@@ -34,6 +34,17 @@
       "url": "https://personalcapsule.app/",
       "logo": "https://personalcapsule.app/icon.jpg",
       "email": "support.personalcapsule@gmail.com",
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "contactType": "customer support",
+          "email": "support.personalcapsule@gmail.com",
+          "availableLanguage": [
+            "English",
+            "Turkish"
+          ]
+        }
+      ],
       "founder": {
         "@type": "Person",
         "name": "Umut Baris Gungor"
@@ -60,11 +71,13 @@
       "featureList": [
         "Future self letters",
         "Gift capsules for someone you love",
+        "Open When letters",
         "Digital time capsules",
         "Decision, goal and moment capsules",
         "Photo attachments for capsules",
         "Voice notes for capsules",
         "Home Screen widgets",
+        "PDF export",
         "On-device storage with optional iCloud sync"
       ],
       "offers": {
@@ -77,6 +90,9 @@
         "description": "US lifetime premium price. Prices may vary by country."
       },
       "author": {
+        "@id": "https://personalcapsule.app/#organization"
+      },
+      "maintainer": {
         "@id": "https://personalcapsule.app/#organization"
       },
       "publisher": {
@@ -94,10 +110,12 @@
       },
       "about": {
         "@id": "https://personalcapsule.app/#app"
+      },
+      "mainEntity": {
+        "@id": "https://personalcapsule.app/#app"
       }
     },
     {
-      "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       "itemListElement": [
         {
@@ -113,14 +131,60 @@
           "item": "https://personalcapsule.app/about/"
         }
       ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://personalcapsule.app/about/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is PersonalCapsule used for?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "PersonalCapsule is used to create private digital time capsules on iPhone. You can write future self letters, save memories, record life decisions, track personal goals, and create Gift Capsules or Open When letters for someone you love."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need an account to use PersonalCapsule?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. PersonalCapsule does not require a PersonalCapsule account. Private capsule content is designed to stay on your device, and optional iCloud sync uses your own Apple iCloud account."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a Gift Capsule?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A Gift Capsule is a private message, memory, or Open When letter created for someone special. It can be used for birthdays, anniversaries, long-distance relationships, family memories, encouragement, or future messages."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is included in the free version?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The free version lets you create up to 3 capsules and your first Gift Capsule. Lifetime Premium unlocks unlimited capsules, unlimited Gift Capsules and templates, photo attachments, voice notes, Home Screen widgets, and PDF export."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I export my capsules?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Premium users can export capsules as PDF, which can help preserve letters, memories, decisions, goals, or Gift Capsules outside the app."
+          }
+        }
+      ]
     }
   ]
 }
 </script>
 <link rel="preload" href="../fonts/hanken-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../fonts/fraunces-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../fonts.css?v=20260614-faq-unified">
-<link rel="stylesheet" href="../styles.css?v=20260614-faq-unified">
+<link rel="stylesheet" href="../fonts.css?v=20260614-about-trust">
+<link rel="stylesheet" href="../styles.css?v=20260614-about-trust">
 <!-- Cloudflare Web Analytics -->
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ea06127e65ee4078b5e86ad842b9fe2c"}'></script>
 <!-- End Cloudflare Web Analytics -->
@@ -157,7 +221,7 @@
     <div class="wrap">
       <div class="eyebrow reveal">About PersonalCapsule</div>
       <h1 class="reveal" style="transition-delay:.06s">A private digital time capsule journal for your future self.</h1>
-      <p class="reveal" style="transition-delay:.12s">PersonalCapsule helps you save letters, memories, goals and decisions today, then reopen them when the time is right.</p>
+      <p class="reveal" style="transition-delay:.12s">PersonalCapsule helps you write something meaningful today, choose a future date, and reopen it when the time is right.</p>
     </div>
   </header>
   <section class="sec" style="padding-top:30px">
@@ -168,7 +232,7 @@
           <div>
             <div class="eyebrow">App profile</div>
             <h2>PersonalCapsule at a glance</h2>
-            <p>A privacy-first iPhone journal for future self letters, gift capsules, memories, decisions and goals.</p>
+            <p>A privacy-first iPhone journal for future self letters, Gift Capsules, Open When letters, memories, decisions and goals.</p>
           </div>
         </div>
         <div class="app-profile-grid">
@@ -178,6 +242,7 @@
           <div><span>Built in</span><strong>Istanbul, Turkey</strong></div>
           <div><span>Privacy</span><strong>No account required, on-device storage with optional iCloud sync</strong></div>
           <div><span>Premium</span><strong>Lifetime upgrade from $9.99 in the US</strong></div>
+          <div><span>Main uses</span><strong>Future self letters, Gift Capsules, memories, goals, decisions, photos, voice notes, widgets and PDF export</strong></div>
         </div>
         <div class="app-profile-foot">
           <p>Prices may vary by country.</p>
@@ -186,58 +251,131 @@
       </aside>
       <article class="content-panel reveal">
         <h2>What is PersonalCapsule?</h2>
-        <p>PersonalCapsule is a private digital time capsule journal for saving letters, memories, goals and decisions for your future self. It also includes Gift Capsules for creating meaningful messages for someone you love.</p>
-        <p>Instead of treating journaling as a daily task, PersonalCapsule focuses on meaningful moments. You write something now, choose a future date, and let that capsule wait until the right time to be opened again.</p>
+        <p>PersonalCapsule is a private digital time capsule journal for iPhone. It is designed to help you save thoughts, emotions, decisions, goals and memories in a way that becomes more meaningful over time.</p>
+        <p>You can write a letter to your future self, save an important memory, record a life decision, set a personal goal, or create a Gift Capsule for someone you love.</p>
+        <ul class="about-list">
+          <li>Write future self letters and reopen them later.</li>
+          <li>Create digital time capsules for memories, goals and decisions.</li>
+          <li>Make Gift Capsules and Open When letters for meaningful moments.</li>
+          <li>Reflect privately without public posting, feeds or social pressure.</li>
+        </ul>
+      </article>
+      <article class="content-panel reveal">
+        <h2>What are Gift Capsules?</h2>
+        <p>Gift Capsules are private messages, memories, or Open When letters created for someone special. They are meant for moments where a normal message feels too small: birthdays, anniversaries, long-distance relationships, encouragement, family memories, or future messages.</p>
+        <p>The idea is simple: write something personal, choose when it should be opened, and let the message wait until the right time.</p>
       </article>
       <div class="info-grid">
         <article class="info-card reveal">
           <h3>Why it was created</h3>
-          <p>PersonalCapsule was created for people who want to remember not only what happened, but how life felt while it was happening.</p>
-          <p>Big choices, quiet memories, hopes, fears and goals often make sense only after time passes. The app gives those moments a private place to wait until your future self is ready to meet them again.</p>
+          <p>PersonalCapsule was created because ordinary notes often capture what happened, but not why it mattered.</p>
+          <p>Some thoughts only become clear with distance. A fear that felt huge today may feel small in a year. A decision that felt uncertain may become a turning point. A simple memory may become something you are grateful you saved.</p>
+          <p>The app gives those moments a quiet place to wait until your future self is ready to meet them again.</p>
         </article>
         <article class="info-card reveal" style="transition-delay:.06s">
           <h3>Who built it</h3>
-          <p>PersonalCapsule is built in Istanbul by Umut Baris Gungor, an indie iOS developer based in Turkey.</p>
-          <p>The product is designed as a privacy-first journaling app rather than a large social platform. Its purpose is simple: help people reflect across time without needing an account or public profile.</p>
+          <p>PersonalCapsule is built by Umut Baris Gungor, an indie iOS developer from Istanbul, Turkey.</p>
+          <p>The app is not built as a social network, advertising platform, or content-sharing service. It is built as a personal reflection tool for people who want a private, focused place to save meaningful thoughts and return to them later.</p>
         </article>
       </div>
       <article class="content-panel reveal">
+        <h2>Long-term commitment</h2>
+        <p>PersonalCapsule is an actively developed indie app. The goal is to keep improving the app carefully over time, without turning it into a complicated or noisy platform.</p>
+        <ul class="about-list">
+          <li>Updates are planned around privacy, reliability and meaningful reflection.</li>
+          <li>The app already includes letters, goals, decisions, moments, Gift Capsules, photo support, voice notes, widgets and PDF export.</li>
+          <li>Future improvements are added carefully so the app stays simple, personal and useful.</li>
+        </ul>
+        <p class="about-link-note">You can see recent updates on the <a href="../changelog/">changelog</a>.</p>
+      </article>
+      <article class="content-panel reveal">
         <h2>Privacy approach</h2>
-        <p>PersonalCapsule does not collect your journal content, capsule text, photos, voice recordings or personal memories. Your private content stays on your device and can sync through Apple iCloud if enabled.</p>
-        <p>The app uses Apple's StoreKit for purchases and Apple's iCloud for optional sync. PersonalCapsule does not run its own account system for your private capsule content.</p>
+        <p>PersonalCapsule is designed around a simple privacy idea: your personal capsule content should not become content for a server, feed, or profile.</p>
+        <ul class="about-list">
+          <li>No PersonalCapsule account is required.</li>
+          <li>Your capsule content is designed to stay on your device.</li>
+          <li>Optional iCloud sync uses your own Apple iCloud account.</li>
+          <li>PersonalCapsule does not collect your journal text, capsule text, photos, voice recordings or private memories.</li>
+          <li>Purchases are handled through Apple's StoreKit.</li>
+        </ul>
+      </article>
+      <article class="content-panel reveal">
+        <h2>Your data is not locked to a PersonalCapsule server</h2>
+        <p>PersonalCapsule does not require you to create a server-based journal account. Your private capsule content is not built around a PersonalCapsule cloud database.</p>
+        <p>Premium users can export capsules as PDF. This helps you keep important letters, memories, decisions, goals or Gift Capsules as personal archives, printed keepsakes, or files you can store outside the app.</p>
       </article>
       <article class="content-panel reveal">
         <h2>Free vs Premium</h2>
-        <p>PersonalCapsule is free to start. The lifetime premium upgrade unlocks richer ways to preserve capsules, including photos, voice notes, widgets, PDF export and expanded Gift Capsule creation.</p>
+        <p>PersonalCapsule is free to start. The lifetime premium upgrade unlocks richer ways to preserve capsules, including unlimited capsules, unlimited Gift Capsules and templates, photos, voice notes, widgets and PDF export.</p>
         <div class="plan-compare" aria-label="Free and premium feature comparison">
           <div class="plan-card">
             <div class="eyebrow">Free</div>
             <h3>Start writing capsules</h3>
             <ul>
-              <li>Create up to 3 capsules for free</li>
-              <li>Create your first Gift Capsule</li>
-              <li>Write future self letters, goals, decisions and memories</li>
-              <li>Seal capsules until a chosen reopen date</li>
-              <li>Keep private content on device with optional iCloud sync</li>
+              <li>Create up to 3 capsules for free.</li>
+              <li>Create your first Gift Capsule.</li>
+              <li>Write future self letters, goals, decisions and memories.</li>
+              <li>Seal capsules until a chosen reopen date.</li>
+              <li>Keep private content on device with optional iCloud sync.</li>
             </ul>
           </div>
           <div class="plan-card premium-plan">
             <div class="eyebrow">Lifetime Premium</div>
             <h3>Preserve more of every capsule</h3>
             <ul>
-              <li>Create unlimited capsules</li>
-              <li>Create unlimited Gift Capsules with every template</li>
-              <li>Add photo attachments to capsules</li>
-              <li>Record voice notes inside capsules</li>
-              <li>Use Home Screen widgets and export capsules as PDF</li>
+              <li>Create unlimited capsules.</li>
+              <li>Create unlimited Gift Capsules with every template.</li>
+              <li>Add photo attachments to capsules.</li>
+              <li>Record voice notes inside capsules.</li>
+              <li>Use Home Screen widgets.</li>
+              <li>Export capsules as PDF.</li>
             </ul>
           </div>
         </div>
         <p class="pricing-note">Lifetime premium starts from $9.99 in the US. Prices may vary by country.</p>
       </article>
+      <article class="content-panel feedback-panel reveal">
+        <div class="feedback-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 6.5h16v11H4z"></path>
+            <path d="m4.5 7 7.5 6 7.5-6"></path>
+          </svg>
+        </div>
+        <div>
+          <h2>Feedback & suggestions</h2>
+          <p>PersonalCapsule is shaped by real user feedback. If you have an idea, a problem, a translation suggestion, or a feature request, you can contact the developer directly.</p>
+          <p>Feedback is especially helpful for improving journaling flow, Gift Capsules, Open When letters, privacy wording, accessibility and future updates.</p>
+          <a class="feedback-link" href="mailto:support.personalcapsule@gmail.com">Email the developer</a>
+        </div>
+      </article>
+      <article class="content-panel about-faq-panel reveal" id="about-faq">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-wrap">
+          <details class="faq-item">
+            <summary>What is PersonalCapsule used for?<span class="q-plus" aria-hidden="true"></span></summary>
+            <div class="faq-a">PersonalCapsule is used to create private digital time capsules on iPhone. You can write future self letters, save memories, record life decisions, track personal goals, and create Gift Capsules or Open When letters for someone you love. It is designed for meaningful reflection over time rather than public posting or daily social journaling.</div>
+          </details>
+          <details class="faq-item">
+            <summary>Do I need an account to use PersonalCapsule?<span class="q-plus" aria-hidden="true"></span></summary>
+            <div class="faq-a">No. PersonalCapsule does not require a PersonalCapsule account. Your private capsule content is designed to stay on your device. If you choose to use iCloud sync, your data syncs through your own Apple iCloud account.</div>
+          </details>
+          <details class="faq-item">
+            <summary>What is a Gift Capsule?<span class="q-plus" aria-hidden="true"></span></summary>
+            <div class="faq-a">A Gift Capsule is a private message, memory, or Open When letter created for someone special. You can use it for birthdays, anniversaries, long-distance relationships, family memories, encouragement, or future messages. You write the capsule, choose an unlock date, and let it wait until the right time.</div>
+          </details>
+          <details class="faq-item">
+            <summary>What is included in the free version?<span class="q-plus" aria-hidden="true"></span></summary>
+            <div class="faq-a">The free version lets you create up to 3 capsules and your first Gift Capsule. You can write future self letters, goals, decisions, and memories, then seal them until a chosen date. Lifetime Premium unlocks unlimited capsules, unlimited Gift Capsules and templates, photo attachments, voice notes, Home Screen widgets, and PDF export.</div>
+          </details>
+          <details class="faq-item">
+            <summary>Can I export my capsules?<span class="q-plus" aria-hidden="true"></span></summary>
+            <div class="faq-a">Yes. Premium users can export capsules as PDF. PDF export helps you preserve important letters, memories, decisions, goals, or Gift Capsules outside the app. It can be useful for personal archives, printed keepsakes, or saving meaningful capsules in another format.</div>
+          </details>
+        </div>
+      </article>
       <div class="article-cta reveal">
         <h3>Start your first capsule</h3>
-        <p>Write a private note to your future self and decide when it should reopen.</p>
+        <p>Write a private note to your future self, save a meaningful memory, record a decision, set a goal, or create a Gift Capsule for someone you love.</p>
         <a class="appstore" href="https://apps.apple.com/app/apple-store/id6773064012?pt=128571836&ct=website&mt=8" target="_blank" rel="noopener"><svg viewBox="0 0 384 512"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg><span class="as-txt"><span class="as-small">Download on the</span><span class="as-big">App Store</span></span></a>
       </div>
     </div>

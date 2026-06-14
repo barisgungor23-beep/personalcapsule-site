@@ -498,6 +498,12 @@ footer{border-top:1px solid rgba(216,178,90,.14);padding:46px 0;position:relativ
 .content-panel h2{font-size:1.75rem;margin-bottom:14px}
 .content-panel p,.info-card p,.timeline-item p{color:var(--text-dim);font-size:1rem;font-weight:300;line-height:1.75;margin-bottom:14px}
 .content-panel p:last-child,.info-card p:last-child,.timeline-item p:last-child{margin-bottom:0}
+.about-list{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+.about-list li{position:relative;padding-left:22px;color:var(--text-dim);font-size:1rem;font-weight:300;line-height:1.65}
+.about-list li::before{content:"";position:absolute;left:2px;top:.72em;width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,var(--gold-bright),var(--gold-deep));box-shadow:0 0 0 3px rgba(216,178,90,.1)}
+.about-link-note{margin-top:16px!important}
+.about-link-note a{color:var(--gold-bright);text-decoration:none;font-weight:600}
+.about-link-note a:hover{text-decoration:underline}
 .plan-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0 16px}
 .plan-card{padding:22px;border-radius:18px;background:rgba(255,247,230,.045);border:1px solid rgba(255,247,230,.09)}
 .plan-card h3{font-family:'Fraunces',serif;font-weight:500;font-size:1.24rem;line-height:1.2;margin:0 0 14px;color:var(--cream)}
@@ -506,6 +512,12 @@ footer{border-top:1px solid rgba(216,178,90,.14);padding:46px 0;position:relativ
 .plan-card li::before{content:"";position:absolute;left:0;top:.68em;width:7px;height:7px;border-radius:50%;background:rgba(216,178,90,.72);box-shadow:0 0 0 3px rgba(216,178,90,.1)}
 .premium-plan{background:linear-gradient(145deg,rgba(216,178,90,.12),rgba(255,247,230,.045));border-color:rgba(216,178,90,.24)}
 .pricing-note{font-size:.94rem!important;color:rgba(255,247,230,.72)!important}
+.feedback-panel{display:grid;grid-template-columns:58px minmax(0,1fr);gap:20px;align-items:start}
+.feedback-icon{width:58px;height:58px;border-radius:18px;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,rgba(216,178,90,.2),rgba(216,178,90,.05));border:1px solid rgba(216,178,90,.3);box-shadow:inset 0 1px 0 rgba(255,247,230,.08)}
+.feedback-icon svg{width:28px;height:28px;fill:none;stroke:var(--gold-bright);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.feedback-link{display:inline-flex;align-items:center;justify-content:center;margin-top:8px;padding:11px 16px;border-radius:999px;color:#171007;background:linear-gradient(180deg,var(--gold-bright),var(--gold-deep));text-decoration:none;font-weight:800;box-shadow:0 12px 30px -18px rgba(216,178,90,.85)}
+.feedback-link:hover{transform:translateY(-2px)}
+.about-faq-panel .faq-wrap{max-width:none;margin-top:18px}
 .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
 .info-card{padding:32px 30px;border-radius:22px}
 .info-card h3{font-size:1.35rem;margin-bottom:12px}
@@ -543,6 +555,8 @@ footer{border-top:1px solid rgba(216,178,90,.14);padding:46px 0;position:relativ
   .app-profile-grid{grid-template-columns:1fr}
   .app-profile-foot{align-items:flex-start;flex-direction:column}
   .plan-compare{grid-template-columns:1fr}
+  .feedback-panel{grid-template-columns:1fr}
+  .feedback-icon{width:52px;height:52px;border-radius:16px}
   .prose{font-size:1rem}
 }
 
