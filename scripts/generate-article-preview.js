@@ -90,11 +90,17 @@ function renderBody(blocks) {
 function renderFaq(faq) {
   if (!faq || faq.length === 0) return "";
   return [
+    '<section class="article-faq">',
     "<h2>FAQ</h2>",
-    ...faq.flatMap((item) => [
-      `<h3>${escapeHtml(item.question)}</h3>`,
-      `<p>${escapeHtml(item.answer)}</p>`,
-    ]),
+    '<div class="faq-wrap">',
+    ...faq.map(
+      (item) =>
+        `<details class="faq-item reveal"><summary>${escapeHtml(
+          item.question
+        )}<span class="q-plus"></span></summary><div class="faq-a">${escapeHtml(item.answer)}</div></details>`
+    ),
+    "</div>",
+    "</section>",
   ].join("\n");
 }
 
