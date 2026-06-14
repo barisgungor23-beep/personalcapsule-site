@@ -134,6 +134,9 @@ function validateArticle(file, article, categories) {
       if (!isNonEmptyString(block.type)) {
         add("critical", file, `Body block ${index} is missing type.`);
       }
+      if (isNonEmptyString(block.type) && !["heading", "paragraph", "quote", "list", "table"].includes(block.type)) {
+        add("critical", file, `Body block ${index} has unsupported type: ${block.type}.`);
+      }
       if (block.type === "heading") {
         if (![2, 3].includes(block.level)) {
           add("critical", file, `Heading block ${index} has invalid level.`);
@@ -158,6 +161,45 @@ function validateArticle(file, article, categories) {
             add("critical", file, `List block ${index} item ${itemIndex} is invalid.`);
           }
         });
+      }
+      if (block.type === "table") {
+        if (!Array.isArray(block.headers) || block.headers.length === 0) {
+          add("critical", file, `Table block ${index} has no headers.`);
+        } else {
+          block.headers.forEach((header, headerIndex) => {
+            if (!isNonEmptyString(header)) {
+              add("critical", file, `Table block ${index} header ${headerIndex} is invalid.`);
+            }
+          });
+        }
+        if (!Array.isArray(block.rows) || block.rows.length === 0) {
+          add("critical", file, `Table block ${index} has no rows.`);
+        } else {
+          block.rows.forEach((row, rowIndex) => {
+            if (!Array.isArray(row)) {
+              add("critical", file, `Table block ${index} row ${rowIndex} is invalid.`);
+              return;
+            }
+            if (Array.isArray(block.headers) && row.length !== block.headers.length) {
+              add(
+                "critical",
+                file,
+                `Table block ${index} row ${rowIndex} has ${row.length} cells, expected ${block.headers.length}.`
+              );
+            }
+            row.forEach((cell, cellIndex) => {
+              if (typeof cell === "string") {
+                if (!isNonEmptyString(cell)) {
+                  add("critical", file, `Table block ${index} row ${rowIndex} cell ${cellIndex} is empty.`);
+                }
+                return;
+              }
+              if (!cell || typeof cell !== "object" || !isNonEmptyString(cell.text)) {
+                add("critical", file, `Table block ${index} row ${rowIndex} cell ${cellIndex} is invalid.`);
+              }
+            });
+          });
+        }
       }
     });
   }

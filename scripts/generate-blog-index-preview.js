@@ -177,9 +177,32 @@ function renderArticleCards(articles, categories) {
     .join("")}</div>`;
 }
 
+function renderFeaturedGuides(articles, categories) {
+  const featuredSlugs = BLOG.featuredArticles || [];
+  if (!featuredSlugs.length) return "";
+
+  const articleBySlug = new Map(articles.map((article) => [article.slug, article]));
+  const categoryById = new Map(categories.map((category) => [category.id, category]));
+  const featuredArticles = featuredSlugs.map((slug) => articleBySlug.get(slug)).filter(Boolean);
+  if (!featuredArticles.length) return "";
+
+  return `<div class="featured-guides reveal"><div class="featured-head"><span>Featured Guides</span><strong>Start here</strong></div><div class="featured-grid">${featuredArticles
+    .map((article) => {
+      const category = categoryById.get(article.category);
+      return `<a class="featured-card" href="${escapeAttr(article.slug)}"><small>${escapeHtml(
+        category ? category.name : article.category
+      )}</small><h2>${escapeHtml(article.title)}</h2><p>${escapeHtml(
+        article.excerpt || article.description
+      )}</p><b>Read guide</b></a>`;
+    })
+    .join("")}</div></div>`;
+}
+
 function renderPage() {
   const categories = readPublishedCategories();
   const articles = readPublishedArticles();
+  const featuredSlugs = new Set(BLOG.featuredArticles || []);
+  const regularArticles = articles.filter((article) => !featuredSlugs.has(article.slug));
   return `${renderHead()}<body>
 <div class="atmos">
   <div class="glow-orb" style="width:520px;height:520px;top:-120px;right:-100px;background:radial-gradient(circle,rgba(216,178,90,.28),transparent 70%)"></div>
@@ -211,7 +234,8 @@ function renderPage() {
 <section class="sec" style="padding-top:30px">
   <div class="wrap">
     ${renderCategoryCards(categories, articles)}
-    ${renderArticleCards(articles, categories)}
+    ${renderFeaturedGuides(articles, categories)}
+    ${renderArticleCards(regularArticles, categories)}
   </div>
 </section>
 <footer>

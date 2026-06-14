@@ -54,14 +54,43 @@
       "text": "Feature comparison"
     },
     {
-      "type": "list",
-      "items": [
-        "Main use: PersonalCapsule is a private digital time capsule journal; FutureMe is focused on future email letters.",
-        "Platform focus: PersonalCapsule is iPhone-first; FutureMe works as a web and app-based future letter service.",
-        "Account model: PersonalCapsule does not require an account for private capsule content; FutureMe uses sign-in or email verification flows.",
-        "Storage style: PersonalCapsule is built around on-device storage with optional iCloud sync; FutureMe is built around server and email-based delivery.",
-        "Public letters: PersonalCapsule is not a public feed; FutureMe includes public letter features.",
-        "Media: PersonalCapsule supports photos and voice notes; FutureMe offers media attachments through Premium features."
+      "type": "table",
+      "headers": [
+        "Feature",
+        "PersonalCapsule",
+        "FutureMe"
+      ],
+      "rows": [
+        [
+          "Best for",
+          "Private iPhone reflection and digital time capsules",
+          "Future email delivery"
+        ],
+        [
+          "Account",
+          "No account required",
+          "Email or sign-in flow"
+        ],
+        [
+          "Storage",
+          "On-device storage with optional iCloud sync",
+          "Server and email delivery"
+        ],
+        [
+          "Public letters",
+          "No public feed",
+          "Public letter features available"
+        ],
+        [
+          "Media",
+          "Photos and voice notes",
+          "Premium media attachments"
+        ],
+        [
+          "Main use",
+          "Future self letters, memories, decisions, goals, and Gift Capsules",
+          "Future letters by email"
+        ]
       ]
     },
     {
@@ -119,7 +148,7 @@
     },
     {
       "type": "paragraph",
-      "text": "FutureMe is the safer choice if your priority is long-term email delivery from a well-known service."
+      "text": "FutureMe is the more established choice if your priority is long-term email delivery from a well-known service."
     },
     {
       "type": "paragraph",

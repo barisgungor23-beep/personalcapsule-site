@@ -4,7 +4,7 @@
   "status": "published",
   "category": "comparisons-alternatives",
   "title": "Best FutureMe Alternatives for iPhone",
-  "seoTitle": "Best FutureMe Alternatives for iPhone",
+  "seoTitle": "Best FutureMe Alternatives for iPhone: Private Letter Apps",
   "slug": "best-futureme-alternatives-iphone",
   "url": "https://personalcapsule.app/blog/best-futureme-alternatives-iphone",
   "description": "Looking for apps like FutureMe? Compare the best FutureMe alternatives for iPhone, including private time capsule apps and future letter tools.",
@@ -64,6 +64,51 @@
         "Does it have a public feed?",
         "Is it for private self-reflection or sharing with others?",
         "Can you export or preserve your entries?"
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "FutureMe alternatives compared"
+    },
+    {
+      "type": "table",
+      "headers": [
+        "App / Tool",
+        "Best for",
+        "Tradeoff"
+      ],
+      "rows": [
+        [
+          "PersonalCapsule",
+          "Private iPhone future letters and digital time capsules",
+          "Not focused on email delivery"
+        ],
+        [
+          "FutureMe",
+          "Future email delivery",
+          "Less local and privacy-first than an on-device app"
+        ],
+        [
+          "DearFuture",
+          "Shared future messages",
+          "More social or shared by design"
+        ],
+        [
+          "Apple Journal",
+          "General personal journaling on iPhone",
+          "Not built around sealed future capsules"
+        ],
+        [
+          "Day One",
+          "Advanced journaling and rich archives",
+          "Not mainly a future self letter app"
+        ],
+        [
+          "Notes app",
+          "Simple free writing",
+          "No built-in reopen-date capsule experience"
+        ]
       ]
     },
     {

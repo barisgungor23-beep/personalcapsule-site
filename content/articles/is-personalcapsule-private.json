@@ -68,6 +68,60 @@
     {
       "type": "heading",
       "level": 2,
+      "text": "What PersonalCapsule does and does not collect"
+    },
+    {
+      "type": "paragraph",
+      "text": "The table below explains the practical privacy difference in plain language. It focuses on private capsule content. Optional iCloud sync uses the user’s own Apple iCloud account, not a PersonalCapsule social account."
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Data type",
+        "Collected by PersonalCapsule?",
+        "Notes"
+      ],
+      "rows": [
+        [
+          "Capsule text",
+          "No",
+          "Private capsule content is kept on device, with optional iCloud sync through the user’s Apple account."
+        ],
+        [
+          "Future self letters",
+          "No",
+          "Letters are private capsule content, not a public feed or server account."
+        ],
+        [
+          "Photos",
+          "No",
+          "Photos added to capsules are private capsule content."
+        ],
+        [
+          "Voice recordings",
+          "No",
+          "Voice notes are private capsule content."
+        ],
+        [
+          "Goals and decisions",
+          "No",
+          "Goal and decision entries are stored as private capsule content."
+        ],
+        [
+          "Account email",
+          "No account required",
+          "PersonalCapsule does not require sign-up to use the core app."
+        ],
+        [
+          "Anonymous business metrics",
+          "Minimal, not linked to identity",
+          "Used only for high-level business metrics such as downloads and purchases, not detailed behavior tracking."
+        ]
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
       "text": "Why privacy matters for future self letters"
     },
     {
@@ -199,8 +253,8 @@
       "answer": "PersonalCapsule does not have a public letter feed. Your capsules are meant to be private to you."
     },
     {
-      "question": "Is PersonalCapsule safer than email-based future letter tools?",
-      "answer": "It depends on what you mean by safer. If you prefer not to store your future letters inside an email-delivery service, PersonalCapsule’s on-device, no-account model gives you more local control."
+      "question": "Is PersonalCapsule more private than email-based future letter tools?",
+      "answer": "PersonalCapsule is more private by design for people who prefer local control. It is not built around storing and delivering letters through an email service, and it does not require a PersonalCapsule account."
     }
   ],
   "cta": {

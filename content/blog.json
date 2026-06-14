@@ -20,5 +20,11 @@
   "eyebrow": "PersonalCapsule Blog",
   "heading": "Notes on memory, growth & time.",
   "heroText": "Practical guides on writing to your future self, building digital time capsules, comparing future letter apps, protecting privacy and reflecting on your goals.",
-  "schemaDescription": "Browse PersonalCapsule blog categories for open when letters, FutureMe alternatives, privacy, future self letters, digital time capsules, decision journaling, reflection and memory keeping."
+  "schemaDescription": "Browse PersonalCapsule blog categories for open when letters, FutureMe alternatives, privacy, future self letters, digital time capsules, decision journaling, reflection and memory keeping.",
+  "featuredArticles": [
+    "personalcapsule-vs-futureme",
+    "best-futureme-alternatives-iphone",
+    "is-personalcapsule-private",
+    "how-to-make-open-when-letters-digitally"
+  ]
 }

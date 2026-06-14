@@ -67,6 +67,16 @@ function renderBody(blocks) {
           })
           .join("")}</${tag}>`;
       }
+      if (block.type === "table") {
+        return `<div class="table-scroll"><table><thead><tr>${block.headers
+          .map((header) => `<th>${escapeHtml(header)}</th>`)
+          .join("")}</tr></thead><tbody>${block.rows
+          .map(
+            (row) =>
+              `<tr>${row.map((cell) => `<td>${linkText(cell.text || cell, cell.links)}</td>`).join("")}</tr>`
+          )
+          .join("")}</tbody></table></div>`;
+      }
       throw new Error(`Unsupported block type: ${block.type}`);
     })
     .join("\n");
