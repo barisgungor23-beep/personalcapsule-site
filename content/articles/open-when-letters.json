@@ -296,8 +296,8 @@
   ],
   "cta": {
     "type": "open_when",
-    "heading": "Create your own open when letter",
-    "text": "Create a printable open when letter on the web, or use PersonalCapsule on iPhone to save private digital gift capsules for future moments.",
+    "heading": "Create a digital open when letter",
+    "text": "Use PersonalCapsule to write a private message for a specific future moment and save it as a meaningful Gift Capsule.",
     "appStoreTracking": "website"
   },
   "sitemapInclude": true,

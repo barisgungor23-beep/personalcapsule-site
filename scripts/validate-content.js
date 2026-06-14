@@ -58,7 +58,7 @@ function validateSite(site) {
   if (!site.appStore || !site.appStore.campaigns) {
     add("critical", file, "Missing appStore.campaigns.");
   } else {
-    for (const campaign of ["website", "website_open_when"]) {
+    for (const campaign of ["website"]) {
       if (!isNonEmptyString(site.appStore.campaigns[campaign])) {
         add("critical", file, `Missing App Store campaign URL: ${campaign}`);
       }

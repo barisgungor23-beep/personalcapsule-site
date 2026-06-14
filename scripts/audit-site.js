@@ -7,7 +7,6 @@ const ROOT = path.resolve(__dirname, "..");
 const SITE_URL = "https://personalcapsule.app";
 const APPROVED_APP_STORE_LINK_PREFIXES = [
   "https://apps.apple.com/app/apple-store/id6773064012?pt=128571836&ct=website&mt=8",
-  "https://apps.apple.com/app/apple-store/id6773064012?pt=128571836&ct=website_open_when&mt=8",
 ];
 
 const report = {
