@@ -78,6 +78,123 @@
             "showsNameInput": true
           }
         ]
+      },
+      "es": {
+        "pages": [
+          {
+            "icon": "cube.transparent",
+            "title": "Guarda hoy para el futuro.",
+            "subtitle": "Guarda tus pensamientos, decisiones y recuerdos ahora. Ábrelos cuando llegue el momento.",
+            "style": "capsuleMarquee",
+            "showsNameInput": false
+          },
+          {
+            "icon": "envelope.fill",
+            "title": "Escribe a tu yo del futuro.",
+            "subtitle": "Sella una carta, una meta, una decisión o un momento. Ábrelo cuando llegue la fecha.",
+            "style": "capsuleMarquee",
+            "showsNameInput": false
+          },
+          {
+            "icon": "signpost.right.fill",
+            "title": "Ve tus decisiones con más claridad.",
+            "subtitle": "Guarda tu miedo, esperanza y confianza del momento. Más tarde, mira qué cambió.",
+            "style": "capsuleMarquee",
+            "showsNameInput": false
+          },
+          {
+            "icon": "lock.fill",
+            "title": "Privada por diseño.",
+            "subtitle": "No necesitas cuenta. Tus cápsulas se quedan en tu dispositivo, con sincronización opcional de iCloud.",
+            "style": "icon",
+            "showsNameInput": false
+          },
+          {
+            "icon": "sparkles",
+            "title": "Crea tu primera cápsula.",
+            "subtitle": "Empieza con una nota que tu yo futuro agradecerá leer.",
+            "style": "capsuleMarquee",
+            "showsNameInput": true
+          }
+        ]
+      },
+      "de": {
+        "pages": [
+          {
+            "icon": "cube.transparent",
+            "title": "Bewahre heute für später auf.",
+            "subtitle": "Halte Gedanken, Entscheidungen und Erinnerungen jetzt fest. Öffne sie, wenn die Zeit passt.",
+            "style": "capsuleMarquee",
+            "showsNameInput": false
+          },
+          {
+            "icon": "envelope.fill",
+            "title": "Schreib an dein zukünftiges Ich.",
+            "subtitle": "Versiegle einen Brief, ein Ziel, eine Entscheidung oder einen Moment. Öffne ihn am gewählten Tag.",
+            "style": "capsuleMarquee",
+            "showsNameInput": false
+          },
+          {
+            "icon": "signpost.right.fill",
+            "title": "Sieh deine Entscheidungen klarer.",
+            "subtitle": "Halte Angst, Hoffnung und Vertrauen im Moment fest. Später siehst du, was sich verändert hat.",
+            "style": "capsuleMarquee",
+            "showsNameInput": false
+          },
+          {
+            "icon": "lock.fill",
+            "title": "Privat gestaltet.",
+            "subtitle": "Kein Konto nötig. Deine Kapseln bleiben auf deinem Gerät, mit optionaler iCloud-Synchronisierung.",
+            "style": "icon",
+            "showsNameInput": false
+          },
+          {
+            "icon": "sparkles",
+            "title": "Erstelle deine erste Kapsel.",
+            "subtitle": "Beginne mit einer Notiz, die dein zukünftiges Ich gern lesen wird.",
+            "style": "capsuleMarquee",
+            "showsNameInput": true
+          }
+        ]
+      },
+      "fr": {
+        "pages": [
+          {
+            "icon": "cube.transparent",
+            "title": "Gardez aujourd’hui pour plus tard.",
+            "subtitle": "Gardez vos pensées, décisions et souvenirs maintenant. Rouvrez-les au bon moment.",
+            "style": "capsuleMarquee",
+            "showsNameInput": false
+          },
+          {
+            "icon": "envelope.fill",
+            "title": "Écrivez à votre futur vous.",
+            "subtitle": "Scellez une lettre, un objectif, une décision ou un moment. Ouvrez-le à la date choisie.",
+            "style": "capsuleMarquee",
+            "showsNameInput": false
+          },
+          {
+            "icon": "signpost.right.fill",
+            "title": "Voyez vos décisions plus clairement.",
+            "subtitle": "Gardez votre peur, votre espoir et votre confiance du moment. Plus tard, voyez ce qui a changé.",
+            "style": "capsuleMarquee",
+            "showsNameInput": false
+          },
+          {
+            "icon": "lock.fill",
+            "title": "Privée par conception.",
+            "subtitle": "Aucun compte requis. Vos capsules restent sur votre appareil, avec synchronisation iCloud facultative.",
+            "style": "icon",
+            "showsNameInput": false
+          },
+          {
+            "icon": "sparkles",
+            "title": "Créez votre première capsule.",
+            "subtitle": "Commencez par une note que votre futur vous aimera relire.",
+            "style": "capsuleMarquee",
+            "showsNameInput": true
+          }
+        ]
       }
     }
   },
