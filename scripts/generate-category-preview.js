@@ -89,7 +89,7 @@ function renderHead(category) {
     category.keywords.join(", ")
   )}"><meta name="author" content="${escapeAttr(
     SITE.author
-  )}"><meta name="theme-color" content="#0b0907"><link rel="icon" type="image/png" sizes="32x32" href="${SITE.siteUrl}/favicon-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="${SITE.siteUrl}/apple-touch-icon.png"><link rel="manifest" href="${SITE.siteUrl}/site.webmanifest"><link rel="canonical" href="${escapeAttr(
+  )}"><meta name="theme-color" content="#fbf5ea"><link rel="icon" type="image/png" sizes="32x32" href="${SITE.siteUrl}/favicon-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="${SITE.siteUrl}/apple-touch-icon.png"><link rel="manifest" href="${SITE.siteUrl}/site.webmanifest"><link rel="canonical" href="${escapeAttr(
     canonical
   )}"><meta property="og:type" content="website"><meta property="og:site_name" content="${escapeAttr(
     SITE.siteName
