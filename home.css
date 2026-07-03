@@ -499,3 +499,8 @@ nav.solid{background:rgba(255,250,242,.78);border-bottom-color:rgba(137,105,52,.
 .promo-offer-card,.promo-code-box{background:rgba(255,255,255,.62);border-color:rgba(137,105,52,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.64)}
 .promo-benefits,.redeem-guide,.plan-compare>div{background:rgba(255,255,255,.62);border-color:rgba(137,105,52,.16)}
 .cmp.trad{background:rgba(255,255,255,.58)}
+
+/* ---------- readability polish ---------- */
+.hero-sub,.sec-head p,.step p,.feat p,.promo-copy,.promo-offer-card p,.promo-benefits ul,.redeem-guide ol,.plan-compare p,.priv p,.compare-lead,.cmp li,.faq-item .faq-a{font-weight:400}
+.hero-sub,.sec-head p,.feat p,.promo-copy,.priv p,.compare-lead,.faq-item .faq-a{line-height:1.68}
+.rev-card blockquote{font-weight:360}

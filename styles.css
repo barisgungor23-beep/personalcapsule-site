@@ -640,3 +640,10 @@ nav.solid{background:rgba(255,250,242,.78);border-bottom-color:rgba(137,105,52,.
 .page-hero,.blog-hero{background:linear-gradient(180deg,rgba(255,250,242,.34),rgba(251,245,234,0))}
 .breadcrumb{color:var(--text-faint)}
 .foot-copy{color:var(--text-faint)}
+
+/* ---------- readability polish ---------- */
+.prose{font-weight:400}
+.prose p,.prose li{line-height:1.78}
+.content-panel p,.info-card p,.timeline-item p,.about-list li,.plan-card li,.planned-list li,.timeline-item li{font-weight:400}
+.post-card p,.featured-card p,.category-card small,.category-intro{font-weight:400;line-height:1.62}
+.article-cta p,.faq-item .faq-a{font-weight:400}
