@@ -213,7 +213,7 @@
       },
       {
         "icon": "mic.fill",
-        "text": "Record voice notes inside meaningful capsules"
+        "text": "Audio Capsule player for unlocked voice capsules"
       },
       {
         "icon": "doc.fill",
@@ -250,7 +250,7 @@
           },
           {
             "icon": "mic.fill",
-            "text": "Anlamlı kapsüllerin içine ses notu kaydet"
+            "text": "Açılmış ses kapsülleri için Ses Kapsülü oynatıcısı"
           },
           {
             "icon": "doc.fill",
