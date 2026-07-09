@@ -13,7 +13,7 @@
       {
         "icon": "envelope.fill",
         "title": "Write to your future self.",
-        "subtitle": "Seal a letter, a goal, a decision, or a moment. Open it when the date arrives.",
+        "subtitle": "Add letters, photos, and voice notes — then revisit them when the time is right.",
         "style": "capsuleMarquee",
         "showsNameInput": false
       },
@@ -52,7 +52,7 @@
           {
             "icon": "envelope.fill",
             "title": "Gelecekteki kendine yaz.",
-            "subtitle": "Bir mektup, hedef, karar veya anı oluştur. Seçtiğin tarihe kadar mühürlü kalsın.",
+            "subtitle": "Mektuplar, fotoğraflar ve sesli notlar ekleyin; doğru zaman geldiğinde yeniden açın.",
             "style": "capsuleMarquee",
             "showsNameInput": false
           },
@@ -91,7 +91,7 @@
           {
             "icon": "envelope.fill",
             "title": "Escribe a tu yo del futuro.",
-            "subtitle": "Sella una carta, una meta, una decisión o un momento. Ábrelo cuando llegue la fecha.",
+            "subtitle": "Añade cartas, fotos y notas de voz; revísalas cuando llegue el momento adecuado.",
             "style": "capsuleMarquee",
             "showsNameInput": false
           },
@@ -130,7 +130,7 @@
           {
             "icon": "envelope.fill",
             "title": "Schreib an dein zukünftiges Ich.",
-            "subtitle": "Versiegle einen Brief, ein Ziel, eine Entscheidung oder einen Moment. Öffne ihn am gewählten Tag.",
+            "subtitle": "Füge Briefe, Fotos und Sprachnotizen hinzu und öffne sie wieder, wenn der richtige Moment gekommen ist.",
             "style": "capsuleMarquee",
             "showsNameInput": false
           },
@@ -169,7 +169,7 @@
           {
             "icon": "envelope.fill",
             "title": "Écrivez à votre futur vous.",
-            "subtitle": "Scellez une lettre, un objectif, une décision ou un moment. Ouvrez-le à la date choisie.",
+            "subtitle": "Ajoutez des lettres, des photos et des notes vocales, puis retrouvez-les quand le moment sera venu.",
             "style": "capsuleMarquee",
             "showsNameInput": false
           },
