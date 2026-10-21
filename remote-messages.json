@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "premium-invitation-001",
+  "enabled": false,
+  "audience": "free",
+  "frequency": "daily",
+  "startsAt": null,
+  "endsAt": null,
+  "action": "paywall",
+  "translations": {
+    "en": {
+      "title": "A little more room for memories",
+      "message": "Discover everything PersonalCapsule Premium has to offer.",
+      "primaryButton": "Explore Premium"
+    },
+    "tr": {
+      "title": "Anılarına daha fazla yer aç",
+      "message": "PersonalCapsule Premium’un sunduğu tüm özellikleri keşfet.",
+      "primaryButton": "Premium’u Keşfet"
+    },
+    "de": {
+      "title": "Mehr Raum für Erinnerungen",
+      "message": "Entdecke alle Funktionen von PersonalCapsule Premium.",
+      "primaryButton": "Premium entdecken"
+    },
+    "fr": {
+      "title": "Plus de place pour vos souvenirs",
+      "message": "Découvrez toutes les fonctionnalités de PersonalCapsule Premium.",
+      "primaryButton": "Découvrir Premium"
+    },
+    "es": {
+      "title": "Más espacio para tus recuerdos",
+      "message": "Descubre todas las funciones de PersonalCapsule Premium.",
+      "primaryButton": "Descubrir Premium"
+    }
+  }
+}
