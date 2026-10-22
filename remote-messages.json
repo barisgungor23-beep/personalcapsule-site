@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "campaignId": "premium-invitation-001",
-  "enabled": false,
+  "enabled": true,
   "audience": "free",
   "frequency": "daily",
   "startsAt": null,
