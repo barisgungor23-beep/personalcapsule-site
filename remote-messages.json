@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "campaignId": "premium-invitation-001",
+  "campaignId": "premium-seal-2026-01",
   "enabled": true,
   "audience": "free",
   "frequency": "daily",
@@ -9,28 +9,28 @@
   "action": "paywall",
   "translations": {
     "en": {
-      "title": "A little more room for memories",
-      "message": "Discover everything PersonalCapsule Premium has to offer.",
+      "title": "A little gift for your memories",
+      "message": "Unlock Lifetime Premium with a special offer. Use code SEAL to enjoy your discount.",
       "primaryButton": "Explore Premium"
     },
     "tr": {
-      "title": "Anılarına daha fazla yer aç",
-      "message": "PersonalCapsule Premium’un sunduğu tüm özellikleri keşfet.",
-      "primaryButton": "Premium’u Keşfet"
+      "title": "Anılarına özel bir fırsat",
+      "message": "Lifetime Premium'u özel indirimle keşfet. İndirimden yararlanmak için SEAL kodunu kullan.",
+      "primaryButton": "Premium'u Keşfet"
     },
     "de": {
-      "title": "Mehr Raum für Erinnerungen",
-      "message": "Entdecke alle Funktionen von PersonalCapsule Premium.",
+      "title": "Ein besonderes Angebot",
+      "message": "Sichere dir Lifetime Premium zum Aktionspreis. Nutze den Code SEAL für deinen Rabatt.",
       "primaryButton": "Premium entdecken"
     },
     "fr": {
-      "title": "Plus de place pour vos souvenirs",
-      "message": "Découvrez toutes les fonctionnalités de PersonalCapsule Premium.",
+      "title": "Une offre spéciale pour vos souvenirs",
+      "message": "Profitez d'une réduction sur Premium à vie avec le code SEAL.",
       "primaryButton": "Découvrir Premium"
     },
     "es": {
-      "title": "Más espacio para tus recuerdos",
-      "message": "Descubre todas las funciones de PersonalCapsule Premium.",
+      "title": "Una oferta especial para tus recuerdos",
+      "message": "Consigue Premium de por vida con un descuento especial usando el código SEAL.",
       "primaryButton": "Descubrir Premium"
     }
   }
